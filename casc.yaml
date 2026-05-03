@@ -142,10 +142,14 @@ tool:
                     id: "22.14.0"
                     npmPackagesRefreshHours: 72
 
+security:
+  contentSecurityPolicy:
+    enforce: true
+
 unclassified:
   location:
     url: "http://localhost:8081/"
-  resourceDomainConfiguration:
+  resourceRoot:
     url: "http://localhost:8082/"
   timestamper:
     allPipelines: true

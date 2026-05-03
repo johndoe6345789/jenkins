@@ -26,7 +26,7 @@ services:
       - ./casc.yaml:/var/jenkins_home/casc.d/jenkins.yaml:ro
       - ./secrets/credentials.yaml:/var/jenkins_home/casc.d/credentials.yaml:ro
     environment:
-      - "JAVA_OPTS=-Djenkins.install.runSetupWizard=false \"-Djenkins.security.CSP.HEADER=sandbox; default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self'; img-src 'self' data:;\""
+      - "JAVA_OPTS=-Djenkins.install.runSetupWizard=false"
       - CASC_JENKINS_CONFIG=/var/jenkins_home/casc.d
     networks:
       - jenkins_net
