@@ -1,3 +1,4 @@
+configuration-as-code
 git
 github
 workflow-aggregator
@@ -8,6 +9,7 @@ warnings-ng
 junit
 credentials-binding
 ssh-agent
+ssh-slaves
 docker-workflow
 ansicolor
 timestamper

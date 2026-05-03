@@ -1,7 +1,37 @@
 jenkins:
   systemMessage: "Jenkins — C++/CMake + npm/Next.js CI"
-  numExecutors: 6
+  numExecutors: 0
   scmCheckoutRetryCount: 2
+
+  securityRealm:
+    local:
+      allowsSignup: false
+      users:
+        - id: admin
+          password: scrambled
+          properties:
+            - mailer:
+                emailAddress: ""
+
+  authorizationStrategy:
+    loggedInUsersCanDoAnything:
+      allowAnonymousRead: false
+
+  nodes:
+    - permanent:
+        name: "agent-1"
+        remoteFS: "/home/jenkins/agent"
+        numExecutors: 8
+        mode: NORMAL
+        labelString: "linux"
+        launcher:
+          ssh:
+            host: "jenkins-agent"
+            port: 22
+            credentialsId: "jenkins-agent-ssh-key"
+            sshHostKeyVerificationStrategy:
+              manuallyTrustedKeyVerificationStrategy:
+                requireInitialManualTrust: false
 
 tool:
   nodejs:
@@ -13,22 +43,6 @@ tool:
                 - nodeJSInstaller:
                     id: "22.14.0"
                     npmPackagesRefreshHours: 72
-
-security:
-  globalJobDslSecurityConfiguration:
-    useScriptSecurity: false
-  securityRealm:
-    local:
-      allowsSignup: false
-      users:
-        - id: admin
-          password: scrambled
-          properties:
-            - mailer:
-                emailAddress: ""
-  authorizationStrategy:
-    loggedInUsersCanDoAnything:
-      allowAnonymousRead: false
 
 unclassified:
   timestamper:
