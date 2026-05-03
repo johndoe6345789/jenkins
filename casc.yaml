@@ -21,12 +21,110 @@ jenkins:
     - permanent:
         name: "agent-1"
         remoteFS: "/home/jenkins/agent"
-        numExecutors: 8
+        numExecutors: 1
         mode: NORMAL
         labelString: "linux"
         launcher:
           ssh:
-            host: "jenkins-agent"
+            host: "jenkins-agent-1"
+            port: 22
+            credentialsId: "jenkins-agent-ssh-key"
+            sshHostKeyVerificationStrategy:
+              manuallyTrustedKeyVerificationStrategy:
+                requireInitialManualTrust: false
+    - permanent:
+        name: "agent-2"
+        remoteFS: "/home/jenkins/agent"
+        numExecutors: 1
+        mode: NORMAL
+        labelString: "linux"
+        launcher:
+          ssh:
+            host: "jenkins-agent-2"
+            port: 22
+            credentialsId: "jenkins-agent-ssh-key"
+            sshHostKeyVerificationStrategy:
+              manuallyTrustedKeyVerificationStrategy:
+                requireInitialManualTrust: false
+    - permanent:
+        name: "agent-3"
+        remoteFS: "/home/jenkins/agent"
+        numExecutors: 1
+        mode: NORMAL
+        labelString: "linux"
+        launcher:
+          ssh:
+            host: "jenkins-agent-3"
+            port: 22
+            credentialsId: "jenkins-agent-ssh-key"
+            sshHostKeyVerificationStrategy:
+              manuallyTrustedKeyVerificationStrategy:
+                requireInitialManualTrust: false
+    - permanent:
+        name: "agent-4"
+        remoteFS: "/home/jenkins/agent"
+        numExecutors: 1
+        mode: NORMAL
+        labelString: "linux"
+        launcher:
+          ssh:
+            host: "jenkins-agent-4"
+            port: 22
+            credentialsId: "jenkins-agent-ssh-key"
+            sshHostKeyVerificationStrategy:
+              manuallyTrustedKeyVerificationStrategy:
+                requireInitialManualTrust: false
+    - permanent:
+        name: "agent-5"
+        remoteFS: "/home/jenkins/agent"
+        numExecutors: 1
+        mode: NORMAL
+        labelString: "linux"
+        launcher:
+          ssh:
+            host: "jenkins-agent-5"
+            port: 22
+            credentialsId: "jenkins-agent-ssh-key"
+            sshHostKeyVerificationStrategy:
+              manuallyTrustedKeyVerificationStrategy:
+                requireInitialManualTrust: false
+    - permanent:
+        name: "agent-6"
+        remoteFS: "/home/jenkins/agent"
+        numExecutors: 1
+        mode: NORMAL
+        labelString: "linux"
+        launcher:
+          ssh:
+            host: "jenkins-agent-6"
+            port: 22
+            credentialsId: "jenkins-agent-ssh-key"
+            sshHostKeyVerificationStrategy:
+              manuallyTrustedKeyVerificationStrategy:
+                requireInitialManualTrust: false
+    - permanent:
+        name: "agent-7"
+        remoteFS: "/home/jenkins/agent"
+        numExecutors: 1
+        mode: NORMAL
+        labelString: "linux"
+        launcher:
+          ssh:
+            host: "jenkins-agent-7"
+            port: 22
+            credentialsId: "jenkins-agent-ssh-key"
+            sshHostKeyVerificationStrategy:
+              manuallyTrustedKeyVerificationStrategy:
+                requireInitialManualTrust: false
+    - permanent:
+        name: "agent-8"
+        remoteFS: "/home/jenkins/agent"
+        numExecutors: 1
+        mode: NORMAL
+        labelString: "linux"
+        launcher:
+          ssh:
+            host: "jenkins-agent-8"
             port: 22
             credentialsId: "jenkins-agent-ssh-key"
             sshHostKeyVerificationStrategy:
@@ -45,6 +143,8 @@ tool:
                     npmPackagesRefreshHours: 72
 
 unclassified:
+  location:
+    url: "http://localhost:8081/"
   timestamper:
     allPipelines: true
   ansiColorBuildWrapper:
