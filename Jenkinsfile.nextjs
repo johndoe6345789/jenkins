@@ -1,0 +1,60 @@
+pipeline {
+    agent any
+
+    tools {
+        nodejs 'Node 22'
+    }
+
+    options {
+        ansiColor('xterm')
+        timestamps()
+    }
+
+    environment {
+        CI = 'true'
+        NEXT_TELEMETRY_DISABLED = '1'
+    }
+
+    stages {
+        stage('Install') {
+            steps {
+                sh 'npm ci'
+            }
+        }
+
+        stage('Lint') {
+            steps {
+                sh 'npm run lint'
+            }
+        }
+
+        stage('Type Check') {
+            steps {
+                sh 'npm run type-check'
+            }
+        }
+
+        stage('Test') {
+            steps {
+                sh 'npm test -- --ci --coverage'
+            }
+            post {
+                always {
+                    junit allowEmptyResults: true, testResults: 'coverage/junit.xml'
+                }
+            }
+        }
+
+        stage('Build') {
+            steps {
+                sh 'npm run build'
+            }
+        }
+    }
+
+    post {
+        cleanup {
+            cleanWs()
+        }
+    }
+}

@@ -1,0 +1,13 @@
+git
+github
+workflow-aggregator
+pipeline-stage-view
+blueocean
+nodejs
+warnings-ng
+junit
+credentials-binding
+ssh-agent
+docker-workflow
+ansicolor
+timestamper

@@ -1,0 +1,37 @@
+jenkins:
+  systemMessage: "Jenkins — C++/CMake + npm/Next.js CI"
+  numExecutors: 6
+  scmCheckoutRetryCount: 2
+
+tool:
+  nodejs:
+    installations:
+      - name: "Node 22"
+        properties:
+          - installSource:
+              installers:
+                - nodeJSInstaller:
+                    id: "22.14.0"
+                    npmPackagesRefreshHours: 72
+
+security:
+  globalJobDslSecurityConfiguration:
+    useScriptSecurity: false
+  securityRealm:
+    local:
+      allowsSignup: false
+      users:
+        - id: admin
+          password: scrambled
+          properties:
+            - mailer:
+                emailAddress: ""
+  authorizationStrategy:
+    loggedInUsersCanDoAnything:
+      allowAnonymousRead: false
+
+unclassified:
+  timestamper:
+    allPipelines: true
+  ansiColorBuildWrapper:
+    globalColorMapName: "xterm"

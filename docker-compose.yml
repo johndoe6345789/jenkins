@@ -1,0 +1,21 @@
+services:
+  jenkins:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: jenkins
+    restart: unless-stopped
+    ports:
+      - "8080:8080"   # Web UI
+      - "50000:50000" # Agent JNLP
+    volumes:
+      - jenkins_home:/var/jenkins_home
+      - ./casc.yaml:/var/jenkins_home/casc.yaml:ro
+      - /var/run/docker.sock:/var/run/docker.sock  # Docker-in-Docker for pipeline builds
+    environment:
+      - JAVA_OPTS=-Djenkins.install.runSetupWizard=false
+      - CASC_JENKINS_CONFIG=/var/jenkins_home/casc.yaml
+    user: root  # needed for Docker socket access; lock down after setup
+
+volumes:
+  jenkins_home:
