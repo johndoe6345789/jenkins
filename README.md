@@ -96,6 +96,13 @@ export DOCKER_GID="984"
 docker compose up -d --build
 ```
 
+The MetaBuilder Jenkins job is written for limited disk space:
+
+- prunes old local MetaBuilder images before building
+- deletes an existing Nexus component for the same image tag before pushing
+- removes local registry tags and source images after each push
+- prunes old BuildKit cache after pushes
+
 ## Jobs
 
 Pipeline job definitions live in `jobs/` as Jenkins XML configs. Apply the
