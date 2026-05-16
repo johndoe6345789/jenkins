@@ -25,7 +25,10 @@
 
     stage('Install') {
       steps {
-        sh 'npm install --no-audit --no-fund'
+        sh '''
+          npm config set @esbuild-kit:registry https://registry.npmjs.org/ --location=project
+          npm install --no-audit --no-fund
+        '''
       }
     }
 
