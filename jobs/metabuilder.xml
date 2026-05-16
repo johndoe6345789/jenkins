@@ -14,6 +14,9 @@
 
   options {
     timestamps()
+    buildDiscarder(logRotator(numToKeepStr: '15', artifactNumToKeepStr: '5'))
+    timeout(time: 150, unit: 'MINUTES')
+    disableConcurrentBuilds()
   }
 
   environment {
@@ -28,6 +31,7 @@
     }
 
     stage('Install') {
+      options { timeout(time: 25, unit: 'MINUTES') }
       steps {
         sh '''
           npm config set @esbuild-kit:registry https://registry.npmjs.org/ --location=project
@@ -37,6 +41,7 @@
     }
 
     stage('Validate') {
+      options { timeout(time: 25, unit: 'MINUTES') }
       steps {
         sh '''
           npm run lint --if-present
@@ -48,6 +53,7 @@
     }
 
     stage('Docker Preflight') {
+      options { timeout(time: 10, unit: 'MINUTES') }
       steps {
         withCredentials([usernamePassword(credentialsId: 'nexus-admin', usernameVariable: 'NEXUS_ADMIN_USER', passwordVariable: 'NEXUS_ADMIN_PASSWORD')]) {
           sh '''
@@ -72,6 +78,7 @@
     }
 
     stage('Build Deployment Images') {
+      options { timeout(time: 90, unit: 'MINUTES') }
       steps {
         sh '''
           cd deployment
@@ -82,6 +89,7 @@
     }
 
     stage('Push Images To Nexus') {
+      options { timeout(time: 45, unit: 'MINUTES') }
       steps {
         withCredentials([usernamePassword(credentialsId: 'nexus-admin', usernameVariable: 'NEXUS_ADMIN_USER', passwordVariable: 'NEXUS_ADMIN_PASSWORD')]) {
           sh '''
@@ -168,6 +176,12 @@ PY
         '''
         }
       }
+    }
+  }
+
+  post {
+    always {
+      cleanWs()
     }
   }
 }</script>
