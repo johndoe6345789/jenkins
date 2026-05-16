@@ -18,10 +18,12 @@ Jenkins loads Configuration as Code from `casc.yaml` and the ignored local file
 `secrets/credentials.yaml`. That file must define the `jenkins-agent-ssh-key`
 credential used by every configured SSH agent.
 
-The Jenkins login for `uksodev` is set through `secrets/jenkins.env`:
+Start from the tracked templates:
 
 ```sh
-JENKINS_UKSODEV_PASSWORD=change-this-password
+mkdir -p secrets
+cp secrets.example/credentials.yaml secrets/credentials.yaml
+cp secrets.example/jenkins.env secrets/jenkins.env
 ```
 
 To rotate the agent key:
