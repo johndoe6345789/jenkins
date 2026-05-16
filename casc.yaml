@@ -12,6 +12,11 @@ jenkins:
           properties:
             - mailer:
                 emailAddress: ""
+        - id: uksodev
+          password: "${JENKINS_UKSODEV_PASSWORD}"
+          properties:
+            - mailer:
+                emailAddress: ""
 
   authorizationStrategy:
     loggedInUsersCanDoAnything:
@@ -140,6 +145,13 @@ tool:
               installers:
                 - nodeJSInstaller:
                     id: "22.14.0"
+                    npmPackagesRefreshHours: 72
+      - name: "node25"
+        properties:
+          - installSource:
+              installers:
+                - nodeJSInstaller:
+                    id: "25.9.0"
                     npmPackagesRefreshHours: 72
 
 security:

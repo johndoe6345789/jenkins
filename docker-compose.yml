@@ -23,6 +23,18 @@ services:
     depends_on:
       - jenkins
 
+  nexus:
+    image: sonatype/nexus3:latest
+    container_name: nexus
+    restart: unless-stopped
+    ports:
+      - "8083:8081"
+      - "5001:5001"
+    volumes:
+      - nexus_data:/nexus-data
+    networks:
+      - jenkins_net
+
   jenkins:
     build:
       context: .
@@ -31,6 +43,8 @@ services:
     restart: unless-stopped
     ports:
       - "50000:50000"
+    env_file:
+      - ./secrets/jenkins.env
     volumes:
       - jenkins_home:/var/jenkins_home
       - ./casc.yaml:/var/jenkins_home/casc.d/jenkins.yaml:ro
@@ -99,6 +113,7 @@ volumes:
   agent-6-home:
   agent-7-home:
   agent-8-home:
+  nexus_data:
 
 networks:
   jenkins_net:
