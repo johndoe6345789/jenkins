@@ -1,0 +1,47 @@
+<?xml version='1.1' encoding='UTF-8'?>
+<flow-definition plugin="workflow-job">
+  <actions/>
+  <description>Scheduled, build-safe Docker disk reclamation. Stopgap until the host gets a bigger disk/SSD.</description>
+  <keepDependencies>false</keepDependencies>
+  <properties/>
+  <definition class="org.jenkinsci.plugins.workflow.cps.CpsFlowDefinition" plugin="workflow-cps">
+    <script>pipeline {
+  agent { label 'linux' }
+
+  options {
+    timestamps()
+    disableConcurrentBuilds()
+    timeout(time: 20, unit: 'MINUTES')
+    buildDiscarder(logRotator(numToKeepStr: '20'))
+  }
+
+  triggers {
+    cron('H */6 * * *')
+  }
+
+  stages {
+    stage('Reclaim Docker disk') {
+      steps {
+        sh '''
+          echo "==> Disk before:"; df -h / | tail -1
+
+          # Conservative on purpose: time filters mean a concurrently running
+          # build's recent layers/cache are never touched. Deliberately NOT
+          # using image -a / volume prune / system -a, which would evict base
+          # images and named volumes that builds and the stack depend on.
+          docker builder prune -f --filter until=48h || true
+          docker image prune -f || true
+          docker container prune -f --filter until=24h || true
+
+          echo "==> Disk after:"; df -h / | tail -1
+          docker system df || true
+        '''
+      }
+    }
+  }
+}</script>
+    <sandbox>true</sandbox>
+  </definition>
+  <triggers/>
+  <disabled>false</disabled>
+</flow-definition>

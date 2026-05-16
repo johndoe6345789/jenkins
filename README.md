@@ -162,3 +162,27 @@ Plugins are baked into the controller image at build time
 docker compose build jenkins
 docker compose up -d --no-deps jenkins
 ```
+
+## Housekeeping (disk reclamation)
+
+`jobs/docker-housekeeping.xml` is a scheduled pipeline job (cron `H */6 * * *`)
+that reclaims Docker disk on the agent host. It is a deliberate stopgap for a
+disk-constrained host until a bigger disk/SSD is available. The prune is
+**build-safe**: it uses time filters (`until=48h` for build cache, `until=24h`
+for stopped containers) plus dangling-image cleanup, so a concurrently running
+build's recent layers and cache are never evicted. It intentionally avoids
+`docker image prune -a`, `docker volume prune`, and `docker system prune -a`,
+which would remove base images and named volumes the builds and stack depend
+on. Apply it the same way as the MetaBuilder job:
+
+```sh
+curl -b /tmp/jenkins-cookies \
+  -u uksodev:$JENKINS_UKSODEV_PASSWORD \
+  -H "Jenkins-Crumb: <crumb>" \
+  -H "Content-Type: application/xml" \
+  --data-binary @jobs/docker-housekeeping.xml \
+  "http://localhost:8081/createItem?name=docker-housekeeping"
+```
+
+The MetaBuilder pipeline also cleans its own workspace (`post { cleanWs() }`)
+and caps build retention (`logRotator`) to bound growth between prunes.
