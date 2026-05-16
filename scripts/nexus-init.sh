@@ -14,6 +14,21 @@ until curl -fsS -u "$auth" "${NEXUS_BASE_URL}/service/rest/v1/repositories" >/tm
   sleep 5
 done
 
+# Newer Nexus Community Edition gates every repository behind EULA acceptance;
+# until accepted, all repo endpoints (incl. the docker connector) return 403.
+echo "Ensuring Nexus EULA is accepted..."
+curl -fsS -u "$auth" -H "Accept: application/json" \
+  "${NEXUS_BASE_URL}/service/rest/v1/system/eula" >/tmp/nexus-eula.json
+if grep -q '"accepted"[: ]*true' /tmp/nexus-eula.json; then
+  echo "Nexus EULA already accepted."
+else
+  sed 's/"accepted"[: ]*false/"accepted":true/' /tmp/nexus-eula.json >/tmp/nexus-eula-accept.json
+  curl -fsS -u "$auth" -H "Content-Type: application/json" -X POST \
+    --data @/tmp/nexus-eula-accept.json \
+    "${NEXUS_BASE_URL}/service/rest/v1/system/eula"
+  echo "Accepted Nexus EULA."
+fi
+
 # The Docker registry V2 token handshake requires the DockerToken realm to be
 # active; without it Nexus answers /v2/ with a bare 403 (no WWW-Authenticate)
 # and `docker login` fails. Ensure it idempotently, preserving other realms.
