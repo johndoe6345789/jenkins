@@ -77,14 +77,93 @@
       }
     }
 
-    stage('Build Deployment Images') {
+    // Base images, built as the verified dependency DAG. The three roots are
+    // independent (FROM ubuntu / node:24 / python:3.14-slim) so they run in
+    // parallel. android-sdk and conan-deps derive FROM base-apt, so they run
+    // after the roots. conan-deps is a single 32GB image and is the host's
+    // disk wall: it (and the apps that need it) is best-effort — a failure
+    // marks the build UNSTABLE, never FAILURE, so the disk-safe set still ships.
+    stage('Build Base Images (DAG)') {
       options { timeout(time: 90, unit: 'MINUTES') }
       steps {
-        sh '''
-          cd deployment
-          python3 deployment.py build base node-deps pip-deps
-          python3 deployment.py build apps --sequential
-        '''
+        script {
+          parallel(
+            'apt': {
+              stage('base: apt') {
+                sh '''
+                  set -e
+                  cd deployment
+                  python3 deployment.py build base apt
+                '''
+              }
+            },
+            'node-deps': {
+              stage('base: node-deps') {
+                sh '''
+                  set -e
+                  cd deployment
+                  python3 deployment.py build base node-deps
+                '''
+              }
+            },
+            'pip-deps': {
+              stage('base: pip-deps') {
+                sh '''
+                  set -e
+                  cd deployment
+                  python3 deployment.py build base pip-deps
+                '''
+              }
+            }
+          )
+          stage('base: android-sdk') {
+            catchError(message: 'android-sdk base failed', buildResult: 'UNSTABLE', stageResult: 'FAILURE') {
+              sh '''
+                set -e
+                cd deployment
+                python3 deployment.py build base android-sdk
+              '''
+            }
+          }
+          stage('base: conan-deps (disk-gated)') {
+            catchError(message: 'conan-deps (32GB) did not fit — dependent C++ apps will be skipped', buildResult: 'UNSTABLE', stageResult: 'NOT_BUILT') {
+              sh '''
+                set -e
+                cd deployment
+                python3 deployment.py build base conan-deps
+              '''
+            }
+          }
+        }
+      }
+    }
+
+    // App images, one stage per image generated from the same manifest the
+    // build uses (commands.json). Kept SEQUENTIAL on purpose: this host is
+    // disk-constrained and 15 concurrent image builds would blow peak disk —
+    // the very problem the housekeeping job exists to manage. Each app is
+    // fault-tolerant: a failure (typically a disk-gated base like conan-deps)
+    // marks the build UNSTABLE and the stage skipped, instead of aborting the
+    // whole run, so every disk-safe image still reaches the push stage.
+    stage('Build App Images (per-image)') {
+      options { timeout(time: 120, unit: 'MINUTES') }
+      steps {
+        script {
+          def defs = readJSON file: 'deployment/cli/commands.json'
+          for (entry in defs.definitions.nexus_images.apps) {
+            def svc = entry.name
+            stage("app: ${svc}") {
+              catchError(message: "app ${svc} build failed (likely a disk-gated base, e.g. conan-deps)", buildResult: 'UNSTABLE', stageResult: 'FAILURE') {
+                sh """
+                  set -e
+                  cd deployment
+                  python3 deployment.py build apps ${svc}
+                  docker builder prune -f --filter until=24h || true
+                """
+              }
+            }
+          }
+        }
       }
     }
 
