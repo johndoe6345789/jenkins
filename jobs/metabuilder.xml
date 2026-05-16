@@ -42,6 +42,75 @@
         '''
       }
     }
+
+    stage('Docker Preflight') {
+      steps {
+        sh '''
+          docker version
+          docker compose version
+          curl -fsS -I http://localhost:5001/v2/ || true
+          printf '%s' "$NEXUS_ADMIN_PASSWORD" | docker login "$NEXUS_REGISTRY" -u "$NEXUS_ADMIN_USER" --password-stdin
+        '''
+      }
+    }
+
+    stage('Build Deployment Images') {
+      steps {
+        sh '''
+          cd deployment
+          python3 deployment.py build base node-deps pip-deps
+          python3 deployment.py build apps --sequential
+        '''
+      }
+    }
+
+    stage('Push Images To Nexus') {
+      steps {
+        sh '''
+          tag="$(git rev-parse --short HEAD)"
+          slug="johndoe6345789/metabuilder"
+
+          python3 - &lt;&lt;'PY'
+import json
+import os
+import subprocess
+import sys
+
+with open("deployment/cli/commands.json") as f:
+    defs = json.load(f)["definitions"]["nexus_images"]
+
+registry = os.environ.get("NEXUS_REGISTRY", "localhost:5001")
+tag = subprocess.check_output(["git", "rev-parse", "--short", "HEAD"], text=True).strip()
+slug = "johndoe6345789/metabuilder"
+images = defs["base"] + defs["apps"]
+
+pushed = 0
+missing = []
+for image in images:
+    local = image["local"]
+    name = image["name"]
+    if subprocess.run(["docker", "image", "inspect", local], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).returncode != 0:
+        missing.append(local)
+        continue
+
+    targets = [
+        f"{registry}/{slug}/{name}:{tag}",
+        f"{registry}/{slug}/{name}:latest",
+    ]
+    for target in targets:
+        subprocess.check_call(["docker", "tag", local, target])
+        subprocess.check_call(["docker", "push", target])
+        pushed += 1
+
+print(f"Pushed {pushed} image tags to {registry}/{slug}")
+if missing:
+    print("Skipped images that were not built:", file=sys.stderr)
+    for local in missing:
+        print(f"  - {local}", file=sys.stderr)
+PY
+        '''
+      }
+    }
   }
 }</script>
     <sandbox>true</sandbox>

@@ -5,6 +5,8 @@ x-agent-base: &agent-base
   restart: unless-stopped
   environment:
     - JENKINS_AGENT_SSH_PUBKEY=ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIIwF+TGWQA1Fo1mkNlsQ6IKleAxsqmORjDqeKZXu6o7R jenkins-agent
+  group_add:
+    - "${DOCKER_GID:-984}"
   networks:
     - jenkins_net
 
@@ -35,6 +37,24 @@ services:
     networks:
       - jenkins_net
 
+  nexus-init:
+    image: curlimages/curl:latest
+    container_name: nexus-init
+    restart: "no"
+    depends_on:
+      - nexus
+    env_file:
+      - ./secrets/nexus.env
+    environment:
+      - NEXUS_BASE_URL=http://nexus:8081
+      - NEXUS_DOCKER_REPOSITORY=docker-hosted
+      - NEXUS_DOCKER_HOSTED_PORT=5001
+    volumes:
+      - ./scripts/nexus-init.sh:/nexus-init.sh:ro
+    entrypoint: ["/bin/sh", "/nexus-init.sh"]
+    networks:
+      - jenkins_net
+
   jenkins:
     build:
       context: .
@@ -45,6 +65,7 @@ services:
       - "50000:50000"
     env_file:
       - ./secrets/jenkins.env
+      - ./secrets/nexus.env
     volumes:
       - jenkins_home:/var/jenkins_home
       - ./casc.yaml:/var/jenkins_home/casc.d/jenkins.yaml:ro
@@ -60,48 +81,56 @@ services:
     container_name: jenkins-agent-1
     volumes:
       - agent-1-home:/home/jenkins/agent
+      - /var/run/docker.sock:/var/run/docker.sock
 
   jenkins-agent-2:
     <<: *agent-base
     container_name: jenkins-agent-2
     volumes:
       - agent-2-home:/home/jenkins/agent
+      - /var/run/docker.sock:/var/run/docker.sock
 
   jenkins-agent-3:
     <<: *agent-base
     container_name: jenkins-agent-3
     volumes:
       - agent-3-home:/home/jenkins/agent
+      - /var/run/docker.sock:/var/run/docker.sock
 
   jenkins-agent-4:
     <<: *agent-base
     container_name: jenkins-agent-4
     volumes:
       - agent-4-home:/home/jenkins/agent
+      - /var/run/docker.sock:/var/run/docker.sock
 
   jenkins-agent-5:
     <<: *agent-base
     container_name: jenkins-agent-5
     volumes:
       - agent-5-home:/home/jenkins/agent
+      - /var/run/docker.sock:/var/run/docker.sock
 
   jenkins-agent-6:
     <<: *agent-base
     container_name: jenkins-agent-6
     volumes:
       - agent-6-home:/home/jenkins/agent
+      - /var/run/docker.sock:/var/run/docker.sock
 
   jenkins-agent-7:
     <<: *agent-base
     container_name: jenkins-agent-7
     volumes:
       - agent-7-home:/home/jenkins/agent
+      - /var/run/docker.sock:/var/run/docker.sock
 
   jenkins-agent-8:
     <<: *agent-base
     container_name: jenkins-agent-8
     volumes:
       - agent-8-home:/home/jenkins/agent
+      - /var/run/docker.sock:/var/run/docker.sock
 
 volumes:
   jenkins_home:

@@ -24,6 +24,7 @@ Start from the tracked templates:
 mkdir -p secrets
 cp secrets.example/credentials.yaml secrets/credentials.yaml
 cp secrets.example/jenkins.env secrets/jenkins.env
+cp secrets.example/nexus.env secrets/nexus.env
 ```
 
 To rotate the agent key:
@@ -78,10 +79,22 @@ docker compose logs --tail 120 jenkins
 
 ## Nexus
 
-Nexus runs as `nexus` on the same Compose network as Jenkins. Use the UI at
-http://localhost:8083 to create a hosted Docker repository and bind its HTTP
-connector to port `5001`; the Compose file already exposes that port as
-`localhost:5001`.
+Nexus runs as `nexus` on the same Compose network as Jenkins. The `nexus-init`
+service creates a hosted Docker repository named `docker-hosted` and binds its
+HTTP connector to port `5001`.
+
+- Nexus UI: http://localhost:8083
+- Docker registry: `localhost:5001`
+
+The Jenkins agents mount the host Docker socket so jobs can build and push
+images. The Compose default is `DOCKER_GID=984`, which matches this host's
+socket mapping inside the containers. If your Docker socket maps to a different
+group id, set `DOCKER_GID` before starting Compose:
+
+```sh
+export DOCKER_GID="984"
+docker compose up -d --build
+```
 
 ## Jobs
 
