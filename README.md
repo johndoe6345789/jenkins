@@ -16,7 +16,10 @@ SSH-based Linux build agents for C++/CMake and npm/Next.js pipelines.
 
 Jenkins loads Configuration as Code from `casc.yaml` and the ignored local file
 `secrets/credentials.yaml`. That file must define the `jenkins-agent-ssh-key`
-credential used by every configured SSH agent.
+credential used by every configured SSH agent, and the `nexus-admin`
+username/password credential used by the MetaBuilder job to log in and push
+images (its values interpolate from `secrets/nexus.env`, which the controller
+already loads, so no secret is duplicated).
 
 Start from the tracked templates:
 

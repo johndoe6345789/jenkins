@@ -16,6 +16,10 @@
     timestamps()
   }
 
+  environment {
+    NEXUS_REGISTRY = 'localhost:5001'
+  }
+
   stages {
     stage('Checkout') {
       steps {
@@ -45,12 +49,14 @@
 
     stage('Docker Preflight') {
       steps {
-        sh '''
+        withCredentials([usernamePassword(credentialsId: 'nexus-admin', usernameVariable: 'NEXUS_ADMIN_USER', passwordVariable: 'NEXUS_ADMIN_PASSWORD')]) {
+          sh '''
           docker version
           docker compose version
           curl -fsS -I http://localhost:5001/v2/ || true
           printf '%s' "$NEXUS_ADMIN_PASSWORD" | docker login "$NEXUS_REGISTRY" -u "$NEXUS_ADMIN_USER" --password-stdin
         '''
+        }
       }
     }
 
@@ -77,7 +83,8 @@
 
     stage('Push Images To Nexus') {
       steps {
-        sh '''
+        withCredentials([usernamePassword(credentialsId: 'nexus-admin', usernameVariable: 'NEXUS_ADMIN_USER', passwordVariable: 'NEXUS_ADMIN_PASSWORD')]) {
+          sh '''
           tag="$(git rev-parse --short HEAD)"
           slug="johndoe6345789/metabuilder"
 
@@ -159,6 +166,7 @@ if missing:
         print(f"  - {local}", file=sys.stderr)
 PY
         '''
+        }
       }
     }
   }
