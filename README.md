@@ -106,30 +106,56 @@ export DOCKER_GID="$(stat -c '%g' /var/run/docker.sock)"
 docker compose up -d --build
 ```
 
-The MetaBuilder Jenkins job is written for limited disk space:
+The MetaBuilder jobs are written for limited disk space:
 
-- prunes old local MetaBuilder images before building
+- the base image is split into per-target conan bases
+  (`base-conan-{cli,media,dbal,qt6,gameengine}`) instead of one 32GB
+  `base-conan-deps`, so the app pipeline only needs the small `cli`/`media`
+  bases and peak disk is per-image
+- the apps job pulls the *last-good* base from Nexus rather than rebuilding it,
+  and never deletes the base images it builds FROM (the build #9 cascade)
+- only a build-safe, time-filtered BuildKit cache prune runs in-job; image
+  reclamation is owned by the `docker-housekeeping` job
 - deletes an existing Nexus component for the same image tag before pushing
 - removes local registry tags and source images after each push
-- prunes old BuildKit cache after pushes
 
 ## Jobs
 
-Pipeline job definitions live in `jobs/` as Jenkins XML configs. Apply the
-MetaBuilder job with:
+Pipeline job definitions live in `jobs/` as Jenkins XML configs. The MetaBuilder
+pipeline is split into three jobs so the build is no longer monolithic:
+
+- **`metabuilder-base-images`** (`jobs/metabuilder-base-images.xml`) — heavy and
+  infrequent. Builds the base-image DAG (apt / node-deps / pip-deps / android-sdk
+  / conan) and pushes them to Nexus. Run on base-image/dependency changes.
+- **`metabuilder-apps`** (`jobs/metabuilder-apps.xml`) — light and frequent.
+  Pulls the *last-good* base images from Nexus, retags them locally, builds the
+  app images and pushes them. It never rebuilds base images, so a missing or
+  failed base no longer cascades into `pull access denied for
+  metabuilder/base-apt` (the build #9 failure).
+- **`metabuilder`** (`jobs/metabuilder.xml`) — thin orchestrator for a
+  one-button full release: runs `metabuilder-base-images` then
+  `metabuilder-apps`. A disk-gated/UNSTABLE base does **not** block apps.
+
+The orchestrator references the other two by job name, so create all three (the
+names must match exactly):
 
 ```sh
 curl -c /tmp/jenkins-cookies \
   -u uksodev:$JENKINS_UKSODEV_PASSWORD \
   http://localhost:8081/crumbIssuer/api/json
 
-curl -b /tmp/jenkins-cookies \
-  -u uksodev:$JENKINS_UKSODEV_PASSWORD \
-  -H "Jenkins-Crumb: <crumb-from-previous-response>" \
-  -H "Content-Type: application/xml" \
-  --data-binary @jobs/metabuilder.xml \
-  "http://localhost:8081/createItem?name=metabuilder"
+for job in metabuilder-base-images metabuilder-apps metabuilder; do
+  curl -b /tmp/jenkins-cookies \
+    -u uksodev:$JENKINS_UKSODEV_PASSWORD \
+    -H "Jenkins-Crumb: <crumb-from-previous-response>" \
+    -H "Content-Type: application/xml" \
+    --data-binary @jobs/$job.xml \
+    "http://localhost:8081/createItem?name=$job"
+done
 ```
+
+Update an existing job instead of creating it by POSTing the same XML to
+`http://localhost:8081/job/<name>/config.xml`.
 
 ## Appearance and plugins
 
