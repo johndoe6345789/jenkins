@@ -14,6 +14,21 @@ until curl -fsS -u "$auth" "${NEXUS_BASE_URL}/service/rest/v1/repositories" >/tm
   sleep 5
 done
 
+# The Docker registry V2 token handshake requires the DockerToken realm to be
+# active; without it Nexus answers /v2/ with a bare 403 (no WWW-Authenticate)
+# and `docker login` fails. Ensure it idempotently, preserving other realms.
+echo "Ensuring Docker Bearer Token realm is active..."
+curl -fsS -u "$auth" "${NEXUS_BASE_URL}/service/rest/v1/security/realms/active" >/tmp/nexus-realms.json
+if grep -q 'DockerToken' /tmp/nexus-realms.json; then
+  echo "DockerToken realm already active."
+else
+  realms="$(tr -d ' \n' </tmp/nexus-realms.json | sed 's/]$/,"DockerToken"]/')"
+  curl -fsS -u "$auth" -H "Content-Type: application/json" -X PUT \
+    --data "$realms" \
+    "${NEXUS_BASE_URL}/service/rest/v1/security/realms/active"
+  echo "Enabled DockerToken realm."
+fi
+
 if grep -q "\"name\" : \"${NEXUS_DOCKER_REPOSITORY}\"" /tmp/nexus-repositories.json; then
   echo "Nexus repository ${NEXUS_DOCKER_REPOSITORY} already exists."
   exit 0
