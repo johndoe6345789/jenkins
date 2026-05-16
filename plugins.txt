@@ -13,3 +13,19 @@ ssh-slaves
 docker-workflow
 ansicolor
 timestamper
+dark-theme
+
+# Pipeline essentials
+pipeline-graph-view
+pipeline-utility-steps
+ws-cleanup
+build-timeout
+
+# GitHub integration
+github-branch-source
+github-checks
+
+# Quality & reporting
+coverage
+htmlpublisher
+xunit

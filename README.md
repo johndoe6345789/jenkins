@@ -87,12 +87,19 @@ HTTP connector to port `5001`.
 - Docker registry: `localhost:5001`
 
 The Jenkins agents mount the host Docker socket so jobs can build and push
-images. The Compose default is `DOCKER_GID=984`, which matches this host's
-socket mapping inside the containers. If your Docker socket maps to a different
-group id, set `DOCKER_GID` before starting Compose:
+images. Access requires a group matching the socket GID, and that group is
+**baked into the agent image** as a static member of the `jenkins` user (not
+only a runtime `group_add`) — otherwise pipeline `sh` steps, which run in an
+sshd login session, lose the GID. See
+[docs/agent-docker-socket.md](docs/agent-docker-socket.md) for the full
+explanation.
+
+The Compose default is `DOCKER_GID=984`, which matches this host's socket
+mapping. On a host whose Docker socket maps to a different group id, set
+`DOCKER_GID` so both the baked-in group and `group_add` line up, then rebuild:
 
 ```sh
-export DOCKER_GID="984"
+export DOCKER_GID="$(stat -c '%g' /var/run/docker.sock)"
 docker compose up -d --build
 ```
 
@@ -119,4 +126,36 @@ curl -b /tmp/jenkins-cookies \
   -H "Content-Type: application/xml" \
   --data-binary @jobs/metabuilder.xml \
   "http://localhost:8081/createItem?name=metabuilder"
+```
+
+## Appearance and plugins
+
+The UI uses the built-in **Dark Theme** plugin, forced globally and locked
+through Configuration as Code (`casc.yaml`):
+
+```yaml
+appearance:
+  themeManager:
+    disableUserThemes: true
+    theme: "dark"
+```
+
+It pulls no external resources, so it works under the enforced
+Content-Security-Policy without any CSP changes.
+
+Beyond the pipeline/SCM core, `plugins.txt` adds:
+
+- **Pipeline:** `pipeline-graph-view` (modern stage view), `pipeline-utility-steps`,
+  `ws-cleanup` (per-build workspace cleanup), `build-timeout` (abort hung builds)
+- **GitHub:** `github-branch-source` (multibranch/PR builds), `github-checks`
+  (status reported back to GitHub PRs)
+- **Quality:** `coverage` (lcov/cobertura), `htmlpublisher` (HTML reports),
+  `xunit` (ctest and other non-JUnit results)
+
+Plugins are baked into the controller image at build time
+(`Dockerfile`), so changing `plugins.txt` requires a rebuild:
+
+```sh
+docker compose build jenkins
+docker compose up -d --no-deps jenkins
 ```

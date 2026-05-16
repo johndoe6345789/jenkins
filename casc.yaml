@@ -159,3 +159,8 @@ unclassified:
     allPipelines: true
   ansiColorBuildWrapper:
     globalColorMapName: "xterm"
+
+appearance:
+  themeManager:
+    disableUserThemes: true
+    theme: "dark"
