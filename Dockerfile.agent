@@ -23,6 +23,17 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 # Docker CLI + Compose plugin. Agents use the host Docker socket mounted by
 # docker-compose.yml so image builds are reproducible from Jenkins jobs.
+# The jenkins user must be a *static* member of a group matching the host
+# docker socket GID: Jenkins runs pipeline `sh` steps inside an sshd login
+# session, and PAM rebuilds the group set from /etc/group via initgroups(),
+# so the compose `group_add` GID is not inherited there. DOCKER_GID is passed
+# from docker-compose.yml so the baked-in group matches the host socket.
+ARG DOCKER_GID=984
+RUN set -eux; \
+    existing="$(getent group "${DOCKER_GID}" | cut -d: -f1 || true)"; \
+    if [ -z "$existing" ]; then groupadd -g "${DOCKER_GID}" docker; existing=docker; fi; \
+    usermod -aG "$existing" jenkins
+
 RUN install -m 0755 -d /etc/apt/keyrings \
     && curl -fsSL https://download.docker.com/linux/debian/gpg -o /etc/apt/keyrings/docker.asc \
     && chmod a+r /etc/apt/keyrings/docker.asc \
