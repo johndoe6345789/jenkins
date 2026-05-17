@@ -272,3 +272,35 @@ curl -b /tmp/jenkins-cookies \
 
 The MetaBuilder pipeline also cleans its own workspace (`post { cleanWs() }`)
 and caps build retention (`logRotator`) to bound growth between prunes.
+
+### Nexus retention
+
+`docker-housekeeping` reclaims the **agent host**; Nexus disk is bounded
+separately. Every base/app push adds an immutable `sha-<gitsha>` tag, so
+without retention Nexus grows by one full image set per commit forever.
+`scripts/nexus-init.sh` provisions a cleanup policy **`docker-hosted-retain`**
+and attaches it to `docker-hosted`: it expires image versions whose blob has
+not been updated in `NEXUS_CLEANUP_MAX_AGE_DAYS` days (default 14). `latest` is
+re-pushed every build so its timestamp keeps resetting and it never ages out —
+only stale per-commit `sha-*` tags expire. (Override the window by setting
+`NEXUS_CLEANUP_MAX_AGE_DAYS` for the `nexus-init` container.)
+
+`jobs/nexus-housekeeping.xml` is the Nexus analog of `docker-housekeeping`: a
+scheduled job (cron `H */6 * * *`) that drives the built-in **Cleanup service**
+(applies the retention policy) then **Cleanup unused docker blobs** (reclaims
+the disk), so space is freed promptly after big pipeline runs rather than only
+on Nexus's own internal schedule. It logs the blobstore size and component
+count before/after. Apply it the same way as the other jobs:
+
+```sh
+curl -b /tmp/jenkins-cookies \
+  -u uksodev:$JENKINS_UKSODEV_PASSWORD \
+  -H "Jenkins-Crumb: <crumb>" \
+  -H "Content-Type: application/xml" \
+  --data-binary @jobs/nexus-housekeeping.xml \
+  "http://localhost:8081/createItem?name=nexus-housekeeping"
+```
+
+The `v1/cleanup-policies` REST API is absent on this Nexus CE build, so the
+policy is managed through the supported UI-internal endpoint
+(`/service/rest/internal/cleanup-policies`).
