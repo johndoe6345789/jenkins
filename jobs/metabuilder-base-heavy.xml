@@ -17,6 +17,12 @@
 
   environment {
     NEXUS_REGISTRY = 'localhost:5001'
+    // This Docker env's builders do NOT use the host image store, so heavy
+    // conan bases must resolve base-apt FROM the registry. deployment.py
+    // passes this through as --build-arg BASE_REGISTRY, so conan-dbal/qt6/
+    // gameengine do FROM localhost:5001/johndoe6345789/metabuilder/base-apt
+    // :latest -- pulled from Nexus (base-apt published by the routine job).
+    BASE_REGISTRY = 'localhost:5001/johndoe6345789/metabuilder'
   }
 
   stages {

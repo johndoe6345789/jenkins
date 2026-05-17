@@ -17,6 +17,13 @@
 
   environment {
     NEXUS_REGISTRY = 'localhost:5001'
+    // This Docker env's builders (BuildKit AND legacy, proven) do NOT use the
+    // host image store, so base-derived images must resolve their parent FROM
+    // the registry. deployment.py passes this through as --build-arg
+    // BASE_REGISTRY, so android-sdk/conan-* do
+    // FROM localhost:5001/johndoe6345789/metabuilder/base-apt:latest -- pulled
+    // from Nexus, where base-apt is built and pushed first this run.
+    BASE_REGISTRY = 'localhost:5001/johndoe6345789/metabuilder'
   }
 
   stages {
