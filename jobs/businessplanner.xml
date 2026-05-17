@@ -1,0 +1,38 @@
+<?xml version='1.1' encoding='UTF-8'?>
+<flow-definition plugin="workflow-job">
+  <actions/>
+  <description>Orchestrator: runs businessplanner-base-images then businessplanner-apps. Each is independently runnable/retryable; this job exists for a one-button full release. Base failures do NOT block apps (apps consume the last-good base from Nexus).</description>
+  <keepDependencies>false</keepDependencies>
+  <properties/>
+  <definition class="org.jenkinsci.plugins.workflow.cps.CpsFlowDefinition" plugin="workflow-cps">
+    <script>pipeline {
+  agent none
+
+  options {
+    timestamps()
+    buildDiscarder(logRotator(numToKeepStr: '20'))
+    timeout(time: 330, unit: 'MINUTES')
+    disableConcurrentBuilds()
+  }
+
+  stages {
+    stage('Base Images') {
+      steps {
+        // propagate:false -- a disk-gated/UNSTABLE base must not block apps;
+        // the apps job pulls the last-good base from Nexus regardless.
+        build job: 'businessplanner-base-images', wait: true, propagate: false
+      }
+    }
+
+    stage('Service Images') {
+      steps {
+        build job: 'businessplanner-apps', wait: true, propagate: true
+      }
+    }
+  }
+}</script>
+    <sandbox>true</sandbox>
+  </definition>
+  <triggers/>
+  <disabled>false</disabled>
+</flow-definition>
