@@ -63,6 +63,49 @@ Then update `JENKINS_AGENT_SSH_PUBKEY` in `docker-compose.yml` with:
 cat /tmp/jenkins-agent-key.pub
 ```
 
+## Management CLI (`scripts/setup.py`)
+
+`scripts/setup.py` is a single entrypoint (a thin launcher over the
+`scripts/jenkins_stack/` package) for the things you actually do to this
+stack. Run `scripts/setup.py --help` for everything; the load-bearing ones:
+
+```sh
+scripts/setup.py doctor          # why won't the controller start?
+scripts/setup.py secrets ...     # render the gitignored secrets/ set
+scripts/setup.py recover-key     # pull key + Nexus pw out of the volumes
+scripts/setup.py up | down | restart | status | logs [SERVICE ...]
+```
+
+`secrets` renders `secrets/{jenkins.env,nexus.env,credentials.yaml}` (0600)
+from jinja2 templates. It generates a strong `JENKINS_UKSODEV_PASSWORD` unless
+`--uksodev-password` is given, and either reuses an existing agent key
+(`--import-ssh-key FILE`) or mints a new one (`--rotate-ssh-key` — which then
+needs `JENKINS_AGENT_SSH_PUBKEY` updated in `docker-compose.yml` and all agents
+rebuilt). `--nexus-password` must match the running Nexus admin password.
+
+### Recovery after a server wipe
+
+`secrets/` is **gitignored**, so a host rebuild / "big rearchitecture" wipes
+it and `docker compose config` then fails on the missing `env_file`s — the
+controller and nginx never come back even though the named volumes survived.
+Everything needed is still in the persisted `jenkins_jenkins_home` volume
+(the agent SSH key, encrypted, plus `secrets/master.key` +
+`hudson.util.Secret` to decrypt it) and the `nexus` volume (admin password).
+`recover-key` decrypts them so you can restore `secrets/` **without rotating
+the agent key or rebuilding the running agents**:
+
+```sh
+scripts/setup.py recover-key --out secrets/agent_key
+scripts/setup.py secrets --import-ssh-key secrets/agent_key \
+    --nexus-password "$(scripts/setup.py recover-key --print-nexus-only)"
+scripts/setup.py up        # recreates jenkins + nginx, leaves agents/nexus
+scripts/setup.py doctor    # confirm green
+```
+
+If the home volume was *also* destroyed, the key is unrecoverable: use
+`secrets --rotate-ssh-key`, update `JENKINS_AGENT_SSH_PUBKEY`, and rebuild the
+agents.
+
 ## Run
 
 ```sh
