@@ -1,7 +1,7 @@
 <?xml version='1.1' encoding='UTF-8'?>
 <flow-definition plugin="workflow-job">
   <actions/>
-  <description>Scheduled, build-safe Docker disk reclamation. Stopgap until the host gets a bigger disk/SSD.</description>
+  <description>Scheduled, build-safe Docker host disk reclamation. Stopgap until the host gets a bigger disk/SSD. (Nexus blob/disk reclamation is handled separately by the nexus-housekeeping job.)</description>
   <keepDependencies>false</keepDependencies>
   <properties/>
   <definition class="org.jenkinsci.plugins.workflow.cps.CpsFlowDefinition" plugin="workflow-cps">
@@ -23,9 +23,10 @@
     stage('Reclaim Docker disk') {
       steps {
         sh '''
-          # Back off entirely while a metabuilder base build holds the lock:
-          # those jobs do their own per-image prune, and a concurrent prune
-          # here previously contributed to base images being evicted mid-run.
+          # Back off entirely while a metabuilder/businessplanner base build
+          # holds the lock: those jobs do their own per-image prune, and a
+          # concurrent prune here previously contributed to base images being
+          # evicted mid-run.
           if docker volume inspect mb-base-running >/dev/null 2&gt;&amp;1; then
             echo "mb-base-running lock present -- base build in progress; skipping prune"
             exit 0

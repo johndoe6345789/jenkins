@@ -275,32 +275,18 @@ and caps build retention (`logRotator`) to bound growth between prunes.
 
 ### Nexus retention
 
-`docker-housekeeping` reclaims the **agent host**; Nexus disk is bounded
-separately. Every base/app push adds an immutable `sha-<gitsha>` tag, so
-without retention Nexus grows by one full image set per commit forever.
-`scripts/nexus-init.sh` provisions a cleanup policy **`docker-hosted-retain`**
-and attaches it to `docker-hosted`: it expires image versions whose blob has
-not been updated in `NEXUS_CLEANUP_MAX_AGE_DAYS` days (default 14). `latest` is
-re-pushed every build so its timestamp keeps resetting and it never ages out —
-only stale per-commit `sha-*` tags expire. (Override the window by setting
-`NEXUS_CLEANUP_MAX_AGE_DAYS` for the `nexus-init` container.)
+`docker-housekeeping` reclaims the **agent host**; the same job also bounds
+**Nexus** disk. Every base/app push adds an immutable `sha-<gitsha>` tag, so
+without retention Nexus grows by one full image set per commit forever — fatal
+on a disk-constrained host. The job's first stage (`Nexus image retention`)
+runs **always**, independent of the host-disk lock (deleting Nexus components
+is safe at any time): for each image it keeps `:latest` plus the single newest
+non-`latest` (`sha-*`) version and deletes the rest, then triggers the built-in
+**Cleanup unused docker blobs** and **Cleanup service** tasks to reclaim the
+blob store. This is a hard count cap (≈2 versions/image) regardless of build
+frequency, which a time-window policy cannot guarantee. The host-disk prune
+still runs afterwards (and still backs off under the `mb-base-running` lock).
 
-`jobs/nexus-housekeeping.xml` is the Nexus analog of `docker-housekeeping`: a
-scheduled job (cron `H */6 * * *`) that drives the built-in **Cleanup service**
-(applies the retention policy) then **Cleanup unused docker blobs** (reclaims
-the disk), so space is freed promptly after big pipeline runs rather than only
-on Nexus's own internal schedule. It logs the blobstore size and component
-count before/after. Apply it the same way as the other jobs:
-
-```sh
-curl -b /tmp/jenkins-cookies \
-  -u uksodev:$JENKINS_UKSODEV_PASSWORD \
-  -H "Jenkins-Crumb: <crumb>" \
-  -H "Content-Type: application/xml" \
-  --data-binary @jobs/nexus-housekeeping.xml \
-  "http://localhost:8081/createItem?name=nexus-housekeeping"
-```
-
-The `v1/cleanup-policies` REST API is absent on this Nexus CE build, so the
-policy is managed through the supported UI-internal endpoint
-(`/service/rest/internal/cleanup-policies`).
+To keep more than one rollback point, raise the kept-`sha` count in
+`jobs/docker-housekeeping.xml`. Re-register it the same way as the other jobs
+(POST `jobs/docker-housekeeping.xml` to `createItem`/`config.xml`).
