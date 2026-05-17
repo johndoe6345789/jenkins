@@ -1,7 +1,7 @@
 <?xml version='1.1' encoding='UTF-8'?>
 <flow-definition plugin="workflow-job">
   <actions/>
-  <description>Disk-safe routine base images for the app pipeline. Builds each base, pushes it to Nexus, then prunes it locally BEFORE the next one, so peak local disk is ~one base image, not the sum. Heavy dev-only bases live in metabuilder-base-heavy.</description>
+  <description>Occasional, disk-gated heavy conan bases (dbal/qt6/gameengine) for the devcontainer and standalone C++ builds. NOT on the app pipeline. Hydrates base-apt from Nexus, then builds+pushes+prunes each heavy base one at a time. devcontainer (41GB) is intentionally NOT built here -- build it manually on a larger host.</description>
   <keepDependencies>false</keepDependencies>
   <properties/>
   <definition class="org.jenkinsci.plugins.workflow.cps.CpsFlowDefinition" plugin="workflow-cps">
@@ -10,8 +10,8 @@
 
   options {
     timestamps()
-    buildDiscarder(logRotator(numToKeepStr: '10', artifactNumToKeepStr: '3'))
-    timeout(time: 150, unit: 'MINUTES')
+    buildDiscarder(logRotator(numToKeepStr: '8', artifactNumToKeepStr: '2'))
+    timeout(time: 240, unit: 'MINUTES')
     disableConcurrentBuilds()
   }
 
@@ -28,33 +28,44 @@
 
     stage('Begin base lock') {
       steps {
-        // Cross-agent sentinel: docker-housekeeping skips its prune while this
-        // Docker volume exists, so a concurrent prune cannot fight the build.
         sh 'docker volume create mb-base-running >/dev/null 2>&amp;1 || true'
         sh 'docker builder prune -f --filter until=48h || true'
       }
     }
 
-    // Disk-safe SERIAL pipeline. Order matters: base-apt is built first and
-    // kept resident because android-sdk / conan-cli / conan-media build
-    // FROM metabuilder/base-apt:latest (local). node-deps and pip-deps have
-    // no local dependents here, so they are pruned immediately. base-apt is
-    // dropped at the very end. Peak disk ~= base-apt + one dependent.
-    stage('Build+Push+Prune base images') {
-      options { timeout(time: 140, unit: 'MINUTES') }
+    stage('Hydrate base-apt from Nexus') {
+      options { timeout(time: 20, unit: 'MINUTES') }
       steps {
         withCredentials([usernamePassword(credentialsId: 'nexus-admin', usernameVariable: 'NEXUS_ADMIN_USER', passwordVariable: 'NEXUS_ADMIN_PASSWORD')]) {
           sh '''
-            docker version
             printf '%s' "$NEXUS_ADMIN_PASSWORD" | docker login "$NEXUS_REGISTRY" -u "$NEXUS_ADMIN_USER" --password-stdin
+            src="$NEXUS_REGISTRY/johndoe6345789/metabuilder/base-apt:latest"
+            if docker pull "$src"; then
+              docker tag "$src" metabuilder/base-apt:latest
+              docker rmi -f "$src" || true
+              echo "Hydrated metabuilder/base-apt:latest from Nexus"
+            else
+              echo "WARNING: base-apt not in Nexus -- run metabuilder-base-images first; heavy builds will fail" >&amp;2
+            fi
           '''
+        }
+      }
+    }
+
+    // Disk-gated SERIAL pipeline: build one heavy base, push it, prune it,
+    // then the next. base-apt stays resident (all three build FROM it) and is
+    // dropped at the end. Each is best-effort -- a disk wall marks the build
+    // UNSTABLE/NOT_BUILT but never aborts the others.
+    stage('Build+Push+Prune heavy bases') {
+      options { timeout(time: 210, unit: 'MINUTES') }
+      steps {
+        withCredentials([usernamePassword(credentialsId: 'nexus-admin', usernameVariable: 'NEXUS_ADMIN_USER', passwordVariable: 'NEXUS_ADMIN_PASSWORD')]) {
           script {
-            def routine = ['apt', 'node-deps', 'pip-deps', 'android-sdk', 'conan-cli', 'conan-media']
-            for (nm in routine) {
-              def keep = (nm == 'apt') ? '1' : '0'
-              stage("base: ${nm}") {
-                catchError(message: "base ${nm} failed -- dependent apps skipped this cycle", buildResult: 'UNSTABLE', stageResult: 'FAILURE') {
-                  withEnv(["BASE_BUILD_NAME=${nm}", "KEEP_LOCAL=${keep}"]) {
+            def heavy = ['conan-dbal', 'conan-qt6', 'conan-gameengine']
+            for (nm in heavy) {
+              stage("heavy: ${nm}") {
+                catchError(message: "heavy ${nm} did not fit -- devcontainer/standalone may be stale", buildResult: 'UNSTABLE', stageResult: 'NOT_BUILT') {
+                  withEnv(["BASE_BUILD_NAME=${nm}", "KEEP_LOCAL=0"]) {
                     sh '''
                       set -e
                       cd deployment
@@ -67,7 +78,6 @@ import subprocess
 import sys
 
 name = os.environ["BASE_BUILD_NAME"]
-keep = os.environ.get("KEEP_LOCAL") == "1"
 
 with open("cli/commands.json") as f:
     D = json.load(f)["definitions"]
@@ -118,16 +128,13 @@ for version in (tag, "latest"):
     subprocess.run(["docker", "rmi", "-f", target], check=False)
 print("Pushed " + slug + "/" + short + " (" + tag + ", latest)")
 
-if keep:
-    print("Kept local " + local + " (local dependents need it)")
-else:
-    repo = local.split(":")[0]
-    listed = subprocess.run(["docker", "images", "--format", "{{.Repository}}:{{.Tag}}"], capture_output=True, text=True).stdout.splitlines()
-    for ln in listed:
-        if ln.split(":")[0] == repo:
-            subprocess.run(["docker", "rmi", "-f", ln], check=False)
-    subprocess.run(["docker", "builder", "prune", "-f", "--filter", "until=24h"], check=False)
-    print("Pruned local " + repo + " (freed disk before next base)")
+repo = local.split(":")[0]
+listed = subprocess.run(["docker", "images", "--format", "{{.Repository}}:{{.Tag}}"], capture_output=True, text=True).stdout.splitlines()
+for ln in listed:
+    if ln.split(":")[0] == repo:
+        subprocess.run(["docker", "rmi", "-f", ln], check=False)
+subprocess.run(["docker", "builder", "prune", "-f", "--filter", "until=24h"], check=False)
+print("Pruned local " + repo + " (freed disk before next base)")
 PY
                     '''
                   }
