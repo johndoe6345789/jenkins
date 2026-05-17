@@ -28,11 +28,21 @@
       }
     }
 
-    stage('Begin base lock') {
+    stage('Acquire disk lock') {
       steps {
-        // Cross-agent sentinel: docker-housekeeping skips its prune while this
-        // Docker volume exists, so a concurrent prune cannot fight the build.
-        sh 'docker volume create mb-base-running >/dev/null 2&gt;&amp;1 || true'
+        // Best-effort cross-job advisory lock for this shared, disk-constrained
+        // host: only ONE base build (metabuilder OR businessplanner) may run at
+        // a time, else peak disk blows. The inspect-then-create race is
+        // acceptable (base builds are long, infrequent, orchestrator-serialized).
+        // docker-housekeeping also skips its prune while this volume exists.
+        sh '''
+          if docker volume inspect mb-base-running >/dev/null 2&gt;&amp;1; then
+            echo "another base build holds the mb-base-running lock -- aborting to protect disk" &gt;&amp;2
+            exit 1
+          fi
+          docker volume create mb-base-running >/dev/null
+          touch .mb_lock_owned
+        '''
         sh 'docker builder prune -f --filter until=48h || true'
       }
     }
@@ -139,7 +149,7 @@ PY
 
   post {
     always {
-      sh 'docker volume rm -f mb-base-running >/dev/null 2&gt;&amp;1 || true'
+      sh 'if [ -f .mb_lock_owned ]; then docker volume rm -f mb-base-running >/dev/null 2&gt;&amp;1 || true; echo "released mb-base-running lock"; fi'
       cleanWs()
     }
   }
