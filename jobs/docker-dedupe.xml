@@ -1,0 +1,53 @@
+<?xml version='1.1' encoding='UTF-8'?>
+<flow-definition plugin="workflow-job">
+  <actions/>
+  <description>On-demand + weekly btrfs dedupe of /mnt/btrfs (the docker/registry loop subvol). The CI image/node_modules workload dedupes ~2:1 — one pass reclaimed ~19 GiB (43->24 GiB) on 2026-05-18. Run this when disk-pressured or after big build-outs. Safe: btrfs FIDEDUPERANGE only shares byte-identical extents (data unchanged).</description>
+  <keepDependencies>false</keepDependencies>
+  <properties/>
+  <definition class="org.jenkinsci.plugins.workflow.cps.CpsFlowDefinition" plugin="workflow-cps">
+    <script>pipeline {
+  agent any
+
+  options {
+    timestamps()
+    buildDiscarder(logRotator(numToKeepStr: '20'))
+    timeout(time: 120, unit: 'MINUTES')
+    disableConcurrentBuilds()
+  }
+
+  triggers {
+    // Weekly, Sunday ~04:00 (low-traffic). Also runnable on demand.
+    cron('H 4 * * 0')
+  }
+
+  stages {
+    stage('Dedupe /mnt/btrfs') {
+      steps {
+        sh '''
+          set -e
+          # Jenkins agents share the host docker.sock but not host
+          # paths, so run duperemove in a privileged container that
+          # bind-mounts the host btrfs subvol. --privileged is needed
+          # for the FIDEDUPERANGE ioctl. Hashfile lives on the btrfs
+          # itself (persistent + resumable, never tmpfs/RAM).
+          docker run --rm --privileged -v /mnt/btrfs:/data alpine:3.20 sh -c '
+            set -e
+            apk add --no-cache duperemove btrfs-progs >/dev/null
+            echo "== BEFORE =="; btrfs filesystem usage /data 2>/dev/null | grep -iE "Device size|Used:|Free .est" | head
+            duperemove -dr --hashfile=/data/.duperemove.hash --dedupe-options=partial /data
+            echo "== AFTER =="; btrfs filesystem usage /data 2>/dev/null | grep -iE "Device size|Used:|Free .est" | head
+          '
+        '''
+      }
+    }
+  }
+
+  post {
+    always { cleanWs() }
+  }
+}</script>
+    <sandbox>true</sandbox>
+  </definition>
+  <triggers/>
+  <disabled>false</disabled>
+</flow-definition>

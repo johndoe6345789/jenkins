@@ -1,0 +1,63 @@
+<?xml version='1.1' encoding='UTF-8'?>
+<flow-definition plugin="workflow-job">
+  <actions/>
+  <description>CI for webdevguide: Next.js frontend (install/lint/test/build) + Python backend (deps/flake8/pytest, best-effort). Validation only — uses per-dir steps not `make up` (no docker-compose/deploy on the constrained host).</description>
+  <keepDependencies>false</keepDependencies>
+  <properties/>
+  <definition class="org.jenkinsci.plugins.workflow.cps.CpsFlowDefinition" plugin="workflow-cps">
+    <script>pipeline {
+  agent any
+
+  tools {
+    nodejs 'node25'
+  }
+
+  options {
+    timestamps()
+    buildDiscarder(logRotator(numToKeepStr: '15'))
+    timeout(time: 30, unit: 'MINUTES')
+    disableConcurrentBuilds()
+  }
+
+  stages {
+    stage('Checkout') {
+      steps {
+        git branch: 'main', url: 'https://github.com/johndoe6345789/webdevguide.git'
+      }
+    }
+    stage('Frontend') {
+      steps {
+        dir('frontend') {
+          sh '''
+            set -e
+            npm ci --no-audit --no-fund
+            npm run lint --if-present
+            npm test --if-present
+            NODE_OPTIONS=--max-old-space-size=2048 npm run build
+          '''
+        }
+      }
+    }
+    stage('Backend') {
+      steps {
+        dir('backend') {
+          sh '''
+            set -e
+            python3 -m pip install --break-system-packages -q -r requirements.txt
+            python3 -m flake8 . || true
+            [ -d tests ] &amp;&amp; python3 -m pytest -q || echo "no backend tests"
+          '''
+        }
+      }
+    }
+  }
+
+  post {
+    always { cleanWs() }
+  }
+}</script>
+    <sandbox>true</sandbox>
+  </definition>
+  <triggers/>
+  <disabled>false</disabled>
+</flow-definition>

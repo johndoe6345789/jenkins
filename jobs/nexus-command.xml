@@ -1,0 +1,50 @@
+<?xml version='1.1' encoding='UTF-8'?>
+<flow-definition plugin="workflow-job">
+  <actions/>
+  <description>CI for nexus-command (Next.js Atomic Component Framework): install, lint, vitest unit tests, production build. Playwright e2e intentionally skipped (browser-heavy) on the constrained host. No registry/deploy.</description>
+  <keepDependencies>false</keepDependencies>
+  <properties/>
+  <definition class="org.jenkinsci.plugins.workflow.cps.CpsFlowDefinition" plugin="workflow-cps">
+    <script>pipeline {
+  agent any
+
+  tools {
+    nodejs 'node25'
+  }
+
+  options {
+    timestamps()
+    buildDiscarder(logRotator(numToKeepStr: '15'))
+    timeout(time: 30, unit: 'MINUTES')
+    disableConcurrentBuilds()
+  }
+
+  stages {
+    stage('Checkout') {
+      steps {
+        git branch: 'main', url: 'https://github.com/johndoe6345789/nexus-command.git'
+      }
+    }
+    stage('Install') {
+      steps { sh 'npm ci --no-audit --no-fund' }
+    }
+    stage('Lint') {
+      steps { sh 'npm run lint --if-present' }
+    }
+    stage('Unit tests') {
+      steps { sh 'npm run test:unit --if-present' }
+    }
+    stage('Build') {
+      steps { sh 'NODE_OPTIONS=--max-old-space-size=2048 npm run build' }
+    }
+  }
+
+  post {
+    always { cleanWs() }
+  }
+}</script>
+    <sandbox>true</sandbox>
+  </definition>
+  <triggers/>
+  <disabled>false</disabled>
+</flow-definition>
