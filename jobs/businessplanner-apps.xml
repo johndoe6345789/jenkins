@@ -15,6 +15,12 @@
     disableConcurrentBuilds()
   }
 
+  parameters {
+    string(name: 'TARGETS',
+           defaultValue: 'nextra-api,emailclient,notifications,image-processor-frontend,shop-admin,jobs,search,streams,cron,backups,wiki,webhooks,polls,blog,frontend,sso,audit,social-admin,gallery,flags,analytics,status,alerts,forum,s3,s3-frontend,packagerepo-backend,packagerepo-frontend,pgadmin-backend,pgadmin-frontend',
+           description: 'Comma-separated bake targets to build. Use a subset to batch on the constrained host.')
+  }
+
   environment {
     NEXUS_REGISTRY = 'localhost:5001'
     SLUG = 'johndoe6345789/next_extra_primary'
@@ -65,19 +71,14 @@
       steps {
         withCredentials([usernamePassword(credentialsId: 'nexus-admin', usernameVariable: 'NEXUS_ADMIN_USER', passwordVariable: 'NEXUS_ADMIN_PASSWORD')]) {
           script {
-            def targets = [
-              'nextra-api', 'emailclient-api', 'emailclient', 'notifications',
-              'image-processor-frontend', 'shop-admin', 'jobs', 'search',
-              'streams', 'cron', 'backups', 'wiki', 'webhooks', 'polls',
-              'blog', 'frontend', 'sso', 'audit', 'social-admin', 'gallery',
-              'flags', 'analytics', 'status', 'alerts', 'forum', 's3',
-              's3-frontend', 'packagerepo-backend', 'packagerepo-frontend',
-              'pgadmin-backend', 'pgadmin-frontend',
-            ]
+            def targets = params.TARGETS.split(',')
+                .collect { it.trim() }.findAll { it }
+            echo "Building ${targets.size()} target(s): ${targets.join(', ')}"
             for (t in targets) {
               stage("svc: ${t}") {
                 catchError(message: "service ${t} failed (likely a base image not yet published to Nexus)", buildResult: 'UNSTABLE', stageResult: 'FAILURE') {
                   withEnv(["BAKE_TARGET=${t}"]) {
+                    retry(2) {
                     sh '''
                       set -e
                       docker buildx bake \
@@ -128,8 +129,10 @@ subprocess.run(["docker", "builder", "prune", "-f", "--filter", "until=24h"], ch
 print("Pushed " + slug + "/" + name + " (" + tag + ", latest)")
 PY
                     '''
+                    }
                   }
                 }
+                sh 'sleep 25'
               }
             }
           }
