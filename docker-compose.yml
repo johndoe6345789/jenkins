@@ -31,6 +31,11 @@ services:
     image: sonatype/nexus3:latest
     container_name: nexus
     restart: unless-stopped
+    environment:
+      # Right-sized for the ~3.8 GB shared host: the image
+      # default (-Xms2703m -Xmx2703m -XX:MaxDirectMemorySize=2703m)
+      # alone exceeds host RAM and swap-thrashes every build.
+      INSTALL4J_ADD_VM_PARAMS: "-Xms512m -Xmx768m -XX:MaxDirectMemorySize=768m"
     ports:
       - "8083:8081"
       - "5001:5001"
@@ -106,33 +111,10 @@ services:
       - agent-4-home:/home/jenkins/agent
       - /var/run/docker.sock:/var/run/docker.sock
 
-  jenkins-agent-5:
-    <<: *agent-base
-    container_name: jenkins-agent-5
-    volumes:
-      - agent-5-home:/home/jenkins/agent
-      - /var/run/docker.sock:/var/run/docker.sock
-
-  jenkins-agent-6:
-    <<: *agent-base
-    container_name: jenkins-agent-6
-    volumes:
-      - agent-6-home:/home/jenkins/agent
-      - /var/run/docker.sock:/var/run/docker.sock
-
-  jenkins-agent-7:
-    <<: *agent-base
-    container_name: jenkins-agent-7
-    volumes:
-      - agent-7-home:/home/jenkins/agent
-      - /var/run/docker.sock:/var/run/docker.sock
-
-  jenkins-agent-8:
-    <<: *agent-base
-    container_name: jenkins-agent-8
-    volumes:
-      - agent-8-home:/home/jenkins/agent
-      - /var/run/docker.sock:/var/run/docker.sock
+# agents 5-8 removed: 8 was over-provisioned for a disk/RAM-
+# constrained host; the build pipeline is sequential. Trimmed
+# to 4 (jenkins-agent-1..4). Restore by re-adding the blocks
+# + agent-N-home volumes when the host is upgraded.
 
 volumes:
   jenkins_home:
@@ -140,10 +122,6 @@ volumes:
   agent-2-home:
   agent-3-home:
   agent-4-home:
-  agent-5-home:
-  agent-6-home:
-  agent-7-home:
-  agent-8-home:
   nexus_data:
 
 networks:
