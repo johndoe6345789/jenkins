@@ -75,58 +75,6 @@ jenkins:
             credentialsId: "jenkins-agent-ssh-key"
             sshHostKeyVerificationStrategy:
               nonVerifyingKeyVerificationStrategy: {}
-    - permanent:
-        name: "agent-5"
-        remoteFS: "/home/jenkins/agent"
-        numExecutors: 1
-        mode: NORMAL
-        labelString: "linux"
-        launcher:
-          ssh:
-            host: "jenkins-agent-5"
-            port: 22
-            credentialsId: "jenkins-agent-ssh-key"
-            sshHostKeyVerificationStrategy:
-              nonVerifyingKeyVerificationStrategy: {}
-    - permanent:
-        name: "agent-6"
-        remoteFS: "/home/jenkins/agent"
-        numExecutors: 1
-        mode: NORMAL
-        labelString: "linux"
-        launcher:
-          ssh:
-            host: "jenkins-agent-6"
-            port: 22
-            credentialsId: "jenkins-agent-ssh-key"
-            sshHostKeyVerificationStrategy:
-              nonVerifyingKeyVerificationStrategy: {}
-    - permanent:
-        name: "agent-7"
-        remoteFS: "/home/jenkins/agent"
-        numExecutors: 1
-        mode: NORMAL
-        labelString: "linux"
-        launcher:
-          ssh:
-            host: "jenkins-agent-7"
-            port: 22
-            credentialsId: "jenkins-agent-ssh-key"
-            sshHostKeyVerificationStrategy:
-              nonVerifyingKeyVerificationStrategy: {}
-    - permanent:
-        name: "agent-8"
-        remoteFS: "/home/jenkins/agent"
-        numExecutors: 1
-        mode: NORMAL
-        labelString: "linux"
-        launcher:
-          ssh:
-            host: "jenkins-agent-8"
-            port: 22
-            credentialsId: "jenkins-agent-ssh-key"
-            sshHostKeyVerificationStrategy:
-              nonVerifyingKeyVerificationStrategy: {}
 
 tool:
   nodejs:
