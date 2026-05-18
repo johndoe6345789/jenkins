@@ -33,14 +33,11 @@
     stage('Docker Preflight') {
       options { timeout(time: 10, unit: 'MINUTES') }
       steps {
-        withCredentials([usernamePassword(credentialsId: 'nexus-admin', usernameVariable: 'NEXUS_ADMIN_USER', passwordVariable: 'NEXUS_ADMIN_PASSWORD')]) {
-          sh '''
+        sh '''
           docker version
           docker compose version
           curl -fsS -I http://localhost:5001/v2/ || true
-          printf '%s' "$NEXUS_ADMIN_PASSWORD" | docker login "$NEXUS_REGISTRY" -u "$NEXUS_ADMIN_USER" --password-stdin
         '''
-        }
       }
     }
 
@@ -149,8 +146,7 @@ PY
     stage('Push App Images To Nexus') {
       options { timeout(time: 45, unit: 'MINUTES') }
       steps {
-        withCredentials([usernamePassword(credentialsId: 'nexus-admin', usernameVariable: 'NEXUS_ADMIN_USER', passwordVariable: 'NEXUS_ADMIN_PASSWORD')]) {
-          sh '''
+        sh '''
           tag="$(git rev-parse --short HEAD)"
           slug="johndoe6345789/metabuilder"
 
@@ -164,43 +160,10 @@ with open("deployment/cli/commands.json") as f:
     defs = json.load(f)["definitions"]["nexus_images"]
 
 registry = os.environ.get("NEXUS_REGISTRY", "localhost:5001")
-nexus_url = os.environ.get("NEXUS_BASE_URL", "http://nexus:8081")
-nexus_user = os.environ.get("NEXUS_ADMIN_USER", "admin")
-nexus_password = os.environ["NEXUS_ADMIN_PASSWORD"]
 tag = subprocess.check_output(["git", "rev-parse", "--short", "HEAD"], text=True).strip()
 slug = "johndoe6345789/metabuilder"
 # Apps job publishes ONLY app images; base images are owned by the base job.
 images = defs["apps"] + defs.get("heavy_apps", [])
-
-def delete_existing_component(name, version):
-    import base64
-    import urllib.parse
-    import urllib.request
-
-    query = urllib.parse.urlencode({
-        "repository": "docker-hosted",
-        "name": f"{slug}/{name}",
-        "version": version,
-    })
-    auth = base64.b64encode(f"{nexus_user}:{nexus_password}".encode()).decode()
-    req = urllib.request.Request(
-        f"{nexus_url}/service/rest/v1/search?{query}",
-        headers={"Authorization": f"Basic {auth}"},
-    )
-    with urllib.request.urlopen(req, timeout=30) as response:
-        payload = json.load(response)
-
-    for item in payload.get("items", []):
-        if item.get("name") != f"{slug}/{name}" or item.get("version") != version:
-            continue
-        delete_req = urllib.request.Request(
-            f"{nexus_url}/service/rest/v1/components/{item['id']}",
-            method="DELETE",
-            headers={"Authorization": f"Basic {auth}"},
-        )
-        with urllib.request.urlopen(delete_req, timeout=30):
-            pass
-        print(f"Deleted old Nexus component {slug}/{name}:{version}")
 
 pushed = 0
 missing = []
@@ -216,8 +179,6 @@ for image in images:
         f"{registry}/{slug}/{name}:latest",
     ]
     for target in targets:
-        version = target.rsplit(":", 1)[1]
-        delete_existing_component(name, version)
         subprocess.check_call(["docker", "tag", local, target])
         subprocess.check_call(["docker", "push", target])
         subprocess.run(["docker", "rmi", "-f", target], check=False)
@@ -233,7 +194,6 @@ if missing:
         print(f"  - {local}", file=sys.stderr)
 PY
         '''
-        }
       }
     }
   }

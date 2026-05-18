@@ -60,22 +60,20 @@
     stage('Build+Push+Prune base images') {
       options { timeout(time: 140, unit: 'MINUTES') }
       steps {
-        withCredentials([usernamePassword(credentialsId: 'nexus-admin', usernameVariable: 'NEXUS_ADMIN_USER', passwordVariable: 'NEXUS_ADMIN_PASSWORD')]) {
-          sh '''
-            docker version
-            printf '%s' "$NEXUS_ADMIN_PASSWORD" | docker login "$NEXUS_REGISTRY" -u "$NEXUS_ADMIN_USER" --password-stdin
-          '''
-          script {
-            def routine = ['apt', 'node-deps', 'pip-deps', 'android-sdk', 'conan-cli', 'conan-media']
-            for (nm in routine) {
-              def keep = (nm == 'apt') ? '1' : '0'
-              stage("base: ${nm}") {
-                catchError(message: "base ${nm} failed -- dependent apps skipped this cycle", buildResult: 'UNSTABLE', stageResult: 'FAILURE') {
-                  withEnv(["BASE_BUILD_NAME=${nm}", "KEEP_LOCAL=${keep}"]) {
-                    sh '''
-                      set -e
-                      cd deployment
-                      python3 deployment.py build base "$BASE_BUILD_NAME"
+        sh '''
+          docker version
+        '''
+        script {
+          def routine = ['apt', 'node-deps', 'pip-deps', 'android-sdk', 'conan-cli', 'conan-media']
+          for (nm in routine) {
+            def keep = (nm == 'apt') ? '1' : '0'
+            stage("base: ${nm}") {
+              catchError(message: "base ${nm} failed -- dependent apps skipped this cycle", buildResult: 'UNSTABLE', stageResult: 'FAILURE') {
+                withEnv(["BASE_BUILD_NAME=${nm}", "KEEP_LOCAL=${keep}"]) {
+                  sh '''
+                    set -e
+                    cd deployment
+                    python3 deployment.py build base "$BASE_BUILD_NAME"
 
                       python3 - &lt;&lt;'PY'
 import json
@@ -101,9 +99,6 @@ if short is None:
     sys.exit(0)
 
 registry = os.environ.get("NEXUS_REGISTRY", "localhost:5001")
-nexus_url = os.environ.get("NEXUS_BASE_URL", "http://nexus:8081")
-user = os.environ.get("NEXUS_ADMIN_USER", "admin")
-pw = os.environ["NEXUS_ADMIN_PASSWORD"]
 slug = "johndoe6345789/metabuilder"
 tag = subprocess.check_output(["git", "rev-parse", "--short", "HEAD"], text=True).strip()
 
@@ -111,25 +106,8 @@ if subprocess.run(["docker", "image", "inspect", local], stdout=subprocess.DEVNU
     print("ERROR: " + local + " was not built; nothing to push", file=sys.stderr)
     sys.exit(1)
 
-def delete_existing(comp, version):
-    import base64
-    import urllib.parse
-    import urllib.request
-    q = urllib.parse.urlencode({"repository": "docker-hosted", "name": slug + "/" + comp, "version": version})
-    auth = base64.b64encode((user + ":" + pw).encode()).decode()
-    req = urllib.request.Request(nexus_url + "/service/rest/v1/search?" + q, headers={"Authorization": "Basic " + auth})
-    with urllib.request.urlopen(req, timeout=30) as r:
-        payload = json.load(r)
-    for item in payload.get("items", []):
-        if item.get("name") == slug + "/" + comp and item.get("version") == version:
-            dr = urllib.request.Request(nexus_url + "/service/rest/v1/components/" + item["id"], method="DELETE", headers={"Authorization": "Basic " + auth})
-            with urllib.request.urlopen(dr, timeout=30):
-                pass
-            print("Deleted old Nexus component " + slug + "/" + comp + ":" + version)
-
 for version in (tag, "latest"):
     target = registry + "/" + slug + "/" + short + ":" + version
-    delete_existing(short, version)
     subprocess.check_call(["docker", "tag", local, target])
     subprocess.check_call(["docker", "push", target])
     subprocess.run(["docker", "rmi", "-f", target], check=False)
@@ -146,19 +124,18 @@ else:
     subprocess.run(["docker", "builder", "prune", "-f", "--filter", "until=24h"], check=False)
     print("Pruned local " + repo + " (freed disk before next base)")
 PY
-                    '''
-                  }
+                  '''
                 }
               }
             }
-            stage('drop base-apt') {
-              sh '''
-                docker images --format '{{.Repository}}:{{.Tag}}' \
-                  | grep '^metabuilder/base-apt:' \
-                  | xargs -r docker rmi -f 2&gt;/dev/null || true
-                docker builder prune -f --filter until=24h || true
-              '''
-            }
+          }
+          stage('drop base-apt') {
+            sh '''
+              docker images --format '{{.Repository}}:{{.Tag}}' \
+                | grep '^metabuilder/base-apt:' \
+                | xargs -r docker rmi -f 2&gt;/dev/null || true
+              docker builder prune -f --filter until=24h || true
+            '''
           }
         }
       }

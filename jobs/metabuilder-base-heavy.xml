@@ -54,19 +54,16 @@
     stage('Hydrate base-apt from Nexus') {
       options { timeout(time: 20, unit: 'MINUTES') }
       steps {
-        withCredentials([usernamePassword(credentialsId: 'nexus-admin', usernameVariable: 'NEXUS_ADMIN_USER', passwordVariable: 'NEXUS_ADMIN_PASSWORD')]) {
-          sh '''
-            printf '%s' "$NEXUS_ADMIN_PASSWORD" | docker login "$NEXUS_REGISTRY" -u "$NEXUS_ADMIN_USER" --password-stdin
-            src="$NEXUS_REGISTRY/johndoe6345789/metabuilder/base-apt:latest"
-            if docker pull "$src"; then
-              docker tag "$src" metabuilder/base-apt:latest
-              docker rmi -f "$src" || true
-              echo "Hydrated metabuilder/base-apt:latest from Nexus"
-            else
-              echo "WARNING: base-apt not in Nexus -- run metabuilder-base-images first; heavy builds will fail" >&amp;2
-            fi
-          '''
-        }
+        sh '''
+          src="$NEXUS_REGISTRY/johndoe6345789/metabuilder/base-apt:latest"
+          if docker pull "$src"; then
+            docker tag "$src" metabuilder/base-apt:latest
+            docker rmi -f "$src" || true
+            echo "Hydrated metabuilder/base-apt:latest from Nexus"
+          else
+            echo "WARNING: base-apt not in Nexus -- run metabuilder-base-images first; heavy builds will fail" >&amp;2
+          fi
+        '''
       }
     }
 
@@ -77,17 +74,16 @@
     stage('Build+Push+Prune heavy bases') {
       options { timeout(time: 210, unit: 'MINUTES') }
       steps {
-        withCredentials([usernamePassword(credentialsId: 'nexus-admin', usernameVariable: 'NEXUS_ADMIN_USER', passwordVariable: 'NEXUS_ADMIN_PASSWORD')]) {
-          script {
-            def heavy = ['conan-dbal', 'conan-qt6', 'conan-gameengine']
-            for (nm in heavy) {
-              stage("heavy: ${nm}") {
-                catchError(message: "heavy ${nm} did not fit -- devcontainer/standalone may be stale", buildResult: 'UNSTABLE', stageResult: 'NOT_BUILT') {
-                  withEnv(["BASE_BUILD_NAME=${nm}", "KEEP_LOCAL=0"]) {
-                    sh '''
-                      set -e
-                      cd deployment
-                      python3 deployment.py build base "$BASE_BUILD_NAME"
+        script {
+          def heavy = ['conan-dbal', 'conan-qt6', 'conan-gameengine']
+          for (nm in heavy) {
+            stage("heavy: ${nm}") {
+              catchError(message: "heavy ${nm} did not fit -- devcontainer/standalone may be stale", buildResult: 'UNSTABLE', stageResult: 'NOT_BUILT') {
+                withEnv(["BASE_BUILD_NAME=${nm}", "KEEP_LOCAL=0"]) {
+                  sh '''
+                    set -e
+                    cd deployment
+                    python3 deployment.py build base "$BASE_BUILD_NAME"
 
                       python3 - &lt;&lt;'PY'
 import json
@@ -112,9 +108,6 @@ if short is None:
     sys.exit(0)
 
 registry = os.environ.get("NEXUS_REGISTRY", "localhost:5001")
-nexus_url = os.environ.get("NEXUS_BASE_URL", "http://nexus:8081")
-user = os.environ.get("NEXUS_ADMIN_USER", "admin")
-pw = os.environ["NEXUS_ADMIN_PASSWORD"]
 slug = "johndoe6345789/metabuilder"
 tag = subprocess.check_output(["git", "rev-parse", "--short", "HEAD"], text=True).strip()
 
@@ -122,25 +115,8 @@ if subprocess.run(["docker", "image", "inspect", local], stdout=subprocess.DEVNU
     print("ERROR: " + local + " was not built; nothing to push", file=sys.stderr)
     sys.exit(1)
 
-def delete_existing(comp, version):
-    import base64
-    import urllib.parse
-    import urllib.request
-    q = urllib.parse.urlencode({"repository": "docker-hosted", "name": slug + "/" + comp, "version": version})
-    auth = base64.b64encode((user + ":" + pw).encode()).decode()
-    req = urllib.request.Request(nexus_url + "/service/rest/v1/search?" + q, headers={"Authorization": "Basic " + auth})
-    with urllib.request.urlopen(req, timeout=30) as r:
-        payload = json.load(r)
-    for item in payload.get("items", []):
-        if item.get("name") == slug + "/" + comp and item.get("version") == version:
-            dr = urllib.request.Request(nexus_url + "/service/rest/v1/components/" + item["id"], method="DELETE", headers={"Authorization": "Basic " + auth})
-            with urllib.request.urlopen(dr, timeout=30):
-                pass
-            print("Deleted old Nexus component " + slug + "/" + comp + ":" + version)
-
 for version in (tag, "latest"):
     target = registry + "/" + slug + "/" + short + ":" + version
-    delete_existing(short, version)
     subprocess.check_call(["docker", "tag", local, target])
     subprocess.check_call(["docker", "push", target])
     subprocess.run(["docker", "rmi", "-f", target], check=False)
@@ -154,19 +130,18 @@ for ln in listed:
 subprocess.run(["docker", "builder", "prune", "-f", "--filter", "until=24h"], check=False)
 print("Pruned local " + repo + " (freed disk before next base)")
 PY
-                    '''
-                  }
+                  '''
                 }
               }
             }
-            stage('drop base-apt') {
-              sh '''
-                docker images --format '{{.Repository}}:{{.Tag}}' \
-                  | grep '^metabuilder/base-apt:' \
-                  | xargs -r docker rmi -f 2&gt;/dev/null || true
-                docker builder prune -f --filter until=24h || true
-              '''
-            }
+          }
+          stage('drop base-apt') {
+            sh '''
+              docker images --format '{{.Repository}}:{{.Tag}}' \
+                | grep '^metabuilder/base-apt:' \
+                | xargs -r docker rmi -f 2&gt;/dev/null || true
+              docker builder prune -f --filter until=24h || true
+            '''
           }
         }
       }

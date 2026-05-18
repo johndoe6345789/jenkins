@@ -1,7 +1,7 @@
 <?xml version='1.1' encoding='UTF-8'?>
 <flow-definition plugin="workflow-job">
   <actions/>
-  <description>Scheduled, build-safe Docker host disk reclamation. Stopgap until the host gets a bigger disk/SSD. (Nexus blob/disk reclamation is handled separately by the nexus-housekeeping job.)</description>
+  <description>Scheduled, build-safe Docker host disk reclamation. Stopgap until the host gets a bigger disk/SSD. (The local registry:2 at localhost:5001 overwrites tags on push and is not pruned here.)</description>
   <keepDependencies>false</keepDependencies>
   <properties/>
   <definition class="org.jenkinsci.plugins.workflow.cps.CpsFlowDefinition" plugin="workflow-cps">
