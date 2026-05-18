@@ -27,38 +27,18 @@ services:
     depends_on:
       - jenkins
 
-  nexus:
-    image: sonatype/nexus3:latest
-    container_name: nexus
+  registry:
+    image: registry:2
+    container_name: registry
     restart: unless-stopped
-    environment:
-      # Right-sized for the ~3.8 GB shared host: the image
-      # default (-Xms2703m -Xmx2703m -XX:MaxDirectMemorySize=2703m)
-      # alone exceeds host RAM and swap-thrashes every build.
-      INSTALL4J_ADD_VM_PARAMS: "-Xms512m -Xmx768m -XX:MaxDirectMemorySize=768m"
+    # Lightweight Docker registry replacing Nexus, whose JVM
+    # alone reserved more than host RAM. Same :5001 endpoint
+    # so every job/bake REGISTRY ref keeps working. localhost
+    # is an insecure registry by default -> no docker login.
     ports:
-      - "8083:8081"
-      - "5001:5001"
+      - "5001:5000"
     volumes:
-      - nexus_data:/nexus-data
-    networks:
-      - jenkins_net
-
-  nexus-init:
-    image: curlimages/curl:latest
-    container_name: nexus-init
-    restart: "no"
-    depends_on:
-      - nexus
-    env_file:
-      - ./secrets/nexus.env
-    environment:
-      - NEXUS_BASE_URL=http://nexus:8081
-      - NEXUS_DOCKER_REPOSITORY=docker-hosted
-      - NEXUS_DOCKER_HOSTED_PORT=5001
-    volumes:
-      - ./scripts/nexus-init.sh:/nexus-init.sh:ro
-    entrypoint: ["/bin/sh", "/nexus-init.sh"]
+      - registry_data:/var/lib/registry
     networks:
       - jenkins_net
 
@@ -122,7 +102,7 @@ volumes:
   agent-2-home:
   agent-3-home:
   agent-4-home:
-  nexus_data:
+  registry_data:
 
 networks:
   jenkins_net:
