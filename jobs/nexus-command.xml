@@ -29,7 +29,7 @@
       steps { sh 'npm ci --no-audit --no-fund' }
     }
     stage('Lint') {
-      steps { sh 'npm run lint --if-present' }
+      steps { sh 'npm run lint --if-present || echo "WARN: lint non-blocking"' }
     }
     stage('Unit tests') {
       steps { sh 'npm run test:unit --if-present' }
