@@ -24,7 +24,6 @@
   environment {
     NEXUS_REGISTRY = 'localhost:5001'
     SLUG = 'johndoe6345789/next_extra_primary'
-    NEXUS_BASE_URL = 'http://nexus:8081'
     REGISTRY = 'localhost:5001/johndoe6345789/next_extra_primary'
   }
 
@@ -38,15 +37,12 @@
     stage('Docker Preflight') {
       options { timeout(time: 10, unit: 'MINUTES') }
       steps {
-        withCredentials([usernamePassword(credentialsId: 'nexus-admin', usernameVariable: 'NEXUS_ADMIN_USER', passwordVariable: 'NEXUS_ADMIN_PASSWORD')]) {
-          sh '''
-            docker version
-            docker buildx version
-            docker compose version
-            curl -fsS -I http://localhost:5001/v2/ || true
-            printf '%s' "$NEXUS_ADMIN_PASSWORD" | docker login "$NEXUS_REGISTRY" -u "$NEXUS_ADMIN_USER" --password-stdin
-          '''
-        }
+        sh '''
+          docker version
+          docker buildx version
+          docker compose version
+          curl -fsS -I http://localhost:5001/v2/ || true
+        '''
       }
     }
 
@@ -69,71 +65,48 @@
     stage('Build+Push+Prune service images') {
       options { timeout(time: 130, unit: 'MINUTES') }
       steps {
-        withCredentials([usernamePassword(credentialsId: 'nexus-admin', usernameVariable: 'NEXUS_ADMIN_USER', passwordVariable: 'NEXUS_ADMIN_PASSWORD')]) {
-          script {
-            def targets = params.TARGETS.split(',')
-                .collect { it.trim() }.findAll { it }
-            echo "Building ${targets.size()} target(s): ${targets.join(', ')}"
-            for (t in targets) {
-              stage("svc: ${t}") {
-                catchError(message: "service ${t} failed (likely a base image not yet published to Nexus)", buildResult: 'UNSTABLE', stageResult: 'FAILURE') {
-                  withEnv(["BAKE_TARGET=${t}"]) {
-                    retry(2) {
-                    sh '''
-                      set -e
-                      docker buildx bake \
-                        -f docker-compose.yml -f docker-bake.hcl \
-                        "$BAKE_TARGET"
-                    '''
-                    sh '''
-                      set -e
-                      python3 - &lt;&lt;'PY'
-import json
+        script {
+          def targets = params.TARGETS.split(',')
+              .collect { it.trim() }.findAll { it }
+          echo "Building ${targets.size()} target(s): ${targets.join(', ')}"
+          for (t in targets) {
+            stage("svc: ${t}") {
+              catchError(message: "service ${t} failed (likely a base image not yet published to Nexus)", buildResult: 'UNSTABLE', stageResult: 'FAILURE') {
+                withEnv(["BAKE_TARGET=${t}"]) {
+                  retry(2) {
+                  sh '''
+                    set -e
+                    docker buildx bake \
+                      -f docker-compose.yml -f docker-bake.hcl \
+                      "$BAKE_TARGET"
+                  '''
+                  sh '''
+                    set -e
+                    python3 - &lt;&lt;'PY'
 import os
 import subprocess
 
 registry = os.environ["NEXUS_REGISTRY"]
 slug = os.environ["SLUG"]
-nexus_url = os.environ["NEXUS_BASE_URL"]
-user = os.environ["NEXUS_ADMIN_USER"]
-pw = os.environ["NEXUS_ADMIN_PASSWORD"]
 name = os.environ["BAKE_TARGET"]
 tag = os.environ["TAG"]
-
-def delete_existing(version):
-    import base64
-    import urllib.parse
-    import urllib.request
-    q = urllib.parse.urlencode({"repository": "docker-hosted", "name": slug + "/" + name, "version": version})
-    auth = base64.b64encode((user + ":" + pw).encode()).decode()
-    req = urllib.request.Request(nexus_url + "/service/rest/v1/search?" + q, headers={"Authorization": "Basic " + auth})
-    with urllib.request.urlopen(req, timeout=30) as r:
-        payload = json.load(r)
-    for item in payload.get("items", []):
-        if item.get("name") == slug + "/" + name and item.get("version") == version:
-            dr = urllib.request.Request(nexus_url + "/service/rest/v1/components/" + item["id"], method="DELETE", headers={"Authorization": "Basic " + auth})
-            with urllib.request.urlopen(dr, timeout=30):
-                pass
-            print("Deleted old Nexus component " + slug + "/" + name + ":" + version)
 
 for version in (tag, "latest"):
     target = registry + "/" + slug + "/" + name + ":" + version
     if subprocess.run(["docker", "image", "inspect", target], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).returncode != 0:
         print("ERROR: bake did not produce " + target, flush=True)
         raise SystemExit(1)
-    delete_existing(version)
     subprocess.check_call(["docker", "push", target])
     subprocess.run(["docker", "rmi", "-f", target], check=False)
 
 subprocess.run(["docker", "builder", "prune", "-f", "--filter", "until=24h"], check=False)
 print("Pushed " + slug + "/" + name + " (" + tag + ", latest)")
 PY
-                    '''
-                    }
+                  '''
                   }
                 }
-                sh 'sleep 25'
               }
+              sh 'sleep 25'
             }
           }
         }
