@@ -3,7 +3,18 @@
   <actions/>
   <description>Builds businessplanner (Nextra) service images with docker buildx bake (docker-compose.yml + docker-bake.hcl) against base images pulled from Nexus, then pushes each app to Nexus. Light and frequent: run on app code changes. Never rebuilds base images. One bake target per inner stage, built+pushed+pruned in turn so peak disk is ~one image; a single failing target marks the build UNSTABLE instead of aborting the run.</description>
   <keepDependencies>false</keepDependencies>
-  <properties/>
+  <properties>
+    <hudson.model.ParametersDefinitionProperty>
+      <parameterDefinitions>
+        <hudson.model.StringParameterDefinition>
+          <name>TARGETS</name>
+          <description>Comma-separated bake targets to build (subset = batch on the constrained host).</description>
+          <defaultValue>nextra-api,emailclient,notifications,image-processor-frontend,shop-admin,jobs,search,streams,cron,backups,wiki,webhooks,polls,blog,frontend,sso,audit,social-admin,gallery,flags,analytics,status,alerts,forum,s3,s3-frontend,packagerepo-backend,packagerepo-frontend,pgadmin-backend,pgadmin-frontend</defaultValue>
+          <trim>true</trim>
+        </hudson.model.StringParameterDefinition>
+      </parameterDefinitions>
+    </hudson.model.ParametersDefinitionProperty>
+  </properties>
   <definition class="org.jenkinsci.plugins.workflow.cps.CpsFlowDefinition" plugin="workflow-cps">
     <script>pipeline {
   agent any
