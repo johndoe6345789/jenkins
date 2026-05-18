@@ -15,10 +15,9 @@
     disableConcurrentBuilds()
   }
 
-  triggers {
-    // Weekly, Sunday ~05:00 — after docker-dedupe (~04:00).
-    cron('H 5 * * 0')
-  }
+  // Schedule disabled: NO automatic GC until the stacks are up
+  // (per operator). Manual/on-demand only. Re-add
+  // cron('H 5 * * 0') once stacks are running.
 
   stages {
     stage('Registry GC') {

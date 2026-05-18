@@ -15,9 +15,9 @@
     buildDiscarder(logRotator(numToKeepStr: '20'))
   }
 
-  triggers {
-    cron('H */6 * * *')
-  }
+  // Schedule intentionally disabled: NO automatic GC until the
+  // stacks are up (would evict images mid-bringup / mid-rebuild).
+  // Manual/on-demand only. Re-add cron('H */6 * * *') post-stack.
 
   stages {
     stage('Reclaim Docker disk') {

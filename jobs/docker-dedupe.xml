@@ -15,10 +15,9 @@
     disableConcurrentBuilds()
   }
 
-  triggers {
-    // Weekly, Sunday ~04:00 (low-traffic). Also runnable on demand.
-    cron('H 4 * * 0')
-  }
+  // Schedule disabled: NO automatic GC/dedupe until the stacks are
+  // up (per operator). Manual/on-demand only. Re-add
+  // cron('H 4 * * 0') once stacks are running.
 
   stages {
     stage('Dedupe /mnt/btrfs') {
