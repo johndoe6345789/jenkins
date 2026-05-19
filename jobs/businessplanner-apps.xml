@@ -1,7 +1,7 @@
 <?xml version='1.1' encoding='UTF-8'?>
 <flow-definition plugin="workflow-job">
   <actions/>
-  <description>Builds businessplanner (Nextra) service images with docker buildx bake (docker-compose.yml + docker-bake.hcl) against base images pulled from Nexus, then pushes each app to Nexus. Light and frequent: run on app code changes. Never rebuilds base images. One bake target per inner stage, built+pushed+pruned in turn so peak disk is ~one image; a single failing target marks the build UNSTABLE instead of aborting the run.</description>
+  <description>Builds businessplanner (Businessplanner) service images with docker buildx bake (docker-compose.yml + docker-bake.hcl) against base images pulled from Nexus, then pushes each app to Nexus. Light and frequent: run on app code changes. Never rebuilds base images. One bake target per inner stage, built+pushed+pruned in turn so peak disk is ~one image; a single failing target marks the build UNSTABLE instead of aborting the run.</description>
   <keepDependencies>false</keepDependencies>
   <properties>
     <hudson.model.ParametersDefinitionProperty>
@@ -9,7 +9,7 @@
         <hudson.model.StringParameterDefinition>
           <name>TARGETS</name>
           <description>Comma-separated bake targets to build (subset = batch on the constrained host).</description>
-          <defaultValue>nextra-api,nextra-migrate,nextra-auth,nextra-social,nextra-notifications,nextra-comments,nextra-analytics,nextra-gamification,nextra-content,nextra-media,nextra-search,nextra-infra,nextra-ai,nextra-platform,nextra-commerce,emailclient,notifications,image-processor-frontend,shop-admin,jobs,search,streams,cron,backups,wiki,webhooks,polls,blog,frontend,sso,audit,social-admin,gallery,flags,analytics,status,alerts,forum,s3,s3-frontend,packagerepo-backend,packagerepo-frontend,pgadmin-backend,pgadmin-frontend</defaultValue>
+          <defaultValue>businessplanner-api,businessplanner-migrate,businessplanner-auth,businessplanner-social,businessplanner-notifications,businessplanner-comments,businessplanner-analytics,businessplanner-gamification,businessplanner-content,businessplanner-media,businessplanner-search,businessplanner-infra,businessplanner-ai,businessplanner-platform,businessplanner-commerce,emailclient,notifications,image-processor-frontend,shop-admin,jobs,search,streams,cron,backups,wiki,webhooks,polls,blog,frontend,sso,audit,social-admin,gallery,flags,analytics,status,alerts,forum,s3,s3-frontend,packagerepo-backend,packagerepo-frontend,pgadmin-backend,pgadmin-frontend</defaultValue>
           <trim>true</trim>
         </hudson.model.StringParameterDefinition>
       </parameterDefinitions>
@@ -28,7 +28,7 @@
 
   parameters {
     string(name: 'TARGETS',
-           defaultValue: 'nextra-api,nextra-migrate,nextra-auth,nextra-social,nextra-notifications,nextra-comments,nextra-analytics,nextra-gamification,nextra-content,nextra-media,nextra-search,nextra-infra,nextra-ai,nextra-platform,nextra-commerce,emailclient,notifications,image-processor-frontend,shop-admin,jobs,search,streams,cron,backups,wiki,webhooks,polls,blog,frontend,sso,audit,social-admin,gallery,flags,analytics,status,alerts,forum,s3,s3-frontend,packagerepo-backend,packagerepo-frontend,pgadmin-backend,pgadmin-frontend',
+           defaultValue: 'businessplanner-api,businessplanner-migrate,businessplanner-auth,businessplanner-social,businessplanner-notifications,businessplanner-comments,businessplanner-analytics,businessplanner-gamification,businessplanner-content,businessplanner-media,businessplanner-search,businessplanner-infra,businessplanner-ai,businessplanner-platform,businessplanner-commerce,emailclient,notifications,image-processor-frontend,shop-admin,jobs,search,streams,cron,backups,wiki,webhooks,polls,blog,frontend,sso,audit,social-admin,gallery,flags,analytics,status,alerts,forum,s3,s3-frontend,packagerepo-backend,packagerepo-frontend,pgadmin-backend,pgadmin-frontend',
            description: 'Comma-separated bake targets to build. Use a subset to batch on the constrained host.')
   }
 
@@ -36,7 +36,7 @@
     NEXUS_REGISTRY = 'localhost:5001'
     SLUG = 'johndoe6345789/businessplanner'
     REGISTRY = 'localhost:5001/johndoe6345789/businessplanner'
-    BASE_REGISTRY = 'localhost:5001/johndoe6345789/next_extra_primary'
+    BASE_REGISTRY = 'localhost:5001/johndoe6345789/businessplanner'
   }
 
   stages {
@@ -71,7 +71,7 @@
     // purpose: this host is disk-constrained and concurrent image builds would
     // blow peak disk. bake reads build context/Dockerfile from docker-compose.yml
     // and the GHCR/Nexus tags from docker-bake.hcl; REGISTRY+TAG are injected as
-    // env. Base images (nextra-base-*) resolve from Nexus via the bake DEPS_IMAGE
+    // env. Base images (businessplanner-base-*) resolve from Nexus via the bake DEPS_IMAGE
     // /APT_IMAGE args. Each target is fault-tolerant: a failure marks the build
     // UNSTABLE and the stage skipped, so every buildable image still gets pushed.
     stage('Build+Push+Prune service images') {
