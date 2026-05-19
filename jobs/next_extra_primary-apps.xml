@@ -36,6 +36,7 @@
     NEXUS_REGISTRY = 'localhost:5001'
     SLUG = 'johndoe6345789/next_extra_primary'
     REGISTRY = 'localhost:5001/johndoe6345789/next_extra_primary'
+    BASE_REGISTRY = 'localhost:5001/johndoe6345789/next_extra_primary'
   }
 
   stages {
