@@ -1,7 +1,7 @@
 <?xml version='1.1' encoding='UTF-8'?>
 <flow-definition plugin="workflow-job">
   <actions/>
-  <description>Builds businessplanner (Nextra) service images with docker buildx bake (docker-compose.yml + docker-bake.hcl) against base images pulled from Nexus, then pushes each app to Nexus. Light and frequent: run on app code changes. Never rebuilds base images. One bake target per inner stage, built+pushed+pruned in turn so peak disk is ~one image; a single failing target marks the build UNSTABLE instead of aborting the run.</description>
+  <description>Builds nextra (base template) service images with docker buildx bake (docker-compose.yml + docker-bake.hcl) against base images pulled from Nexus, then pushes each app to Nexus. Light and frequent: run on app code changes. Never rebuilds base images. One bake target per inner stage, built+pushed+pruned in turn so peak disk is ~one image; a single failing target marks the build UNSTABLE instead of aborting the run.</description>
   <keepDependencies>false</keepDependencies>
   <properties>
     <hudson.model.ParametersDefinitionProperty>
@@ -34,14 +34,14 @@
 
   environment {
     NEXUS_REGISTRY = 'localhost:5001'
-    SLUG = 'johndoe6345789/businessplanner'
-    REGISTRY = 'localhost:5001/johndoe6345789/businessplanner'
+    SLUG = 'johndoe6345789/next_extra_primary'
+    REGISTRY = 'localhost:5001/johndoe6345789/next_extra_primary'
   }
 
   stages {
     stage('Checkout') {
       steps {
-        git branch: 'main', url: 'https://github.com/johndoe6345789/businessplanner.git'
+        git branch: 'main', url: 'https://github.com/johndoe6345789/next_extra_primary.git'
       }
     }
 
@@ -61,7 +61,7 @@
       steps {
         script {
           env.TAG = 'sha-' + sh(script: 'git rev-parse --short HEAD', returnStdout: true).trim()
-          echo "Building businessplanner images at ${env.REGISTRY}/*:${env.TAG}"
+          echo "Building nextra images at ${env.REGISTRY}/*:${env.TAG}"
         }
       }
     }

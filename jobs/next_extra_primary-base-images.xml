@@ -1,0 +1,136 @@
+<?xml version='1.1' encoding='UTF-8'?>
+<flow-definition plugin="workflow-job">
+  <actions/>
+  <description>nextra (base template) base images: nextra-base-apt -&gt; nextra-base-conan -&gt; nextra-base-node. Heavy and infrequent. Builds each base, pushes it to Nexus, then prunes it locally BEFORE the next one, so peak local disk is ~one base image. base-apt is kept resident because nextra-base-conan builds FROM it; it is dropped at the very end. Mirrors the .github/workflows/nextra-base-images.yml DAG.</description>
+  <keepDependencies>false</keepDependencies>
+  <properties/>
+  <definition class="org.jenkinsci.plugins.workflow.cps.CpsFlowDefinition" plugin="workflow-cps">
+    <script>pipeline {
+  agent any
+
+  options {
+    timestamps()
+    buildDiscarder(logRotator(numToKeepStr: '10', artifactNumToKeepStr: '3'))
+    timeout(time: 150, unit: 'MINUTES')
+    disableConcurrentBuilds()
+  }
+
+  environment {
+    NEXUS_REGISTRY = 'localhost:5001'
+    SLUG = 'johndoe6345789/next_extra_primary'
+  }
+
+  stages {
+    stage('Checkout') {
+      steps {
+        git branch: 'main', url: 'https://github.com/johndoe6345789/next_extra_primary.git'
+      }
+    }
+
+    stage('Acquire disk lock') {
+      steps {
+        // Best-effort cross-job advisory lock for this shared, disk-constrained
+        // host: only ONE base build (metabuilder OR businessplanner) may run at
+        // a time, else peak disk blows. The inspect-then-create race is
+        // acceptable (base builds are long, infrequent, orchestrator-serialized).
+        // docker-housekeeping also skips its prune while this volume exists.
+        sh '''
+          if docker volume inspect mb-base-running >/dev/null 2&gt;&amp;1; then
+            echo "another base build holds the mb-base-running lock -- aborting to protect disk" &gt;&amp;2
+            exit 1
+          fi
+          docker volume create mb-base-running >/dev/null
+          touch .mb_lock_owned
+        '''
+        sh 'docker builder prune -f --filter until=48h || true'
+      }
+    }
+
+    // Disk-safe SERIAL pipeline. Order matters: nextra-base-apt is built first
+    // and kept resident because nextra-base-conan builds FROM it (local). node
+    // has no local dependents, so it is pruned immediately. base-apt is dropped
+    // at the very end. Peak disk ~= base-apt + one dependent.
+    stage('Build+Push+Prune base images') {
+      options { timeout(time: 140, unit: 'MINUTES') }
+      steps {
+        sh '''
+          docker version
+        '''
+        script {
+          def bases = [
+            [name: 'nextra-base-apt',   file: '.local/docker/nextra-base-apt.Dockerfile',   keep: '1', args: ''],
+            [name: 'nextra-base-conan', file: '.local/docker/nextra-base-conan.Dockerfile', keep: '0', args: '--build-arg APT_IMAGE=localhost:5001/johndoe6345789/next_extra_primary/nextra-base-apt:latest'],
+            [name: 'nextra-base-node',  file: '.local/docker/nextra-base-node.Dockerfile',  keep: '0', args: ''],
+          ]
+          for (b in bases) {
+            stage("base: ${b.name}") {
+              catchError(message: "base ${b.name} failed -- dependent apps fall back to the last-good base in Nexus", buildResult: 'UNSTABLE', stageResult: 'FAILURE') {
+                withEnv(["BASE_NAME=${b.name}", "BASE_FILE=${b.file}", "BASE_ARGS=${b.args}", "KEEP_LOCAL=${b.keep}"]) {
+                  sh '''
+                    set -e
+                    docker build -f "$BASE_FILE" $BASE_ARGS \
+                      -t "$NEXUS_REGISTRY/$SLUG/$BASE_NAME:latest" .
+                  '''
+                  sh '''
+                    set -e
+                    python3 - &lt;&lt;'PY'
+import os
+import subprocess
+
+registry = os.environ["NEXUS_REGISTRY"]
+slug = os.environ["SLUG"]
+name = os.environ["BASE_NAME"]
+keep = os.environ.get("KEEP_LOCAL") == "1"
+tag = subprocess.check_output(["git", "rev-parse", "--short", "HEAD"], text=True).strip()
+
+local = registry + "/" + slug + "/" + name + ":latest"
+
+for version in ("sha-" + tag, "latest"):
+    target = registry + "/" + slug + "/" + name + ":" + version
+    subprocess.check_call(["docker", "tag", local, target])
+    subprocess.check_call(["docker", "push", target])
+    if target != local:
+        subprocess.run(["docker", "rmi", "-f", target], check=False)
+print("Pushed " + slug + "/" + name + " (sha-" + tag + ", latest)")
+
+if keep:
+    print("Kept local " + local + " (local dependents build FROM it)")
+else:
+    repo = local.split(":")[0]
+    listed = subprocess.run(["docker", "images", "--format", "{{.Repository}}:{{.Tag}}"], capture_output=True, text=True).stdout.splitlines()
+    for ln in listed:
+        if ln.split(":")[0] == repo:
+            subprocess.run(["docker", "rmi", "-f", ln], check=False)
+    subprocess.run(["docker", "builder", "prune", "-f", "--filter", "until=24h"], check=False)
+    print("Pruned local " + repo + " (freed disk before next base)")
+PY
+                  '''
+                }
+              }
+            }
+          }
+          stage('drop base-apt') {
+            sh '''
+              docker images --format '{{.Repository}}:{{.Tag}}' \
+                | grep '/nextra-base-apt:' \
+                | xargs -r docker rmi -f 2&gt;/dev/null || true
+              docker builder prune -f --filter until=24h || true
+            '''
+          }
+        }
+      }
+    }
+  }
+
+  post {
+    always {
+      sh 'if [ -f .mb_lock_owned ]; then docker volume rm -f mb-base-running >/dev/null 2&gt;&amp;1 || true; echo "released mb-base-running lock"; fi'
+      cleanWs()
+    }
+  }
+}</script>
+    <sandbox>true</sandbox>
+  </definition>
+  <triggers/>
+  <disabled>false</disabled>
+</flow-definition>
