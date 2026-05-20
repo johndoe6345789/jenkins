@@ -57,6 +57,42 @@ the controller/nginx **without rebuilding the running agents**.
 - Jobs are XML in `jobs/`, pushed via the REST API (see README); the
   `metabuilder*` / `businessplanner*` split exists for a disk-constrained host.
 
+## Agent auto-recovery
+
+Jenkins agents go offline when disk space drops below 1 GiB. The root cause
+is accumulated Docker build cache and images on the shared btrfs loop device.
+
+**Manual one-shot recovery:**
+
+```sh
+scripts/setup.py recover-agents           # prune build cache + reconnect
+scripts/setup.py recover-agents --verbose # see docker prune output
+```
+
+**Install a systemd timer (auto-recovery every 30 min):**
+
+```sh
+sudo scripts/setup.py recover-agents --install-timer
+```
+
+This writes `/etc/systemd/system/jenkins-agent-recover.{service,timer}`
+and enables the timer immediately. On each tick it prunes builder cache
+older than 24 h and dangling images, then reconnects any offline agents.
+
+## next_extra_primary-apps BASE_REGISTRY note
+
+The `businessplanner-base-conan` image is published under
+`localhost:5001/johndoe6345789/businessplanner` (built by the `base-images`
+job). The `next_extra_primary-apps` job must set:
+
+```groovy
+BASE_REGISTRY = 'localhost:5001/johndoe6345789/businessplanner'
+```
+
+NOT the nextra_extra_primary slug — otherwise targets like `nextra-migrate`
+that use `${BASE_REGISTRY}/businessplanner-base-conan:latest` will fail with
+"not found".
+
 ## Verify a repair
 
 ```sh
