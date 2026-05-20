@@ -33,6 +33,7 @@ import argparse
 from pathlib import Path
 
 from . import REPO_ROOT
+from .agent_recover import cmd_recover_agents
 from .compose import cmd_lifecycle
 from .doctor import cmd_doctor
 from .recover import cmd_recover_key
@@ -75,6 +76,15 @@ def build_parser() -> argparse.ArgumentParser:
 
     d = sub.add_parser("doctor", help="diagnose why the stack will not start")
     d.set_defaults(func=cmd_doctor)
+
+    ra = sub.add_parser("recover-agents",
+                         help="prune Docker disk + reconnect offline agents")
+    ra.add_argument("--verbose", action="store_true",
+                    help="print docker prune output")
+    ra.add_argument("--install-timer", action="store_true",
+                    help="install a systemd timer to run this every 30 min "
+                         "(requires sudo)")
+    ra.set_defaults(func=cmd_recover_agents)
 
     for name, help_ in (
         ("up", "create/start services (controller + nginx) without rebuilding agents"),
