@@ -9,7 +9,7 @@
         <hudson.model.StringParameterDefinition>
           <name>TARGETS</name>
           <description>Comma-separated bake targets to build (subset = batch on the constrained host).</description>
-          <defaultValue>businessplanner-migrate,businessplanner-auth,businessplanner-social,businessplanner-notifications,businessplanner-comments,businessplanner-analytics,businessplanner-gamification,businessplanner-content,businessplanner-media,businessplanner-search,businessplanner-infra,businessplanner-ai,businessplanner-platform,businessplanner-commerce,emailclient,notifications,image-processor-frontend,shop-admin,jobs,search,streams,cron,backups,wiki,webhooks,polls,blog,frontend,sso,audit,social-admin,gallery,flags,analytics,status,alerts,forum,s3,s3-frontend,packagerepo-backend,packagerepo-frontend,pgadmin-backend,pgadmin-frontend</defaultValue>
+          <defaultValue>businessplanner-migrate,businessplanner-auth,businessplanner-social,businessplanner-notifications,businessplanner-comments,businessplanner-analytics,businessplanner-gamification,businessplanner-content,businessplanner-media,businessplanner-search,businessplanner-infra,businessplanner-ai,businessplanner-platform,businessplanner-commerce,emailclient,notifications,image-processor-frontend,shop-admin,jobs,search,streams,cron,backups,wiki,webhooks,polls,blog,frontend,sso,audit,social-admin,gallery,flags,analytics,status,alerts,forum,s3,s3-frontend,packagerepo-backend,packagerepo-frontend,pgadmin-backend,pgadmin-frontend,emailclient-api,mailserver</defaultValue>
           <trim>true</trim>
         </hudson.model.StringParameterDefinition>
       </parameterDefinitions>
@@ -28,7 +28,7 @@
 
   parameters {
     string(name: 'TARGETS',
-           defaultValue: 'businessplanner-migrate,businessplanner-auth,businessplanner-social,businessplanner-notifications,businessplanner-comments,businessplanner-analytics,businessplanner-gamification,businessplanner-content,businessplanner-media,businessplanner-search,businessplanner-infra,businessplanner-ai,businessplanner-platform,businessplanner-commerce,emailclient,notifications,image-processor-frontend,shop-admin,jobs,search,streams,cron,backups,wiki,webhooks,polls,blog,frontend,sso,audit,social-admin,gallery,flags,analytics,status,alerts,forum,s3,s3-frontend,packagerepo-backend,packagerepo-frontend,pgadmin-backend,pgadmin-frontend',
+           defaultValue: 'businessplanner-migrate,businessplanner-auth,businessplanner-social,businessplanner-notifications,businessplanner-comments,businessplanner-analytics,businessplanner-gamification,businessplanner-content,businessplanner-media,businessplanner-search,businessplanner-infra,businessplanner-ai,businessplanner-platform,businessplanner-commerce,emailclient,notifications,image-processor-frontend,shop-admin,jobs,search,streams,cron,backups,wiki,webhooks,polls,blog,frontend,sso,audit,social-admin,gallery,flags,analytics,status,alerts,forum,s3,s3-frontend,packagerepo-backend,packagerepo-frontend,pgadmin-backend,pgadmin-frontend,emailclient-api,mailserver',
            description: 'Comma-separated bake targets to build. Use a subset to batch on the constrained host.')
   }
 
