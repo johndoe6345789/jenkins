@@ -1,7 +1,7 @@
 <?xml version='1.1' encoding='UTF-8'?>
 <flow-definition plugin="workflow-job">
   <actions/>
-  <description>Deploy pipeline for metabuilder. Pulls the app images published by metabuilder-apps from the registry, retags them to the local deployment-&lt;svc&gt;:latest names the compose stack expects, then brings the stack up via deployment.py. Build/deploy split: this never builds images. Auto-triggered after metabuilder-apps (threshold UNSTABLE, so an UNSTABLE apps build still deploys what was pushed).</description>
+  <description>Deploy pipeline for metabuilder. Pulls the app images published by metabuilder-apps from the registry, retags them to the local metabuilder-deploy-&lt;svc&gt;:latest names the compose stack expects, then brings the stack up via deployment.py. Build/deploy split: this never builds images. Auto-triggered after metabuilder-apps (threshold UNSTABLE, so an UNSTABLE apps build still deploys what was pushed).</description>
   <keepDependencies>false</keepDependencies>
   <properties>
     <hudson.model.ParametersDefinitionProperty>
@@ -54,8 +54,8 @@
     }
 
     // metabuilder-apps pushes app images to ${REGISTRY}/${SLUG}/&lt;name&gt;. The
-    // compose stack (deployment/metabuilder/compose.yml, project "deployment")
-    // expects them as local deployment-&lt;svc&gt;:latest tags. Pull + retag so
+    // compose stack (deployment/metabuilder/compose.yml, project "metabuilder-deploy")
+    // expects them as local metabuilder-deploy-&lt;svc&gt;:latest tags. Pull + retag so
     // `stack up` reuses them instead of rebuilding. Best-effort per image: a
     // missing image just means its service will not start.
     stage('Hydrate App Images From Registry') {
