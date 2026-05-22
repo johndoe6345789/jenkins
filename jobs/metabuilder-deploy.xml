@@ -1,0 +1,133 @@
+<?xml version='1.1' encoding='UTF-8'?>
+<flow-definition plugin="workflow-job">
+  <actions/>
+  <description>Deploy pipeline for metabuilder. Pulls the app images published by metabuilder-apps from the registry, retags them to the local deployment-&lt;svc&gt;:latest names the compose stack expects, then brings the stack up via deployment.py. Build/deploy split: this never builds images. Auto-triggered after metabuilder-apps (threshold UNSTABLE, so an UNSTABLE apps build still deploys what was pushed).</description>
+  <keepDependencies>false</keepDependencies>
+  <properties>
+    <hudson.model.ParametersDefinitionProperty>
+      <parameterDefinitions>
+        <hudson.model.StringParameterDefinition>
+          <name>IMAGE_TAG</name>
+          <description>Image tag to pull from the registry: latest, or a specific git short sha.</description>
+          <defaultValue>latest</defaultValue>
+          <trim>true</trim>
+        </hudson.model.StringParameterDefinition>
+      </parameterDefinitions>
+    </hudson.model.ParametersDefinitionProperty>
+  </properties>
+  <definition class="org.jenkinsci.plugins.workflow.cps.CpsFlowDefinition" plugin="workflow-cps">
+    <script>pipeline {
+  agent any
+
+  options {
+    timestamps()
+    buildDiscarder(logRotator(numToKeepStr: '15'))
+    timeout(time: 60, unit: 'MINUTES')
+    disableConcurrentBuilds()
+  }
+
+  parameters {
+    string(name: 'IMAGE_TAG', defaultValue: 'latest',
+           description: 'Image tag to pull from the registry: latest, or a specific git short sha.')
+  }
+
+  environment {
+    REGISTRY = 'localhost:5001'
+    SLUG = 'johndoe6345789/metabuilder'
+  }
+
+  stages {
+    stage('Checkout') {
+      steps {
+        git branch: 'main', url: 'https://github.com/johndoe6345789/metabuilder.git'
+      }
+    }
+
+    stage('Docker Preflight') {
+      steps {
+        sh '''
+          docker version
+          docker compose version
+          curl -fsS -I http://localhost:5001/v2/ || true
+        '''
+      }
+    }
+
+    // metabuilder-apps pushes app images to ${REGISTRY}/${SLUG}/&lt;name&gt;. The
+    // compose stack (deployment/metabuilder/compose.yml, project "deployment")
+    // expects them as local deployment-&lt;svc&gt;:latest tags. Pull + retag so
+    // `stack up` reuses them instead of rebuilding. Best-effort per image: a
+    // missing image just means its service will not start.
+    stage('Hydrate App Images From Registry') {
+      steps {
+        script {
+          def defs = readJSON file: 'deployment/cli/commands.json'
+          def apps = defs.definitions.nexus_images.apps
+          if (defs.definitions.nexus_images.heavy_apps) {
+            apps += defs.definitions.nexus_images.heavy_apps
+          }
+          def missing = []
+          for (img in apps) {
+            def src = "${env.REGISTRY}/${env.SLUG}/${img.name}:${params.IMAGE_TAG}"
+            def rc = sh(script: "docker pull ${src}", returnStatus: true)
+            if (rc != 0) {
+              missing.add(src)
+              continue
+            }
+            sh "docker tag ${src} ${img.local}"
+            sh "docker rmi -f ${src} || true"
+            echo "Hydrated ${img.local} from ${src}"
+          }
+          if (!missing.isEmpty()) {
+            echo "WARNING: ${missing.size()} app image(s) not in the registry; their services may not start:"
+            for (m in missing) { echo "  - ${m}" }
+          }
+        }
+      }
+    }
+
+    stage('Deploy Stack') {
+      steps {
+        sh '''
+          set -e
+          cd deployment
+          python3 deployment.py stack up
+        '''
+      }
+    }
+
+    stage('Status') {
+      steps {
+        sh '''
+          cd deployment
+          python3 deployment.py stack ps || true
+        '''
+      }
+    }
+  }
+
+  post {
+    success {
+      echo 'metabuilder stack deployed - portal: http://localhost:8900'
+    }
+    always {
+      cleanWs()
+    }
+  }
+}</script>
+    <sandbox>true</sandbox>
+  </definition>
+  <triggers>
+    <jenkins.triggers.ReverseBuildTrigger>
+      <spec></spec>
+      <upstreamProjects>metabuilder-apps</upstreamProjects>
+      <threshold>
+        <name>UNSTABLE</name>
+        <ordinal>1</ordinal>
+        <color>YELLOW</color>
+        <completeBuild>true</completeBuild>
+      </threshold>
+    </jenkins.triggers.ReverseBuildTrigger>
+  </triggers>
+  <disabled>false</disabled>
+</flow-definition>

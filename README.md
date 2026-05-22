@@ -7,10 +7,14 @@ SSH-based Linux build agents for C++/CMake and npm/Next.js pipelines.
 
 - Jenkins UI: http://localhost:8081
 - Jenkins resource root: http://localhost:8082
-- Nexus UI: http://localhost:8083
-- Nexus Docker registry connector: `localhost:5001`
+- Docker registry (`registry:2`): `localhost:5001` — insecure / no-auth, replaces Nexus
 - Inbound agent port: `50000`
 - SSH agents: `jenkins-agent-1` through `jenkins-agent-8`
+
+> **Note:** the registry was migrated from Nexus 3 to a lightweight `registry:2`
+> and agents were briefly trimmed to 4 for an old 4 GB / 100 GB host; on the
+> current 32 GB Vultr host the 8-agent set is restored. Some prose below still
+> says "Nexus" — read it as the `registry:2` on `:5001`.
 
 ## Credentials
 
@@ -259,6 +263,31 @@ pulling this change:
 docker compose up -d --build jenkins-agent-1 jenkins-agent-2 jenkins-agent-3 \
   jenkins-agent-4 jenkins-agent-5 jenkins-agent-6 jenkins-agent-7 jenkins-agent-8
 ```
+
+## Deploy pipelines
+
+The build jobs above stop at "push image to the registry". Deployment is a
+**separate** set of jobs — `<app>-deploy` — that pull those images and bring
+the app's own `docker compose` stack up on the host. Build and deploy are
+fully split: a deploy job never builds images, a build job never deploys.
+
+- **`metabuilder-deploy`** (`jobs/metabuilder-deploy.xml`) — pulls the app
+  images published by `metabuilder-apps`, retags them to the local
+  `deployment-<svc>:latest` names `deployment/metabuilder/compose.yml` expects,
+  then runs `deployment.py stack up`. Parameter `IMAGE_TAG` (default `latest`).
+  Portal: http://localhost:8900
+- **`businessplanner-deploy`** (`jobs/businessplanner-deploy.xml`) — pulls the
+  service images published by `businessplanner-apps` and runs the repo's
+  `docker compose` stack. Portal: http://localhost:8892
+- **`hamradiosite-deploy`** / **`webdevguide-deploy`** — build the frontend /
+  backend / nginx images from each repo's own `docker-compose.yml` and bring
+  the stack up: http://localhost:7423 and http://localhost:8743 respectively.
+
+Each deploy job carries a `ReverseBuildTrigger`, so it runs **automatically
+after** its build job finishes (threshold `UNSTABLE` — an UNSTABLE build still
+deploys whatever was pushed). The trigger lives in the deploy job's own config,
+so the build jobs stay untouched. Register them like any other job (POST the
+XML to `createItem` / `job/<name>/config.xml`).
 
 ## Appearance and plugins
 

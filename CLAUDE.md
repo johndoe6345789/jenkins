@@ -1,9 +1,15 @@
 # CLAUDE.md — Jenkins CI stack
 
 Docker Compose stack: a JCasC-configured Jenkins controller, an nginx front
-end (`:8081` UI, `:8082` resource root), Nexus 3 + a one-shot `nexus-init`,
-and **8 SSH build agents** (`jenkins-agent-1..8`). Agents and Nexus carry
-`restart: unless-stopped`; the controller is rebuilt from `Dockerfile`.
+end (`:8081` UI, `:8082` resource root), a lightweight `registry:2` Docker
+registry on `:5001`, and **8 SSH build agents** (`jenkins-agent-1..8`). Agents
+and the registry carry `restart: unless-stopped`; the controller is rebuilt
+from `Dockerfile`.
+
+> Nexus 3 was replaced by `registry:2` (insecure, no auth) — it freed the JVM
+> RAM the old 4 GB host could not spare. Some prose below still says "Nexus";
+> read it as the `registry:2` on `:5001`. Build jobs push without `docker
+> login`; deployment is a separate `<app>-deploy` job set (see README).
 
 ## The #1 failure mode: wiped `secrets/`
 
