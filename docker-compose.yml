@@ -6,7 +6,7 @@ x-agent-base: &agent-base
       DOCKER_GID: "${DOCKER_GID:-984}"
   restart: unless-stopped
   environment:
-    - JENKINS_AGENT_SSH_PUBKEY=ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIIwF+TGWQA1Fo1mkNlsQ6IKleAxsqmORjDqeKZXu6o7R jenkins-agent
+    - JENKINS_AGENT_SSH_PUBKEY=ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINPCCdpG9EpNhiLiLoJgeC4ELi0KDVmMSSDQcbD8zIG/ jenkins-agent
   group_add:
     - "${DOCKER_GID:-984}"
   networks:
@@ -91,10 +91,37 @@ services:
       - agent-4-home:/home/jenkins/agent
       - /var/run/docker.sock:/var/run/docker.sock
 
-# agents 5-8 removed: 8 was over-provisioned for a disk/RAM-
-# constrained host; the build pipeline is sequential. Trimmed
-# to 4 (jenkins-agent-1..4). Restore by re-adding the blocks
-# + agent-N-home volumes when the host is upgraded.
+  jenkins-agent-5:
+    <<: *agent-base
+    container_name: jenkins-agent-5
+    volumes:
+      - agent-5-home:/home/jenkins/agent
+      - /var/run/docker.sock:/var/run/docker.sock
+
+  jenkins-agent-6:
+    <<: *agent-base
+    container_name: jenkins-agent-6
+    volumes:
+      - agent-6-home:/home/jenkins/agent
+      - /var/run/docker.sock:/var/run/docker.sock
+
+  jenkins-agent-7:
+    <<: *agent-base
+    container_name: jenkins-agent-7
+    volumes:
+      - agent-7-home:/home/jenkins/agent
+      - /var/run/docker.sock:/var/run/docker.sock
+
+  jenkins-agent-8:
+    <<: *agent-base
+    container_name: jenkins-agent-8
+    volumes:
+      - agent-8-home:/home/jenkins/agent
+      - /var/run/docker.sock:/var/run/docker.sock
+
+# 8 SSH agents (jenkins-agent-1..8): restored from the interim 4-agent
+# trim now the host is a 32 GB / ~225 GB Vultr box, not the old
+# 4 GB / 100 GB server. Matches the 8-agent JCasC node set in casc.yaml.
 
 volumes:
   jenkins_home:
@@ -102,6 +129,10 @@ volumes:
   agent-2-home:
   agent-3-home:
   agent-4-home:
+  agent-5-home:
+  agent-6-home:
+  agent-7-home:
+  agent-8-home:
   registry_data:
 
 networks:
