@@ -1,7 +1,7 @@
 <?xml version='1.1' encoding='UTF-8'?>
 <flow-definition plugin="workflow-job">
   <actions/>
-  <description>CI for nexus-command (Next.js Atomic Component Framework): install, lint, vitest unit tests, production build. Playwright e2e intentionally skipped (browser-heavy) on the constrained host. No registry/deploy.</description>
+  <description>CI for nexus-command (Next.js Atomic Component Framework): install, lint, vitest unit tests, production build. Playwright e2e intentionally skipped (browser-heavy) on the constrained host. Triggers nexus-command-deploy on success.</description>
   <keepDependencies>false</keepDependencies>
   <properties/>
   <definition class="org.jenkinsci.plugins.workflow.cps.CpsFlowDefinition" plugin="workflow-cps">
