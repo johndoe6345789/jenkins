@@ -287,6 +287,10 @@ fully split: a deploy job never builds images, a build job never deploys.
   baked into the image at build time, no bind mounts) and brings the stack up.
   http://localhost:8721. Auto-triggered after **`nexus-command`** (the CI job
   that runs install / lint / unit tests / build).
+- **`next_extra_primary-deploy`** (`jobs/next_extra_primary-deploy.xml`) —
+  pulls the service images published by `next_extra_primary-apps` and brings
+  the full stack up. Portal: http://localhost:8889. Auto-triggered after
+  **`next_extra_primary-apps`** (threshold UNSTABLE).
 
 Each deploy job carries a `ReverseBuildTrigger`, so it runs **automatically
 after** its build job finishes (threshold `UNSTABLE` — an UNSTABLE build still

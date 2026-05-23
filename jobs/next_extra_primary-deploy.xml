@@ -1,0 +1,83 @@
+<?xml version='1.1' encoding='UTF-8'?>
+<flow-definition plugin="workflow-job">
+  <actions/>
+  <description>Deploy pipeline for next_extra_primary. Pulls the service images published by next_extra_primary-apps from the registry and brings the docker-compose stack up. Build/deploy split: this never bakes images. The compose image: refs are pinned to :latest, which next_extra_primary-apps refreshes every build. Auto-triggered after next_extra_primary-apps (threshold UNSTABLE).</description>
+  <keepDependencies>false</keepDependencies>
+  <properties/>
+  <definition class="org.jenkinsci.plugins.workflow.cps.CpsFlowDefinition" plugin="workflow-cps">
+    <script>pipeline {
+  agent any
+
+  options {
+    timestamps()
+    buildDiscarder(logRotator(numToKeepStr: '15'))
+    timeout(time: 60, unit: 'MINUTES')
+    disableConcurrentBuilds()
+  }
+
+  stages {
+    stage('Checkout') {
+      steps {
+        git branch: 'main', url: 'https://github.com/johndoe6345789/next_extra_primary.git'
+      }
+    }
+
+    stage('Docker Preflight') {
+      steps {
+        sh '''
+          docker version
+          docker compose version
+          curl -fsS -I http://localhost:5001/v2/ || true
+        '''
+      }
+    }
+
+    stage('Pull Service Images') {
+      steps {
+        sh '''
+          docker compose pull --ignore-buildable || docker compose pull || true
+        '''
+      }
+    }
+
+    stage('Deploy Stack') {
+      steps {
+        sh '''
+          set -e
+          docker compose up -d --build --remove-orphans
+        '''
+      }
+    }
+
+    stage('Status') {
+      steps {
+        sh 'docker compose ps'
+      }
+    }
+  }
+
+  post {
+    success {
+      echo 'next_extra_primary stack deployed - portal: http://localhost:8889'
+    }
+    always {
+      cleanWs()
+    }
+  }
+}</script>
+    <sandbox>true</sandbox>
+  </definition>
+  <triggers>
+    <jenkins.triggers.ReverseBuildTrigger>
+      <spec></spec>
+      <upstreamProjects>next_extra_primary-apps</upstreamProjects>
+      <threshold>
+        <name>UNSTABLE</name>
+        <ordinal>1</ordinal>
+        <color>YELLOW</color>
+        <completeBuild>true</completeBuild>
+      </threshold>
+    </jenkins.triggers.ReverseBuildTrigger>
+  </triggers>
+  <disabled>false</disabled>
+</flow-definition>
