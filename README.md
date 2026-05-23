@@ -282,6 +282,11 @@ fully split: a deploy job never builds images, a build job never deploys.
 - **`hamradiosite-deploy`** / **`webdevguide-deploy`** — build the frontend /
   backend / nginx images from each repo's own `docker-compose.yml` and bring
   the stack up: http://localhost:7423 and http://localhost:8743 respectively.
+- **`nexus-command-deploy`** (`jobs/nexus-command-deploy.xml`) — builds the
+  nginx image from nexus-command's `docker-compose.yml` (Next.js static export
+  baked into the image at build time, no bind mounts) and brings the stack up.
+  http://localhost:8721. Auto-triggered after **`nexus-command`** (the CI job
+  that runs install / lint / unit tests / build).
 
 Each deploy job carries a `ReverseBuildTrigger`, so it runs **automatically
 after** its build job finishes (threshold `UNSTABLE` — an UNSTABLE build still
