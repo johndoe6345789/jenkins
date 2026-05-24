@@ -9,7 +9,7 @@
         <hudson.model.StringParameterDefinition>
           <name>TARGETS</name>
           <description>Comma-separated bake targets to build (subset = batch on the constrained host).</description>
-          <defaultValue>backend,nextra-migrate,nextra-auth,nextra-social,nextra-notifications,nextra-comments,nextra-analytics,nextra-gamification,nextra-content,nextra-media,nextra-search,nextra-infra,nextra-ai,nextra-platform,nextra-commerce,emailclient,notifications,image-processor-frontend,shop-admin,jobs,search,streams,cron,backups,wiki,webhooks,polls,blog,frontend,sso,audit,social-admin,gallery,flags,analytics,status,alerts,forum,s3,s3-frontend,packagerepo-backend,packagerepo-frontend,pgadmin-backend,pgadmin-frontend</defaultValue>
+          <defaultValue>backend,nextra-migrate,mailserver,emailclient-api,nextra-auth,nextra-social,nextra-notifications,nextra-comments,nextra-analytics,nextra-gamification,nextra-content,nextra-media,nextra-search,nextra-infra,nextra-ai,nextra-platform,nextra-commerce,emailclient,notifications,image-processor-frontend,shop-admin,jobs,search,streams,cron,backups,wiki,webhooks,polls,blog,frontend,sso,audit,social-admin,gallery,flags,analytics,status,alerts,forum,s3,s3-frontend,packagerepo-backend,packagerepo-frontend,pgadmin-backend,pgadmin-frontend</defaultValue>
           <trim>true</trim>
         </hudson.model.StringParameterDefinition>
       </parameterDefinitions>
@@ -28,7 +28,7 @@
 
   parameters {
     string(name: 'TARGETS',
-           defaultValue: 'backend,nextra-migrate,nextra-auth,nextra-social,nextra-notifications,nextra-comments,nextra-analytics,nextra-gamification,nextra-content,nextra-media,nextra-search,nextra-infra,nextra-ai,nextra-platform,nextra-commerce,emailclient,notifications,image-processor-frontend,shop-admin,jobs,search,streams,cron,backups,wiki,webhooks,polls,blog,frontend,sso,audit,social-admin,gallery,flags,analytics,status,alerts,forum,s3,s3-frontend,packagerepo-backend,packagerepo-frontend,pgadmin-backend,pgadmin-frontend',
+           defaultValue: 'backend,nextra-migrate,mailserver,emailclient-api,nextra-auth,nextra-social,nextra-notifications,nextra-comments,nextra-analytics,nextra-gamification,nextra-content,nextra-media,nextra-search,nextra-infra,nextra-ai,nextra-platform,nextra-commerce,emailclient,notifications,image-processor-frontend,shop-admin,jobs,search,streams,cron,backups,wiki,webhooks,polls,blog,frontend,sso,audit,social-admin,gallery,flags,analytics,status,alerts,forum,s3,s3-frontend,packagerepo-backend,packagerepo-frontend,pgadmin-backend,pgadmin-frontend',
            description: 'Comma-separated bake targets to build. Use a subset to batch on the constrained host.')
   }
 

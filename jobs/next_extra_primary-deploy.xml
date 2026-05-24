@@ -45,7 +45,7 @@
       steps {
         sh '''
           set -e
-          docker compose build portal keycloak squid verdaccio mailserver emailclient-api
+          docker compose build portal keycloak squid verdaccio
           docker compose up -d --no-build --remove-orphans
         '''
       }
