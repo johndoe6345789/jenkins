@@ -1,0 +1,36 @@
+{
+  "required_containers": [
+    "businessplanner-frontend",
+    "nextra-frontend"
+  ],
+  "endpoints": [
+    { "label": "BP  root",             "url": "http://wardcrew.com:8892/" },
+    { "label": "BP  /app/en",          "url": "http://wardcrew.com:8892/app/en" },
+    { "label": "BP  /app/en/login",    "url": "http://wardcrew.com:8892/app/en/login" },
+    { "label": "BP  /app/en/register", "url": "http://wardcrew.com:8892/app/en/register" },
+    { "label": "BP  /app/en/terms",    "url": "http://wardcrew.com:8892/app/en/terms" },
+    { "label": "BP  /app/en/privacy",  "url": "http://wardcrew.com:8892/app/en/privacy" },
+    { "label": "BP  /db",              "url": "http://wardcrew.com:8892/db" },
+    { "label": "BP  /s3",              "url": "http://wardcrew.com:8892/s3" },
+    { "label": "BP  /repo",            "url": "http://wardcrew.com:8892/repo" },
+    { "label": "BP  /emailclient",     "url": "http://wardcrew.com:8892/emailclient" },
+    { "label": "BP  /alerts",          "url": "http://wardcrew.com:8892/alerts" },
+    { "label": "BP  /sso-portal",      "url": "http://wardcrew.com:8892/sso-portal" },
+    { "label": "BP  /apidocs/",        "url": "http://wardcrew.com:8892/apidocs/" },
+    { "label": "BP  /api/health",      "url": "http://wardcrew.com:8892/api/health" },
+    { "label": "NEP root",             "url": "http://wardcrew.com:8889/" },
+    { "label": "NEP /app/en",          "url": "http://wardcrew.com:8889/app/en" },
+    { "label": "NEP /app/en/login",    "url": "http://wardcrew.com:8889/app/en/login" },
+    { "label": "NEP /app/en/register", "url": "http://wardcrew.com:8889/app/en/register" },
+    { "label": "NEP /app/en/terms",    "url": "http://wardcrew.com:8889/app/en/terms" },
+    { "label": "NEP /app/en/privacy",  "url": "http://wardcrew.com:8889/app/en/privacy" },
+    { "label": "NEP /db",              "url": "http://wardcrew.com:8889/db" },
+    { "label": "NEP /s3",              "url": "http://wardcrew.com:8889/s3" },
+    { "label": "NEP /repo",            "url": "http://wardcrew.com:8889/repo" },
+    { "label": "NEP /emailclient",     "url": "http://wardcrew.com:8889/emailclient" },
+    { "label": "NEP /alerts",          "url": "http://wardcrew.com:8889/alerts" },
+    { "label": "NEP /sso-portal",      "url": "http://wardcrew.com:8889/sso-portal" },
+    { "label": "NEP /apidocs/",        "url": "http://wardcrew.com:8889/apidocs/" },
+    { "label": "NEP /api/health",      "url": "http://wardcrew.com:8889/api/health" }
+  ]
+}
