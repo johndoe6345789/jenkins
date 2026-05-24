@@ -1,0 +1,74 @@
+<?xml version='1.1' encoding='UTF-8'?>
+<flow-definition plugin="workflow-job">
+  <actions/>
+  <description>Deploy pipeline for strategy-execution-p. Builds the nginx/SPA image from the repo's docker-compose.yml and brings the stack up on port 8894. Auto-triggered after a successful strategy-execution-p build.</description>
+  <keepDependencies>false</keepDependencies>
+  <properties/>
+  <definition class="org.jenkinsci.plugins.workflow.cps.CpsFlowDefinition" plugin="workflow-cps">
+    <script>pipeline {
+  agent any
+
+  options {
+    timestamps()
+    buildDiscarder(logRotator(numToKeepStr: '15'))
+    timeout(time: 30, unit: 'MINUTES')
+    disableConcurrentBuilds()
+  }
+
+  stages {
+    stage('Checkout') {
+      steps {
+        git branch: 'main', url: 'https://github.com/johndoe6345789/strategy-execution-p.git'
+      }
+    }
+
+    stage('Docker Preflight') {
+      steps {
+        sh '''
+          docker version
+          docker compose version
+        '''
+      }
+    }
+
+    stage('Build + Deploy') {
+      steps {
+        sh '''
+          set -e
+          docker compose up -d --build --remove-orphans
+        '''
+      }
+    }
+
+    stage('Status') {
+      steps {
+        sh 'docker compose ps'
+      }
+    }
+  }
+
+  post {
+    success {
+      echo 'strategy-execution-p deployed - http://wardcrew.com:8894'
+    }
+    always {
+      cleanWs()
+    }
+  }
+}</script>
+    <sandbox>true</sandbox>
+  </definition>
+  <triggers>
+    <jenkins.triggers.ReverseBuildTrigger>
+      <spec></spec>
+      <upstreamProjects>strategy-execution-p</upstreamProjects>
+      <threshold>
+        <name>SUCCESS</name>
+        <ordinal>0</ordinal>
+        <color>BLUE</color>
+        <completeBuild>true</completeBuild>
+      </threshold>
+    </jenkins.triggers.ReverseBuildTrigger>
+  </triggers>
+  <disabled>false</disabled>
+</flow-definition>

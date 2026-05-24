@@ -1,0 +1,50 @@
+<?xml version='1.1' encoding='UTF-8'?>
+<flow-definition plugin="workflow-job">
+  <actions/>
+  <description>CI for strategy-execution-p: Vite SPA (npm ci / build). Validation only — no deploy. Triggers strategy-execution-p-deploy on success.</description>
+  <keepDependencies>false</keepDependencies>
+  <properties/>
+  <definition class="org.jenkinsci.plugins.workflow.cps.CpsFlowDefinition" plugin="workflow-cps">
+    <script>pipeline {
+  agent any
+
+  tools {
+    nodejs 'node25'
+  }
+
+  options {
+    timestamps()
+    buildDiscarder(logRotator(numToKeepStr: '15'))
+    timeout(time: 20, unit: 'MINUTES')
+    disableConcurrentBuilds()
+  }
+
+  stages {
+    stage('Checkout') {
+      steps {
+        git branch: 'main', url: 'https://github.com/johndoe6345789/strategy-execution-p.git'
+      }
+    }
+
+    stage('Install') {
+      steps {
+        sh 'npm ci --no-audit --no-fund'
+      }
+    }
+
+    stage('Build') {
+      steps {
+        sh 'NODE_OPTIONS=--max-old-space-size=2048 npm run build'
+      }
+    }
+  }
+
+  post {
+    always { cleanWs() }
+  }
+}</script>
+    <sandbox>true</sandbox>
+  </definition>
+  <triggers/>
+  <disabled>false</disabled>
+</flow-definition>
