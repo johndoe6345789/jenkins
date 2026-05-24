@@ -28,6 +28,7 @@
           docker version
           docker compose version
           curl -fsS -I http://localhost:5001/v2/ || true
+          docker pull localhost:5001/johndoe6345789/businessplanner/businessplanner-base-conan:latest || true
         '''
       }
     }
