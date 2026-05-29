@@ -184,25 +184,37 @@ def _pip_packages() -> list[dict]:
         return []
 
 
+_DEB_SCRAPE: dict[str, dict] = {
+    "nomachine": {
+        # NoMachine doesn't publish a stable .deb URL — the version-specific
+        # mirror host (web9001.nomachine.com today) changes between releases.
+        # install-host-deps fetches scrape_url, parses with bs4, and grabs
+        # the first <a href> whose URL matches deb_pattern.
+        "scrape_url": "https://downloads.nomachine.com/download/?id=1&platform=linux",
+        "deb_pattern": r"nomachine_.*amd64\.deb$",
+        "deb_url_hint": "https://www.nomachine.com/download",
+    },
+}
+
+
 def _deb_installs() -> list[dict]:
     """Packages installed via `dpkg -i` of a stand-alone .deb (not in any
-    apt source). Detected by checking dpkg origin against the apt cache."""
+    apt source). Generalising to "package not found in any apt source" is
+    doable with apt-cache policy per-package but slow for 5k packages, so we
+    keep an explicit allowlist (_DEB_SCRAPE) and extend as new ones appear."""
     installed = _run(["dpkg-query", "-W", "-f", "${Package}\t${Version}\t${Status}\n"])
     out: list[dict] = []
-    # The only well-known one on this stack is nomachine. Generalising to
-    # "package not found in any apt source" is doable with apt-cache policy
-    # per-package, but slow for 5k packages. Hardcoding the known one keeps
-    # this fast and is easy to extend.
-    for known in ("nomachine",):
+    for known, cfg in _DEB_SCRAPE.items():
         for line in installed.splitlines():
             parts = line.split("\t")
             if len(parts) >= 2 and parts[0] == known:
-                out.append({
+                entry = {
                     "package": known,
                     "version": parts[1],
                     "install_method": "dpkg -i <.deb>",
-                    "deb_url_hint": "https://www.nomachine.com/download" if known == "nomachine" else None,
-                })
+                }
+                entry.update(cfg)
+                out.append(entry)
                 break
     return out
 

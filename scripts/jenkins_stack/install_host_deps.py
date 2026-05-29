@@ -10,10 +10,17 @@ Reads the JSON capture and applies each phase idempotently:
                                    `nvm install` each version in the JSON
     4. claude cli                 curl-pipe install if the binary isn't
                                    present in the captured path
-    5. essential pip packages     bcrypt, cryptography — the rest of the
-                                   278-pkg capture is stdlib companions
-    6. dpkg -i installs           printed as instructions (NoMachine needs
-                                   license acceptance, can't automate)
+    5. essential pip packages     bcrypt, cryptography, beautifulsoup4 —
+                                   the rest of the 278-pkg capture is
+                                   stdlib companions
+    6. dpkg -i installs           if scrape_url + deb_pattern are present
+                                   in the JSON entry (e.g. NoMachine),
+                                   bs4-scrape the download page for the
+                                   actual .deb URL, fetch it, and run
+                                   dpkg -i + apt-get install -f under
+                                   DEBIAN_FRONTEND=noninteractive. Entries
+                                   without scrape config print manual
+                                   instructions.
     7. docker group + verify      usermod -aG docker $USER, then
                                    `sudo docker run --rm hello-world` to
                                    confirm the daemon is reachable
@@ -39,7 +46,7 @@ from . import REPO_ROOT
 
 BASELINE_JSON = REPO_ROOT / "docs" / "host-baseline.json"
 APT_LIST = REPO_ROOT / "docs" / "host-apt-manual.txt"
-ESSENTIAL_PIP = {"bcrypt", "cryptography"}
+ESSENTIAL_PIP = {"bcrypt", "cryptography", "beautifulsoup4"}
 
 
 # ---------- helpers ----------
@@ -277,22 +284,77 @@ def phase_docker_setup(data: dict, dry_run: bool) -> int:
     return rc
 
 
+def _scrape_deb_url(scrape_url: str, pattern: str) -> str:
+    """Fetch a download page, parse with bs4, return the first <a href> URL
+    whose path matches `pattern` (regex against the URL string itself).
+    Raises if nothing matches — caller decides whether that's fatal."""
+    import re
+    from bs4 import BeautifulSoup
+
+    page = urllib.request.urlopen(scrape_url, timeout=30).read()
+    soup = BeautifulSoup(page, "html.parser")
+    rx = re.compile(pattern)
+    for a in soup.find_all("a", href=True):
+        href = a["href"]
+        if rx.search(href):
+            return href
+    raise RuntimeError(f"no link matching {pattern!r} on {scrape_url}")
+
+
 def phase_deb_installs(data: dict, dry_run: bool) -> int:
-    """`.deb`-from-URL installs are reported, not executed. NoMachine needs a
-    license confirmation step that we shouldn't be clicking through on the
-    user's behalf."""
+    """For each dpkg -i entry in the baseline: if it has a scrape_url +
+    deb_pattern, fetch the download page, parse with bs4, download the .deb,
+    and run dpkg -i + apt-get install -f. Entries without scrape config
+    are printed as manual instructions."""
     debs = data["non_apt"]["deb_installs"]
     pending = [d for d in debs if not _have_pkg(d["package"])]
     if not pending:
         print(f"dpkg -i installs: all {len(debs)} present")
         return 0
-    print(f"dpkg -i installs: {len(pending)} pending — manual:")
+
+    failures = 0
     for d in pending:
-        print(f"  - {d['package']} {d['version']}")
-        if d.get("deb_url_hint"):
-            print(f"    download from: {d['deb_url_hint']}")
-        print(f"    then: sudo dpkg -i <file>.deb")
-    return 0  # not an error; just needs human
+        name = d["package"]
+        scrape_url = d.get("scrape_url")
+        deb_pattern = d.get("deb_pattern")
+
+        if not scrape_url or not deb_pattern:
+            print(f"  - {name} {d.get('version', '?')}  (manual)")
+            if d.get("deb_url_hint"):
+                print(f"    download from: {d['deb_url_hint']}")
+            print(f"    then: sudo dpkg -i <file>.deb")
+            continue
+
+        try:
+            url = _scrape_deb_url(scrape_url, deb_pattern)
+            print(f"  {name}: scraped {url}")
+        except Exception as e:
+            print(f"  {name}: scrape FAIL ({e}) — see {d.get('deb_url_hint', scrape_url)}")
+            failures += 1
+            continue
+
+        tmp = Path("/tmp") / Path(urllib.parse.urlparse(url).path).name
+        print(f"  download -> {tmp}")
+        if not dry_run:
+            try:
+                urllib.request.urlretrieve(url, tmp)
+            except OSError as e:
+                print(f"    FAIL: {e}")
+                failures += 1
+                continue
+
+        # dpkg -i can leave the system half-installed if deps are missing;
+        # apt-get install -f fixes that. Both run with noninteractive
+        # frontend so debconf doesn't prompt.
+        env_prefix = ["env", "DEBIAN_FRONTEND=noninteractive"]
+        if _exec(_sudo() + env_prefix + ["dpkg", "-i", str(tmp)], dry_run):
+            if _exec(_sudo() + env_prefix + ["apt-get", "install", "-f", "-y"], dry_run):
+                failures += 1
+
+        if not dry_run:
+            tmp.unlink(missing_ok=True)
+
+    return failures
 
 
 # ---------- entrypoint ----------

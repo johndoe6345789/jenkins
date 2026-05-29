@@ -1,5 +1,5 @@
 {
-  "captured_at": "2026-05-29T10:11:52+00:00",
+  "captured_at": "2026-05-29T10:15:41+00:00",
   "captured_on": "wardcrew",
   "schema_version": 1,
   "os": {
@@ -612,6 +612,10 @@
         "version": "4.2.0"
       },
       {
+        "name": "beautifulsoup4",
+        "version": "4.14.3"
+      },
+      {
         "name": "blinker",
         "version": "1.9.0"
       },
@@ -954,6 +958,10 @@
       {
         "name": "snowballstemmer",
         "version": "2.2.0"
+      },
+      {
+        "name": "soupsieve",
+        "version": "2.8.4"
       },
       {
         "name": "Sphinx",
@@ -1697,6 +1705,8 @@
         "package": "nomachine",
         "version": "9.5.7-2",
         "install_method": "dpkg -i <.deb>",
+        "scrape_url": "https://downloads.nomachine.com/download/?id=1&platform=linux",
+        "deb_pattern": "nomachine_.*amd64\\.deb$",
         "deb_url_hint": "https://www.nomachine.com/download"
       }
     ]
