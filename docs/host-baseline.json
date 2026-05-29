@@ -1,0 +1,1705 @@
+{
+  "captured_at": "2026-05-29T10:03:44+00:00",
+  "captured_on": "wardcrew",
+  "schema_version": 1,
+  "os": {
+    "distro": "Debian",
+    "version": "13",
+    "codename": "trixie",
+    "arch": "amd64",
+    "kernel_package_version": "6.12.90-2"
+  },
+  "apt": {
+    "sources": [
+      {
+        "file": "backports-src.list",
+        "uri": "",
+        "suite": "",
+        "components": [],
+        "arch": null,
+        "key_path": null,
+        "key_url": null,
+        "is_third_party": false
+      },
+      {
+        "file": "backports.list",
+        "uri": "",
+        "suite": "",
+        "components": [],
+        "arch": null,
+        "key_path": null,
+        "key_url": null,
+        "is_third_party": false
+      },
+      {
+        "file": "base-src.list",
+        "uri": "",
+        "suite": "",
+        "components": [],
+        "arch": null,
+        "key_path": null,
+        "key_url": null,
+        "is_third_party": false
+      },
+      {
+        "file": "base.list",
+        "uri": "https://deb.debian.org/debian",
+        "suite": "trixie",
+        "components": [
+          "main",
+          "contrib",
+          "non-free",
+          "non-free-firmware"
+        ],
+        "arch": null,
+        "key_path": null,
+        "key_url": null,
+        "is_third_party": false
+      },
+      {
+        "file": "docker.sources",
+        "uri": "https://download.docker.com/linux/debian",
+        "suite": "trixie",
+        "components": [
+          "stable"
+        ],
+        "arch": "amd64",
+        "key_path": "/etc/apt/keyrings/docker.asc",
+        "key_url": "https://download.docker.com/linux/debian/gpg",
+        "is_third_party": true
+      },
+      {
+        "file": "github-cli.list",
+        "uri": "https://cli.github.com/packages",
+        "suite": "stable",
+        "components": [
+          "main"
+        ],
+        "arch": "amd64",
+        "key_path": "/etc/apt/keyrings/githubcli-archive-keyring.gpg",
+        "key_url": "https://cli.github.com/packages/githubcli-archive-keyring.gpg",
+        "is_third_party": true
+      },
+      {
+        "file": "google-chrome.sources",
+        "uri": "https://dl.google.com/linux/chrome-stable/deb/",
+        "suite": "stable",
+        "components": [
+          "main"
+        ],
+        "arch": null,
+        "key_path": "/usr/share/keyrings/google-chrome.gpg",
+        "key_url": null,
+        "is_third_party": true
+      },
+      {
+        "file": "mirror_constant_com-src.list",
+        "uri": "",
+        "suite": "",
+        "components": [],
+        "arch": null,
+        "key_path": null,
+        "key_url": null,
+        "is_third_party": false
+      },
+      {
+        "file": "mirror_constant_com.list",
+        "uri": "https://debian.mirror.constant.com",
+        "suite": "trixie",
+        "components": [
+          "main",
+          "contrib",
+          "non-free",
+          "non-free-firmware"
+        ],
+        "arch": null,
+        "key_path": null,
+        "key_url": null,
+        "is_third_party": false
+      },
+      {
+        "file": "security-src.list",
+        "uri": "",
+        "suite": "",
+        "components": [],
+        "arch": null,
+        "key_path": null,
+        "key_url": null,
+        "is_third_party": false
+      },
+      {
+        "file": "security.list",
+        "uri": "https://deb.debian.org/debian-security/",
+        "suite": "trixie-security",
+        "components": [
+          "main",
+          "contrib",
+          "non-free",
+          "non-free-firmware"
+        ],
+        "arch": null,
+        "key_path": null,
+        "key_url": null,
+        "is_third_party": false
+      },
+      {
+        "file": "updates-src.list",
+        "uri": "",
+        "suite": "",
+        "components": [],
+        "arch": null,
+        "key_path": null,
+        "key_url": null,
+        "is_third_party": false
+      },
+      {
+        "file": "updates.list",
+        "uri": "https://deb.debian.org/debian",
+        "suite": "trixie-updates",
+        "components": [
+          "main",
+          "contrib",
+          "non-free",
+          "non-free-firmware"
+        ],
+        "arch": null,
+        "key_path": null,
+        "key_url": null,
+        "is_third_party": false
+      }
+    ],
+    "manual_packages": [
+      "adduser",
+      "amd64-microcode",
+      "apache2-utils",
+      "apt",
+      "apt-listchanges",
+      "apt-utils",
+      "autoconf",
+      "automake",
+      "base-files",
+      "base-passwd",
+      "bash",
+      "bash-completion",
+      "bind9-dnsutils",
+      "bind9-host",
+      "bison",
+      "bsdutils",
+      "build-essential",
+      "busybox",
+      "bzip2",
+      "ca-certificates",
+      "chrony",
+      "cloud-guest-utils",
+      "cloud-init",
+      "cmake",
+      "command-not-found",
+      "console-setup",
+      "containerd.io",
+      "coreutils",
+      "cpio",
+      "cron",
+      "cron-daemon-common",
+      "curl",
+      "dash",
+      "dctrl-tools",
+      "debconf",
+      "debconf-i18n",
+      "debconf-utils",
+      "debhelper",
+      "debian-archive-keyring",
+      "debian-faq",
+      "debianutils",
+      "dhcpcd-base",
+      "diffutils",
+      "dirmngr",
+      "dmidecode",
+      "doc-debian",
+      "docker-buildx-plugin",
+      "docker-ce",
+      "docker-ce-cli",
+      "docker-compose-plugin",
+      "dpkg",
+      "dpkg-dev",
+      "e2fsprogs",
+      "eject",
+      "ethtool",
+      "fdisk",
+      "file",
+      "findutils",
+      "flex",
+      "fontforge-nox",
+      "freeglut3-dev",
+      "gcc",
+      "gcc-14-base",
+      "gcc-mingw-w64-x86-64",
+      "gettext",
+      "gettext-base",
+      "gh",
+      "gnome-disk-utility",
+      "gnome-human-icon-theme",
+      "gnome-icon-theme",
+      "gnome-system-monitor",
+      "gnome-terminal",
+      "gnupg2",
+      "google-chrome-stable",
+      "gparted",
+      "grep",
+      "groff-base",
+      "grub-common",
+      "grub-efi-amd64",
+      "gzip",
+      "hostname",
+      "html2text",
+      "htop",
+      "icoutils",
+      "ifupdown",
+      "imagemagick",
+      "imagemagick-7.q16",
+      "inetutils-telnet",
+      "init",
+      "init-system-helpers",
+      "initramfs-tools",
+      "installation-report",
+      "iproute2",
+      "iputils-ping",
+      "jq",
+      "keyboard-configuration",
+      "khronos-api",
+      "kmod",
+      "krb5-locales",
+      "laptop-detect",
+      "less",
+      "libacl1",
+      "libapparmor1",
+      "libapt-pkg7.0",
+      "libasound2-dev",
+      "libattr1",
+      "libaudit-common",
+      "libaudit1",
+      "libavcodec-dev",
+      "libavformat-dev",
+      "libblkid1",
+      "libbpf1",
+      "libbsd0",
+      "libbz2-1.0",
+      "libc-bin",
+      "libc6",
+      "libcap-ng0",
+      "libcap2",
+      "libcap2-bin",
+      "libcapi20-dev",
+      "libcom-err2",
+      "libcrypt1",
+      "libcups2-dev",
+      "libdb5.3t64",
+      "libdbus-1-dev",
+      "libdebconfclient0",
+      "libedit2",
+      "libegl1",
+      "libelf1t64",
+      "libext2fs2t64",
+      "libfdisk1",
+      "libfontconfig-dev",
+      "libfreetype-dev",
+      "libgcc-s1",
+      "libgettextpo-dev",
+      "libgl-dev",
+      "libglu1-mesa-dev",
+      "libglvnd-dev",
+      "libgmp10",
+      "libgnutls28-dev",
+      "libgphoto2-dev",
+      "libgssapi-krb5-2",
+      "libgstreamer-plugins-base1.0-dev",
+      "libhogweed6t64",
+      "libidn2-0",
+      "libjansson4",
+      "libk5crypto3",
+      "libkeyutils1",
+      "libkmod2",
+      "libkrb5-3",
+      "libkrb5-dev",
+      "libkrb5support0",
+      "liblapack-dev",
+      "liblastlog2-2",
+      "libldap-dev",
+      "libldap2-dev",
+      "liblocale-gettext-perl",
+      "liblockfile-bin",
+      "liblz4-1",
+      "liblzma5",
+      "libmd0",
+      "libmnl0",
+      "libmount1",
+      "libncurses-dev",
+      "libncursesw6",
+      "libnettle8t64",
+      "libnewt0.52",
+      "libnftables1",
+      "libnftnl11",
+      "libnss-systemd",
+      "libopenal-dev",
+      "libopenblas-dev",
+      "libosmesa6-dev",
+      "libpam-modules",
+      "libpam-modules-bin",
+      "libpam-pwquality",
+      "libpam-runtime",
+      "libpam-systemd",
+      "libpam0g",
+      "libpcap0.8-dev",
+      "libpcre2-8-0",
+      "libpcsclite-dev",
+      "libpopt0",
+      "libproc2-0",
+      "libpulse-dev",
+      "libreadline8t64",
+      "librsvg2-bin",
+      "libsdl2-dev",
+      "libseccomp2",
+      "libselinux1",
+      "libsemanage-common",
+      "libsemanage2",
+      "libsepol2",
+      "libslang2",
+      "libsmartcols1",
+      "libsqlite3-0",
+      "libss2",
+      "libssl-dev",
+      "libssl3t64",
+      "libstdc++6",
+      "libsystemd-shared",
+      "libsystemd0",
+      "libtext-charwidth-perl",
+      "libtext-iconv-perl",
+      "libtext-wrapi18n-perl",
+      "libtinfo6",
+      "libtirpc-common",
+      "libtirpc3t64",
+      "libudev-dev",
+      "libudev1",
+      "libunistring5",
+      "libunwind-dev",
+      "libusb-1.0-0-dev",
+      "libuuid1",
+      "libv4l-dev",
+      "libvulkan-dev",
+      "libwayland-dev",
+      "libx11-dev",
+      "libxcomposite-dev",
+      "libxcursor-dev",
+      "libxext-dev",
+      "libxfixes-dev",
+      "libxi-dev",
+      "libxinerama-dev",
+      "libxkbfile-dev",
+      "libxkbregistry-dev",
+      "libxml-libxml-perl",
+      "libxmu-dev",
+      "libxrandr-dev",
+      "libxrender-dev",
+      "libxt-dev",
+      "libxtables12",
+      "libxxf86dga-dev",
+      "libxxf86vm-dev",
+      "libxxhash0",
+      "libz-mingw-w64-dev",
+      "libzstd1",
+      "linux-headers-amd64",
+      "linux-image-amd64",
+      "linux-sysctl-defaults",
+      "locales",
+      "locales-all",
+      "login",
+      "login.defs",
+      "logrotate",
+      "logsave",
+      "lsb-release",
+      "lsof",
+      "man-db",
+      "manpages",
+      "mawk",
+      "mount",
+      "nano",
+      "ncurses-base",
+      "ncurses-bin",
+      "ncurses-term",
+      "net-tools",
+      "netbase",
+      "netcat-traditional",
+      "nftables",
+      "nomachine",
+      "ocl-icd-opencl-dev",
+      "openssh-client",
+      "openssh-server",
+      "openssl-provider-legacy",
+      "os-prober",
+      "parted",
+      "passwd",
+      "pciutils",
+      "pcp",
+      "perl",
+      "perl-base",
+      "pkg-config",
+      "pkgconf",
+      "procps",
+      "python3",
+      "python3-dev",
+      "python3-docutils",
+      "python3-jsonschema",
+      "python3-pip",
+      "python3-poetry",
+      "python3-sphinx",
+      "python3.13",
+      "python3.13-minimal",
+      "qemu-guest-agent",
+      "quilt",
+      "rdnssd",
+      "readline-common",
+      "reportbug",
+      "rsync",
+      "screen",
+      "sed",
+      "sensible-utils",
+      "sharutils",
+      "shim-signed",
+      "smartmontools",
+      "sqv",
+      "strace",
+      "sudo",
+      "synaptic",
+      "systemd",
+      "systemd-sysv",
+      "sysvinit-utils",
+      "tar",
+      "task-english",
+      "tasksel",
+      "tcpdump",
+      "terminator",
+      "tmux",
+      "traceroute",
+      "tzdata",
+      "udev",
+      "ufw",
+      "unattended-upgrades",
+      "unicode-cldr-core",
+      "unicode-data",
+      "unicode-idna",
+      "unixodbc-dev",
+      "unzip",
+      "util-linux",
+      "util-linux-extra",
+      "vim",
+      "vim-common",
+      "vim-tiny",
+      "wamerican",
+      "watchdog",
+      "wget",
+      "whiptail",
+      "wtmpdb",
+      "xfce4",
+      "xfce4-appfinder",
+      "xfce4-appmenu-plugin",
+      "xfce4-battery-plugin",
+      "xfce4-clipman",
+      "xfce4-clipman-plugin",
+      "xfce4-cpufreq-plugin",
+      "xfce4-cpugraph-plugin",
+      "xfce4-datetime-plugin",
+      "xfce4-dev-tools",
+      "xfce4-dict",
+      "xfce4-diskperf-plugin",
+      "xfce4-docklike-plugin",
+      "xfce4-eyes-plugin",
+      "xfce4-fsguard-plugin",
+      "xfce4-genmon-plugin",
+      "xfce4-goodies",
+      "xfce4-helpers",
+      "xfce4-indicator-plugin",
+      "xfce4-mailwatch-plugin",
+      "xfce4-mount-plugin",
+      "xfce4-mpc-plugin",
+      "xfce4-netload-plugin",
+      "xfce4-notes",
+      "xfce4-notes-plugin",
+      "xfce4-notifyd",
+      "xfce4-panel",
+      "xfce4-panel-profiles",
+      "xfce4-places-plugin",
+      "xfce4-power-manager",
+      "xfce4-power-manager-data",
+      "xfce4-power-manager-plugins",
+      "xfce4-pulseaudio-plugin",
+      "xfce4-screensaver",
+      "xfce4-screenshooter",
+      "xfce4-sensors-plugin",
+      "xfce4-session",
+      "xfce4-settings",
+      "xfce4-smartbookmark-plugin",
+      "xfce4-systemload-plugin",
+      "xfce4-taskmanager",
+      "xfce4-terminal",
+      "xfce4-time-out-plugin",
+      "xfce4-timer-plugin",
+      "xfce4-verve-plugin",
+      "xfce4-wavelan-plugin",
+      "xfce4-weather-plugin",
+      "xfce4-whiskermenu-plugin",
+      "xfce4-windowck-plugin",
+      "xfce4-xkb-plugin",
+      "xz-utils",
+      "zip",
+      "zlib1g",
+      "zstd"
+    ]
+  },
+  "non_apt": {
+    "nvm": {
+      "install_url_hint": "https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh",
+      "node_versions": [
+        "v24.16.0"
+      ],
+      "default_version": "lts/*",
+      "global_npm_packages": [
+        "corepack@0.35.0",
+        "npm@11.13.0"
+      ]
+    },
+    "pip_packages": [
+      {
+        "name": "alabaster",
+        "version": "0.7.16"
+      },
+      {
+        "name": "anyio",
+        "version": "4.8.0"
+      },
+      {
+        "name": "apt-listchanges",
+        "version": "4.8"
+      },
+      {
+        "name": "arrow",
+        "version": "1.3.0"
+      },
+      {
+        "name": "attrs",
+        "version": "25.3.0"
+      },
+      {
+        "name": "autocommand",
+        "version": "2.2.2"
+      },
+      {
+        "name": "babel",
+        "version": "2.17.0"
+      },
+      {
+        "name": "bcrypt",
+        "version": "4.2.0"
+      },
+      {
+        "name": "blinker",
+        "version": "1.9.0"
+      },
+      {
+        "name": "build",
+        "version": "1.2.2"
+      },
+      {
+        "name": "CacheControl",
+        "version": "0.14.3"
+      },
+      {
+        "name": "certifi",
+        "version": "2025.1.31"
+      },
+      {
+        "name": "chardet",
+        "version": "5.2.0"
+      },
+      {
+        "name": "charset-normalizer",
+        "version": "3.4.2"
+      },
+      {
+        "name": "cleo",
+        "version": "2.2.1"
+      },
+      {
+        "name": "click",
+        "version": "8.1.8"
+      },
+      {
+        "name": "cloud-init",
+        "version": "25.1.4"
+      },
+      {
+        "name": "configobj",
+        "version": "5.0.9"
+      },
+      {
+        "name": "cryptography",
+        "version": "43.0.0"
+      },
+      {
+        "name": "dbus-python",
+        "version": "1.4.0"
+      },
+      {
+        "name": "defusedxml",
+        "version": "0.7.1"
+      },
+      {
+        "name": "distlib",
+        "version": "0.3.9"
+      },
+      {
+        "name": "distro",
+        "version": "1.9.0"
+      },
+      {
+        "name": "distro-info",
+        "version": "1.13"
+      },
+      {
+        "name": "docutils",
+        "version": "0.21.2"
+      },
+      {
+        "name": "dulwich",
+        "version": "0.22.7"
+      },
+      {
+        "name": "fastimport",
+        "version": "0.9.14"
+      },
+      {
+        "name": "fastjsonschema",
+        "version": "2.21.1"
+      },
+      {
+        "name": "filelock",
+        "version": "3.18.0"
+      },
+      {
+        "name": "findpython",
+        "version": "0.6.2"
+      },
+      {
+        "name": "fqdn",
+        "version": "1.5.1"
+      },
+      {
+        "name": "h11",
+        "version": "0.14.0"
+      },
+      {
+        "name": "httpcore",
+        "version": "1.0.7"
+      },
+      {
+        "name": "httpx",
+        "version": "0.28.1"
+      },
+      {
+        "name": "idna",
+        "version": "3.10"
+      },
+      {
+        "name": "imagesize",
+        "version": "1.4.1"
+      },
+      {
+        "name": "inflect",
+        "version": "7.3.1"
+      },
+      {
+        "name": "installer",
+        "version": "0.7.0"
+      },
+      {
+        "name": "isoduration",
+        "version": "20.11.0"
+      },
+      {
+        "name": "jaraco.classes",
+        "version": "3.4.0"
+      },
+      {
+        "name": "jaraco.context",
+        "version": "6.0.1"
+      },
+      {
+        "name": "jaraco.functools",
+        "version": "4.1.0"
+      },
+      {
+        "name": "jaraco.text",
+        "version": "4.0.0"
+      },
+      {
+        "name": "jeepney",
+        "version": "0.9.0"
+      },
+      {
+        "name": "Jinja2",
+        "version": "3.1.6"
+      },
+      {
+        "name": "jsonpatch",
+        "version": "1.32"
+      },
+      {
+        "name": "jsonpointer",
+        "version": "2.4"
+      },
+      {
+        "name": "jsonschema",
+        "version": "4.19.2"
+      },
+      {
+        "name": "jsonschema-specifications",
+        "version": "2023.12.1"
+      },
+      {
+        "name": "keyring",
+        "version": "25.6.0"
+      },
+      {
+        "name": "linkify-it-py",
+        "version": "2.0.3"
+      },
+      {
+        "name": "markdown-it-py",
+        "version": "3.0.0"
+      },
+      {
+        "name": "MarkupSafe",
+        "version": "2.1.5"
+      },
+      {
+        "name": "mdurl",
+        "version": "0.1.2"
+      },
+      {
+        "name": "meson",
+        "version": "1.7.0"
+      },
+      {
+        "name": "more-itertools",
+        "version": "10.7.0"
+      },
+      {
+        "name": "msgpack",
+        "version": "1.0.3"
+      },
+      {
+        "name": "numpy",
+        "version": "2.2.4"
+      },
+      {
+        "name": "oauthlib",
+        "version": "3.2.2"
+      },
+      {
+        "name": "packaging",
+        "version": "25.0"
+      },
+      {
+        "name": "pbs-installer",
+        "version": "2025.4.9"
+      },
+      {
+        "name": "pcp",
+        "version": "5.0"
+      },
+      {
+        "name": "pip",
+        "version": "25.1.1"
+      },
+      {
+        "name": "pkginfo",
+        "version": "1.12.1.2"
+      },
+      {
+        "name": "platformdirs",
+        "version": "4.3.7"
+      },
+      {
+        "name": "poetry",
+        "version": "2.1.2"
+      },
+      {
+        "name": "poetry-core",
+        "version": "2.1.2"
+      },
+      {
+        "name": "psutil",
+        "version": "7.0.0"
+      },
+      {
+        "name": "pycairo",
+        "version": "1.27.0"
+      },
+      {
+        "name": "Pygments",
+        "version": "2.18.0"
+      },
+      {
+        "name": "PyGObject",
+        "version": "3.50.0"
+      },
+      {
+        "name": "PyJWT",
+        "version": "2.10.1"
+      },
+      {
+        "name": "pyproject_hooks",
+        "version": "1.2.0"
+      },
+      {
+        "name": "python-apt",
+        "version": "3.0.0"
+      },
+      {
+        "name": "python-dateutil",
+        "version": "2.9.0"
+      },
+      {
+        "name": "python-debian",
+        "version": "1.0.1"
+      },
+      {
+        "name": "python-debianbts",
+        "version": "4.1.1"
+      },
+      {
+        "name": "PyYAML",
+        "version": "6.0.2"
+      },
+      {
+        "name": "RapidFuzz",
+        "version": "3.12.2"
+      },
+      {
+        "name": "referencing",
+        "version": "0.36.2"
+      },
+      {
+        "name": "reportbug",
+        "version": "13.2.0"
+      },
+      {
+        "name": "requests",
+        "version": "2.32.3"
+      },
+      {
+        "name": "requests-toolbelt",
+        "version": "1.0.0"
+      },
+      {
+        "name": "rfc3339-validator",
+        "version": "0.1.4"
+      },
+      {
+        "name": "rfc3986-validator",
+        "version": "0.1.1"
+      },
+      {
+        "name": "rfc3987",
+        "version": "1.3.8"
+      },
+      {
+        "name": "rich",
+        "version": "13.9.4"
+      },
+      {
+        "name": "roman",
+        "version": "5.0"
+      },
+      {
+        "name": "rpds-py",
+        "version": "0.21.0"
+      },
+      {
+        "name": "SecretStorage",
+        "version": "3.3.3"
+      },
+      {
+        "name": "setuptools",
+        "version": "78.1.1"
+      },
+      {
+        "name": "shellingham",
+        "version": "1.5.4"
+      },
+      {
+        "name": "sniffio",
+        "version": "1.3.1"
+      },
+      {
+        "name": "snowballstemmer",
+        "version": "2.2.0"
+      },
+      {
+        "name": "Sphinx",
+        "version": "8.1.3"
+      },
+      {
+        "name": "terminator",
+        "version": "2.1.4"
+      },
+      {
+        "name": "tomlkit",
+        "version": "0.13.2"
+      },
+      {
+        "name": "trove-classifiers",
+        "version": "2025.4.28.22"
+      },
+      {
+        "name": "typeguard",
+        "version": "4.4.2"
+      },
+      {
+        "name": "types-aiofiles",
+        "version": "24.1"
+      },
+      {
+        "name": "types-antlr4-python3-runtime",
+        "version": "4.13"
+      },
+      {
+        "name": "types-assertpy",
+        "version": "1.1"
+      },
+      {
+        "name": "types-atheris",
+        "version": "2.3"
+      },
+      {
+        "name": "types-aws-xray-sdk",
+        "version": "2.14"
+      },
+      {
+        "name": "types-beautifulsoup4",
+        "version": "4.12"
+      },
+      {
+        "name": "types-bleach",
+        "version": "6.2"
+      },
+      {
+        "name": "types-boltons",
+        "version": "24.1"
+      },
+      {
+        "name": "types-braintree",
+        "version": "4.31"
+      },
+      {
+        "name": "types-cachetools",
+        "version": "5.5"
+      },
+      {
+        "name": "types-caldav",
+        "version": "1.3"
+      },
+      {
+        "name": "types-capturer",
+        "version": "3.0"
+      },
+      {
+        "name": "types-cffi",
+        "version": "1.16"
+      },
+      {
+        "name": "types-chevron",
+        "version": "0.14"
+      },
+      {
+        "name": "types-click-default-group",
+        "version": "1.2"
+      },
+      {
+        "name": "types-click-spinner",
+        "version": "0.1"
+      },
+      {
+        "name": "types-colorama",
+        "version": "0.4"
+      },
+      {
+        "name": "types-commonmark",
+        "version": "0.9"
+      },
+      {
+        "name": "types-console-menu",
+        "version": "0.8"
+      },
+      {
+        "name": "types-corus",
+        "version": "0.10"
+      },
+      {
+        "name": "types-croniter",
+        "version": "5.0.1"
+      },
+      {
+        "name": "types-dateparser",
+        "version": "1.2"
+      },
+      {
+        "name": "types-decorator",
+        "version": "5.1"
+      },
+      {
+        "name": "types-defusedxml",
+        "version": "0.7"
+      },
+      {
+        "name": "types-Deprecated",
+        "version": "1.2.15"
+      },
+      {
+        "name": "types-docker",
+        "version": "7.1"
+      },
+      {
+        "name": "types-dockerfile-parse",
+        "version": "2.0"
+      },
+      {
+        "name": "types-docutils",
+        "version": "0.21"
+      },
+      {
+        "name": "types-editdistance",
+        "version": "0.8"
+      },
+      {
+        "name": "types-entrypoints",
+        "version": "0.4"
+      },
+      {
+        "name": "types-ExifRead",
+        "version": "3.0"
+      },
+      {
+        "name": "types-fanstatic",
+        "version": "1.4"
+      },
+      {
+        "name": "types-first",
+        "version": "2.0"
+      },
+      {
+        "name": "types-flake8",
+        "version": "7.1"
+      },
+      {
+        "name": "types-flake8-bugbear",
+        "version": "24.12.12"
+      },
+      {
+        "name": "types-flake8-builtins",
+        "version": "2.5"
+      },
+      {
+        "name": "types-flake8-docstrings",
+        "version": "1.7"
+      },
+      {
+        "name": "types-flake8-rst-docstrings",
+        "version": "0.3"
+      },
+      {
+        "name": "types-flake8-simplify",
+        "version": "0.21"
+      },
+      {
+        "name": "types-flake8-typing-imports",
+        "version": "1.16"
+      },
+      {
+        "name": "types-Flask-Cors",
+        "version": "5.0"
+      },
+      {
+        "name": "types-Flask-Migrate",
+        "version": "4.0"
+      },
+      {
+        "name": "types-Flask-SocketIO",
+        "version": "5.4"
+      },
+      {
+        "name": "types-fpdf2",
+        "version": "2.8.2"
+      },
+      {
+        "name": "types-gdb",
+        "version": "15.0"
+      },
+      {
+        "name": "types-gevent",
+        "version": "24.11"
+      },
+      {
+        "name": "types-google-cloud-ndb",
+        "version": "2.3"
+      },
+      {
+        "name": "types-greenlet",
+        "version": "3.1"
+      },
+      {
+        "name": "types-hdbcli",
+        "version": "2.23"
+      },
+      {
+        "name": "types-html5lib",
+        "version": "1.1"
+      },
+      {
+        "name": "types-httplib2",
+        "version": "0.22"
+      },
+      {
+        "name": "types-humanfriendly",
+        "version": "10.0"
+      },
+      {
+        "name": "types-hvac",
+        "version": "2.3"
+      },
+      {
+        "name": "types-ibm-db",
+        "version": "3.2.4"
+      },
+      {
+        "name": "types-icalendar",
+        "version": "6.1"
+      },
+      {
+        "name": "types-influxdb-client",
+        "version": "1.45"
+      },
+      {
+        "name": "types-inifile",
+        "version": "0.4"
+      },
+      {
+        "name": "types-JACK-Client",
+        "version": "0.5"
+      },
+      {
+        "name": "types-Jetson.GPIO",
+        "version": "2.1"
+      },
+      {
+        "name": "types-jmespath",
+        "version": "1.0"
+      },
+      {
+        "name": "types-jsonschema",
+        "version": "4.23"
+      },
+      {
+        "name": "types-jwcrypto",
+        "version": "1.5"
+      },
+      {
+        "name": "types-keyboard",
+        "version": "0.13"
+      },
+      {
+        "name": "types-ldap3",
+        "version": "2.9"
+      },
+      {
+        "name": "types-libsass",
+        "version": "0.23"
+      },
+      {
+        "name": "types-lupa",
+        "version": "2.2"
+      },
+      {
+        "name": "types-lzstring",
+        "version": "1.0"
+      },
+      {
+        "name": "types-m3u8",
+        "version": "6.0"
+      },
+      {
+        "name": "types-Markdown",
+        "version": "3.7"
+      },
+      {
+        "name": "types-mock",
+        "version": "5.1"
+      },
+      {
+        "name": "types-mypy-extensions",
+        "version": "1.0"
+      },
+      {
+        "name": "types-mysqlclient",
+        "version": "2.2"
+      },
+      {
+        "name": "types-nanoid",
+        "version": "2.0.0"
+      },
+      {
+        "name": "types-netaddr",
+        "version": "1.3"
+      },
+      {
+        "name": "types-netifaces",
+        "version": "0.11"
+      },
+      {
+        "name": "types-networkx",
+        "version": "3.4.2"
+      },
+      {
+        "name": "types-oauthlib",
+        "version": "3.2"
+      },
+      {
+        "name": "types-objgraph",
+        "version": "3.6"
+      },
+      {
+        "name": "types-olefile",
+        "version": "0.47"
+      },
+      {
+        "name": "types-openpyxl",
+        "version": "3.1.5"
+      },
+      {
+        "name": "types-opentracing",
+        "version": "2.4"
+      },
+      {
+        "name": "types-paramiko",
+        "version": "3.5"
+      },
+      {
+        "name": "types-parsimonious",
+        "version": "0.10"
+      },
+      {
+        "name": "types-passlib",
+        "version": "1.7"
+      },
+      {
+        "name": "types-passpy",
+        "version": "1.0"
+      },
+      {
+        "name": "types-peewee",
+        "version": "3.17.8"
+      },
+      {
+        "name": "types-pep8-naming",
+        "version": "0.14"
+      },
+      {
+        "name": "types-pexpect",
+        "version": "4.9"
+      },
+      {
+        "name": "types-pika-ts",
+        "version": "1.3"
+      },
+      {
+        "name": "types-polib",
+        "version": "1.2"
+      },
+      {
+        "name": "types-portpicker",
+        "version": "1.6"
+      },
+      {
+        "name": "types-protobuf",
+        "version": "5.29.1"
+      },
+      {
+        "name": "types-psutil",
+        "version": "6.1"
+      },
+      {
+        "name": "types-psycopg2",
+        "version": "2.9.10"
+      },
+      {
+        "name": "types-pyasn1",
+        "version": "0.6"
+      },
+      {
+        "name": "types-pyaudio",
+        "version": "0.2"
+      },
+      {
+        "name": "types-PyAutoGUI",
+        "version": "0.9"
+      },
+      {
+        "name": "types-pycocotools",
+        "version": "2.0"
+      },
+      {
+        "name": "types-pycurl",
+        "version": "7.45.4"
+      },
+      {
+        "name": "types-pyfarmhash",
+        "version": "0.4"
+      },
+      {
+        "name": "types-pyflakes",
+        "version": "3.2"
+      },
+      {
+        "name": "types-pygit2",
+        "version": "1.15"
+      },
+      {
+        "name": "types-Pygments",
+        "version": "2.18"
+      },
+      {
+        "name": "types-pyinstaller",
+        "version": "6.11"
+      },
+      {
+        "name": "types-pyjks",
+        "version": "20.0"
+      },
+      {
+        "name": "types-PyMySQL",
+        "version": "1.1"
+      },
+      {
+        "name": "types-pynput",
+        "version": "1.7.7"
+      },
+      {
+        "name": "types-pyOpenSSL",
+        "version": "24.1"
+      },
+      {
+        "name": "types-pyRFC3339",
+        "version": "2.0.1"
+      },
+      {
+        "name": "types-PyScreeze",
+        "version": "1.0.1"
+      },
+      {
+        "name": "types-pyserial",
+        "version": "3.5"
+      },
+      {
+        "name": "types-pysftp",
+        "version": "0.2"
+      },
+      {
+        "name": "types-pytest-lazy-fixture",
+        "version": "0.6"
+      },
+      {
+        "name": "types-python-crontab",
+        "version": "3.2"
+      },
+      {
+        "name": "types-python-datemath",
+        "version": "3.0.1"
+      },
+      {
+        "name": "types-python-dateutil",
+        "version": "2.9"
+      },
+      {
+        "name": "types-python-http-client",
+        "version": "3.3.7"
+      },
+      {
+        "name": "types-python-jenkins",
+        "version": "1.8"
+      },
+      {
+        "name": "types-python-jose",
+        "version": "3.3"
+      },
+      {
+        "name": "types-python-nmap",
+        "version": "0.7"
+      },
+      {
+        "name": "types-python-xlib",
+        "version": "0.33"
+      },
+      {
+        "name": "types-pytz",
+        "version": "2024.2"
+      },
+      {
+        "name": "types-pywin32",
+        "version": "308"
+      },
+      {
+        "name": "types-pyxdg",
+        "version": "0.28"
+      },
+      {
+        "name": "types-PyYAML",
+        "version": "6.0"
+      },
+      {
+        "name": "types-qrbill",
+        "version": "1.1"
+      },
+      {
+        "name": "types-qrcode",
+        "version": "8.0"
+      },
+      {
+        "name": "types-regex",
+        "version": "2024.11.6"
+      },
+      {
+        "name": "types-reportlab",
+        "version": "4.2.5"
+      },
+      {
+        "name": "types-requests",
+        "version": "2.32"
+      },
+      {
+        "name": "types-requests-oauthlib",
+        "version": "2.0"
+      },
+      {
+        "name": "types-retry",
+        "version": "0.9"
+      },
+      {
+        "name": "types-RPi.GPIO",
+        "version": "0.7"
+      },
+      {
+        "name": "types-s2clientprotocol",
+        "version": "5"
+      },
+      {
+        "name": "types-seaborn",
+        "version": "0.13.2"
+      },
+      {
+        "name": "types-Send2Trash",
+        "version": "1.8"
+      },
+      {
+        "name": "types-setuptools",
+        "version": "75.6"
+      },
+      {
+        "name": "types-shapely",
+        "version": "2.0"
+      },
+      {
+        "name": "types-simplejson",
+        "version": "3.19"
+      },
+      {
+        "name": "types-singledispatch",
+        "version": "4.1"
+      },
+      {
+        "name": "types-six",
+        "version": "1.17"
+      },
+      {
+        "name": "types-slumber",
+        "version": "0.7"
+      },
+      {
+        "name": "types-str2bool",
+        "version": "1.1"
+      },
+      {
+        "name": "types-tabulate",
+        "version": "0.9"
+      },
+      {
+        "name": "types-tensorflow",
+        "version": "2.18.0"
+      },
+      {
+        "name": "types-TgCrypto",
+        "version": "1.2"
+      },
+      {
+        "name": "types-toml",
+        "version": "0.10"
+      },
+      {
+        "name": "types-toposort",
+        "version": "1.10"
+      },
+      {
+        "name": "types-tqdm",
+        "version": "4.67"
+      },
+      {
+        "name": "types-translationstring",
+        "version": "1.4"
+      },
+      {
+        "name": "types-tree-sitter-languages",
+        "version": "1.10"
+      },
+      {
+        "name": "types-ttkthemes",
+        "version": "3.2"
+      },
+      {
+        "name": "types-ujson",
+        "version": "5.10"
+      },
+      {
+        "name": "types-unidiff",
+        "version": "0.7"
+      },
+      {
+        "name": "types-untangle",
+        "version": "1.2"
+      },
+      {
+        "name": "types-usersettings",
+        "version": "1.1"
+      },
+      {
+        "name": "types-uWSGI",
+        "version": "2.0"
+      },
+      {
+        "name": "types-vobject",
+        "version": "0.9.9"
+      },
+      {
+        "name": "types-waitress",
+        "version": "3.0.1"
+      },
+      {
+        "name": "types-WebOb",
+        "version": "1.8"
+      },
+      {
+        "name": "types-whatthepatch",
+        "version": "1.0"
+      },
+      {
+        "name": "types-workalendar",
+        "version": "17.0"
+      },
+      {
+        "name": "types-WTForms",
+        "version": "3.2.1"
+      },
+      {
+        "name": "types-wurlitzer",
+        "version": "3.1"
+      },
+      {
+        "name": "types-xdgenvpy",
+        "version": "3.0"
+      },
+      {
+        "name": "types-xmltodict",
+        "version": "0.14"
+      },
+      {
+        "name": "types-zstd",
+        "version": "1.5"
+      },
+      {
+        "name": "types-zxcvbn",
+        "version": "4.4"
+      },
+      {
+        "name": "typing_extensions",
+        "version": "4.13.2"
+      },
+      {
+        "name": "uc-micro-py",
+        "version": "1.0.3"
+      },
+      {
+        "name": "ufw",
+        "version": "0.36.2"
+      },
+      {
+        "name": "unattended-upgrades",
+        "version": "0.1"
+      },
+      {
+        "name": "uritemplate",
+        "version": "4.1.1"
+      },
+      {
+        "name": "urllib3",
+        "version": "2.3.0"
+      },
+      {
+        "name": "virtualenv",
+        "version": "20.31.2"
+      },
+      {
+        "name": "webcolors",
+        "version": "1.13"
+      },
+      {
+        "name": "wheel",
+        "version": "0.46.1"
+      },
+      {
+        "name": "zipp",
+        "version": "3.21.0"
+      },
+      {
+        "name": "zstandard",
+        "version": "0.23.0"
+      }
+    ],
+    "deb_installs": [
+      {
+        "package": "nomachine",
+        "version": "9.5.7-2",
+        "install_method": "dpkg -i <.deb>",
+        "deb_url_hint": "https://www.nomachine.com/download"
+      }
+    ]
+  },
+  "user_groups": [
+    "audio",
+    "cdrom",
+    "dip",
+    "docker",
+    "floppy",
+    "linuxuser",
+    "netdev",
+    "plugdev",
+    "sudo",
+    "users",
+    "video"
+  ]
+}

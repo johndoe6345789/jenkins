@@ -120,10 +120,12 @@ def build_parser() -> argparse.ArgumentParser:
     bs.set_defaults(func=cmd_bootstrap)
 
     ih = sub.add_parser("inventory-host",
-                        help="refresh docs/host-baseline.md + docs/host-apt-manual.txt "
+                        help="refresh docs/host-baseline.{json,md} + host-apt-manual.txt "
                              "from the live host state")
     ih.add_argument("--print", action="store_true",
-                    help="print the rendered baseline to stdout instead of writing")
+                    help="print to stdout instead of writing files")
+    ih.add_argument("--format", choices=("md", "json"), default="md",
+                    help="when --print is set, which format (default md)")
     ih.set_defaults(func=cmd_inventory_host)
 
     ihd = sub.add_parser("install-host-deps",
