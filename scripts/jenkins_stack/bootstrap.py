@@ -117,11 +117,3 @@ def cmd_bootstrap(args: argparse.Namespace) -> int:
     return 0
 
 
-def cmd_install_host_deps(args: argparse.Namespace) -> int:
-    """Stub. Reading and applying docs/host-baseline.md programmatically is
-    out of scope for this first cut — manual is fine for a one-shot recovery,
-    and writing this needs sudo + apt-key + nvm + interactive choices about
-    desktop vs headless. Tracked as a follow-up."""
-    print("install-host-deps is not implemented yet.")
-    print("see docs/host-baseline.md for the manual checklist.")
-    return 2

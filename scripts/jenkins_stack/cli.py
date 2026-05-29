@@ -34,10 +34,11 @@ from pathlib import Path
 
 from . import REPO_ROOT
 from .agent_recover import cmd_recover_agents
-from .bootstrap import cmd_bootstrap, cmd_install_host_deps
+from .bootstrap import cmd_bootstrap
 from .compose import cmd_lifecycle
 from .doctor import cmd_doctor
 from .host import cmd_inventory_host
+from .install_host_deps import cmd_install_host_deps
 from .jobs import cmd_register_jobs
 from .recover import cmd_recover_key
 from .repos import cmd_clone_repos
@@ -129,8 +130,13 @@ def build_parser() -> argparse.ArgumentParser:
     ih.set_defaults(func=cmd_inventory_host)
 
     ihd = sub.add_parser("install-host-deps",
-                         help="(stub) install the apt + non-apt prerequisites listed "
-                              "in docs/host-baseline.md")
+                         help="apply docs/host-baseline.json to the current host "
+                              "(adds apt sources, installs apt + pip + nvm + node)")
+    ihd.add_argument("--apply", action="store_true",
+                     help="execute. without this flag, dry-run prints the plan only")
+    ihd.add_argument("--skip-desktop", action="store_true",
+                     help="omit xfce4-*, gnome-*, chrome, nomachine, gparted, terminator "
+                          "(headless rebuilds)")
     ihd.set_defaults(func=cmd_install_host_deps)
 
     for name, help_ in (
