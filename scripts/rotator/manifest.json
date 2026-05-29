@@ -1,0 +1,92 @@
+{
+  "$schema_note": "Targets are rotated in array order. secret_env_key is the name written to jenkins/secrets/rotated.env (and rotated.latest.env). adapter is a Python module name under jenkins/scripts/rotator/adapters/. params is passed verbatim to the adapter's rotate() / status() functions.",
+  "targets": [
+    {
+      "name": "postgres-dashboard-admin",
+      "adapter": "db_bcrypt",
+      "secret_env_key": "POSTGRES_DASHBOARD_ADMIN_PASSWORD",
+      "params": {
+        "db_container": "metabuilder-postgres",
+        "db_name": "metabuilder",
+        "db_user": "metabuilder",
+        "table": "admin_users",
+        "username_column": "username",
+        "hash_column": "password_hash",
+        "updated_at_column": "updated_at",
+        "username": "admin",
+        "bcrypt_cost": 10
+      }
+    },
+    {
+      "name": "packagerepo-admin",
+      "adapter": "db_bcrypt",
+      "secret_env_key": "PACKAGEREPO_ADMIN_PASSWORD",
+      "params": {
+        "db_container": "metabuilder-packagerepo-db",
+        "db_name": "packagerepo",
+        "db_user": "packagerepo",
+        "table": "users",
+        "username_column": "username",
+        "hash_column": "password_hash",
+        "updated_at_column": "updated_at",
+        "username": "admin",
+        "bcrypt_cost": 10
+      }
+    },
+    {
+      "name": "dockerterminal-admin",
+      "adapter": "env_var",
+      "secret_env_key": "DOCKERTERMINAL_ADMIN_PASSWORD",
+      "params": {
+        "env_file": "secrets/dockerterminal.env",
+        "env_key": "ADMIN_PASSWORD",
+        "recreate_service": "metabuilder-dockerterminal-backend"
+      }
+    },
+    {
+      "name": "workflowui-nextauth-secret",
+      "adapter": "env_var",
+      "secret_env_key": "WORKFLOWUI_NEXTAUTH_SECRET",
+      "params": {
+        "env_file": "secrets/workflowui.env",
+        "env_key": "NEXTAUTH_SECRET",
+        "recreate_service": "metabuilder-workflowui",
+        "length": 64
+      }
+    },
+    {
+      "name": "emailclient-redis",
+      "adapter": "env_var",
+      "secret_env_key": "EMAILCLIENT_REDIS_PASSWORD",
+      "params": {
+        "env_file": "secrets/emailclient.env",
+        "env_key": "REDIS_PASSWORD",
+        "recreate_service": "metabuilder-emailclient-redis"
+      }
+    },
+    {
+      "name": "businessplanner-keycloak-devadmin",
+      "adapter": "keycloak_realm",
+      "secret_env_key": "BUSINESSPLANNER_DEVADMIN_PASSWORD",
+      "params": {
+        "kc_url": "http://localhost:8080",
+        "kc_master_user": "admin",
+        "kc_master_password_env": "BUSINESSPLANNER_KC_MASTER_PASSWORD",
+        "realm": "businessplanner",
+        "user": "devadmin"
+      }
+    },
+    {
+      "name": "next-extra-primary-keycloak-devadmin",
+      "adapter": "keycloak_realm",
+      "secret_env_key": "NEXTRA_DEVADMIN_PASSWORD",
+      "params": {
+        "kc_url": "http://localhost:8080",
+        "kc_master_user": "admin",
+        "kc_master_password_env": "NEXTRA_KC_MASTER_PASSWORD",
+        "realm": "nextra",
+        "user": "devadmin"
+      }
+    }
+  ]
+}
