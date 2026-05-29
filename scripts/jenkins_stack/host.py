@@ -124,6 +124,23 @@ def _apt_packages() -> list[str]:
     return sorted(_run(["apt-mark", "showmanual"]).splitlines())
 
 
+def _claude_cli() -> dict | None:
+    bin_path = Path.home() / ".local" / "bin" / "claude"
+    versions_dir = Path.home() / ".local" / "share" / "claude" / "versions"
+    if not bin_path.exists() and not versions_dir.exists():
+        return None
+    versions = []
+    if versions_dir.exists():
+        versions = sorted(p.name for p in versions_dir.iterdir())
+    return {
+        "install_url": "https://claude.ai/install.sh",
+        "install_method": "curl -fsSL <install_url> | bash",
+        "bin_path": str(bin_path),
+        "versions_dir": str(versions_dir),
+        "versions": versions,
+    }
+
+
 def _nvm() -> dict | None:
     nvm_dir = Path.home() / ".nvm"
     if not nvm_dir.exists():
@@ -207,6 +224,7 @@ def capture() -> dict:
         },
         "non_apt": {
             "nvm": _nvm(),
+            "claude_cli": _claude_cli(),
             "pip_packages": _pip_packages(),
             "deb_installs": _deb_installs(),
         },
@@ -238,6 +256,16 @@ def render_md(data: dict) -> str:
         )
     else:
         nvm_section = "_nvm not detected._"
+
+    claude = data["non_apt"].get("claude_cli")
+    if claude:
+        claude_section = (
+            f"- Install via: `{claude['install_method']}` (URL: `{claude['install_url']}`)\n"
+            f"- Versions present: {', '.join('`' + v + '`' for v in claude['versions']) or '_none_'}\n"
+            f"- Binary symlink: `{claude['bin_path']}`"
+        )
+    else:
+        claude_section = "_Claude CLI not detected._"
 
     pip_lines = "\n".join(
         f"- `{p['name']}=={p['version']}`"
@@ -291,6 +319,10 @@ The JSON capture has the same list under `apt.manual_packages`.
 ### Node.js — nvm
 
 {nvm_section}
+
+### Claude CLI
+
+{claude_section}
 
 ### Python pip packages (tracked)
 

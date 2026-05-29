@@ -1,5 +1,5 @@
 {
-  "captured_at": "2026-05-29T10:08:58+00:00",
+  "captured_at": "2026-05-29T10:11:52+00:00",
   "captured_on": "wardcrew",
   "schema_version": 1,
   "os": {
@@ -564,6 +564,18 @@
       "global_npm_packages": [
         "corepack@0.35.0",
         "npm@11.13.0"
+      ]
+    },
+    "claude_cli": {
+      "install_url": "https://claude.ai/install.sh",
+      "install_method": "curl -fsSL <install_url> | bash",
+      "bin_path": "/home/linuxuser/.local/bin/claude",
+      "versions_dir": "/home/linuxuser/.local/share/claude/versions",
+      "versions": [
+        "2.1.150",
+        "2.1.152",
+        "2.1.153",
+        "2.1.154"
       ]
     },
     "pip_packages": [

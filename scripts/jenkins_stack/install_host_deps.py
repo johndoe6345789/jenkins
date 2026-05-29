@@ -2,21 +2,27 @@
 
 Reads the JSON capture and applies each phase idempotently:
 
-    1. Third-party apt sources         (keys to /etc/apt/keyrings/,
-                                         sources files to /etc/apt/sources.list.d/)
-    2. apt packages from manual_packages   (apt-get install, skipping those
-                                             already present)
-    3. nvm + node versions             (curl install + nvm install)
-    4. Essential pip packages          (bcrypt, cryptography — the rest of
-                                         the 278-pkg capture is stdlib
-                                         companions)
-    5. dpkg -i installs                (printed as instructions only —
-                                         these need license acceptance /
-                                         user input so we don't automate)
+    1. Third-party apt sources    keys to /etc/apt/keyrings/, sources files
+                                   to /etc/apt/sources.list.d/
+    2. apt packages               apt-get install every missing entry from
+                                   apt.manual_packages
+    3. nvm + node versions        curl install nvm if missing, then
+                                   `nvm install` each version in the JSON
+    4. claude cli                 curl-pipe install if the binary isn't
+                                   present in the captured path
+    5. essential pip packages     bcrypt, cryptography — the rest of the
+                                   278-pkg capture is stdlib companions
+    6. dpkg -i installs           printed as instructions (NoMachine needs
+                                   license acceptance, can't automate)
+    7. docker group + verify      usermod -aG docker $USER, then
+                                   `sudo docker run --rm hello-world` to
+                                   confirm the daemon is reachable
 
-Default mode is dry-run. Use --apply to execute. sudo prompts will appear
-for steps 1, 2, and 5. Re-runs are safe: every phase checks current state
-and only acts on missing items.
+Default is dry-run. Use --apply to execute. sudo prompts will appear for
+steps 1, 2, 6, and 7. Re-runs are safe: every phase checks current state
+and only acts on missing items. After --apply finishes, log out + back in
+(or `newgrp docker`) so the new group membership takes effect for plain
+`docker` commands.
 """
 from __future__ import annotations
 
@@ -221,6 +227,56 @@ def phase_pip(data: dict, dry_run: bool) -> int:
     return _exec(["python3", "-m", "pip", "install", "--break-system-packages", *missing], dry_run)
 
 
+def phase_claude_cli(data: dict, dry_run: bool) -> int:
+    cli = data["non_apt"].get("claude_cli")
+    if not cli:
+        print("claude cli: not in baseline, skipping")
+        return 0
+    bin_path = Path(cli["bin_path"])
+    if bin_path.exists():
+        print(f"claude cli: present at {bin_path}")
+        return 0
+    print(f"claude cli: installing via `{cli['install_method']}`")
+    return _exec_sh(f"curl -fsSL {cli['install_url']} | bash", dry_run)
+
+
+def phase_docker_setup(data: dict, dry_run: bool) -> int:
+    """Two things compose needs to actually work:
+        1. the current user is in the `docker` group (avoids sudo for every
+           docker command)
+        2. the daemon is reachable — verified with `hello-world`
+
+    Group changes don't take effect in the current session, so the verify
+    step uses `sudo docker` which works regardless. After --apply, the user
+    needs to log out + back in (or `newgrp docker`) before plain `docker ps`
+    works as them.
+    """
+    if not _have_pkg("docker-ce"):
+        print("docker: docker-ce not installed — run the apt-packages phase first")
+        return 1
+
+    user = os.environ.get("USER") or os.environ.get("LOGNAME") or ""
+    if not user or user == "root":
+        print("docker: running as root or unknown user — skipping group setup")
+    else:
+        current_groups = subprocess.run(
+            ["id", "-nG", user], capture_output=True, text=True,
+        ).stdout.split()
+        if "docker" in current_groups:
+            print(f"docker: {user} already in docker group")
+        else:
+            print(f"docker: adding {user} to docker group (log out + back in to apply)")
+            if _exec(_sudo() + ["usermod", "-aG", "docker", user], dry_run):
+                return 1
+
+    print("docker: hello-world verification (uses sudo so group state doesn't matter)")
+    rc = _exec(_sudo() + ["docker", "run", "--rm", "hello-world"], dry_run)
+    if rc:
+        print("docker: hello-world failed — daemon may not be running")
+        print("       try: sudo systemctl enable --now docker")
+    return rc
+
+
 def phase_deb_installs(data: dict, dry_run: bool) -> int:
     """`.deb`-from-URL installs are reported, not executed. NoMachine needs a
     license confirmation step that we shouldn't be clicking through on the
@@ -260,11 +316,13 @@ def cmd_install_host_deps(args: argparse.Namespace) -> int:
 
     dry = not args.apply
     phases = [
-        ("apt sources",     lambda: phase_apt_sources(data, dry)),
-        ("apt packages",    lambda: phase_apt_packages(data, dry, args.skip_desktop)),
-        ("nvm + node",      lambda: phase_nvm(data, dry)),
-        ("pip essentials",  lambda: phase_pip(data, dry)),
-        ("dpkg -i installs",lambda: phase_deb_installs(data, dry)),
+        ("apt sources",      lambda: phase_apt_sources(data, dry)),
+        ("apt packages",     lambda: phase_apt_packages(data, dry, args.skip_desktop)),
+        ("nvm + node",       lambda: phase_nvm(data, dry)),
+        ("claude cli",       lambda: phase_claude_cli(data, dry)),
+        ("pip essentials",   lambda: phase_pip(data, dry)),
+        ("dpkg -i installs", lambda: phase_deb_installs(data, dry)),
+        ("docker group + verify", lambda: phase_docker_setup(data, dry)),
     ]
     failures = 0
     for name, fn in phases:
