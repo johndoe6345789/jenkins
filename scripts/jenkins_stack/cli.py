@@ -34,9 +34,13 @@ from pathlib import Path
 
 from . import REPO_ROOT
 from .agent_recover import cmd_recover_agents
+from .bootstrap import cmd_bootstrap, cmd_install_host_deps
 from .compose import cmd_lifecycle
 from .doctor import cmd_doctor
+from .host import cmd_inventory_host
+from .jobs import cmd_register_jobs
 from .recover import cmd_recover_key
+from .repos import cmd_clone_repos
 from .secretgen import cmd_secrets
 
 
@@ -85,6 +89,47 @@ def build_parser() -> argparse.ArgumentParser:
                     help="install a systemd timer to run this every 30 min "
                          "(requires sudo)")
     ra.set_defaults(func=cmd_recover_agents)
+
+    cr = sub.add_parser("clone-repos",
+                        help="git clone sibling app repos listed in sibling_repos.json")
+    cr.add_argument("--only", nargs="+", metavar="NAME",
+                    help="limit to specific repo names")
+    cr.add_argument("--update", action="store_true",
+                    help="git pull existing checkouts instead of leaving them alone")
+    cr.set_defaults(func=cmd_clone_repos)
+
+    rj = sub.add_parser("register-jobs",
+                        help="POST every jobs/*.xml into the running Jenkins")
+    rj.add_argument("--only", nargs="+", metavar="NAME",
+                    help="limit to specific job names (filename stems)")
+    rj.add_argument("--update", action="store_true",
+                    help="overwrite config.xml for jobs that already exist")
+    rj.add_argument("--wait-timeout", type=int, default=180,
+                    help="seconds to poll Jenkins for readiness before failing (default 180)")
+    rj.set_defaults(func=cmd_register_jobs)
+
+    bs = sub.add_parser("bootstrap",
+                        help="fresh-server-to-running-stack: host check -> clone repos -> "
+                             "verify secrets -> up -> register-jobs")
+    bs.add_argument("--skip-clone", action="store_true",
+                    help="skip the clone-repos step (sibling repos already present)")
+    bs.add_argument("--update-jobs", action="store_true",
+                    help="pass --update to register-jobs (overwrite existing)")
+    bs.add_argument("--continue-on-error", action="store_true",
+                    help="proceed past clone-repos failures")
+    bs.set_defaults(func=cmd_bootstrap)
+
+    ih = sub.add_parser("inventory-host",
+                        help="refresh docs/host-baseline.md + docs/host-apt-manual.txt "
+                             "from the live host state")
+    ih.add_argument("--print", action="store_true",
+                    help="print the rendered baseline to stdout instead of writing")
+    ih.set_defaults(func=cmd_inventory_host)
+
+    ihd = sub.add_parser("install-host-deps",
+                         help="(stub) install the apt + non-apt prerequisites listed "
+                              "in docs/host-baseline.md")
+    ihd.set_defaults(func=cmd_install_host_deps)
 
     for name, help_ in (
         ("up", "create/start services (controller + nginx) without rebuilding agents"),

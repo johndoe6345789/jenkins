@@ -1,0 +1,13 @@
+{
+  "_note": "Cloned to ../<name>/ relative to the jenkins repo root. Order is informational only; clone-repos parallelises. Update this file when a new app repo joins the stack.",
+  "repos": [
+    {"name": "metabuilder",          "url": "https://github.com/johndoe6345789/metabuilder.git",          "branch": "main"},
+    {"name": "businessplanner",      "url": "https://github.com/johndoe6345789/businessplanner.git",      "branch": "main"},
+    {"name": "next_extra_primary",   "url": "https://github.com/johndoe6345789/next_extra_primary.git",   "branch": "main"},
+    {"name": "hamradiosite",         "url": "https://github.com/johndoe6345789/hamradiosite.git",         "branch": "main"},
+    {"name": "webdevguide",          "url": "https://github.com/johndoe6345789/webdevguide.git",          "branch": "main"},
+    {"name": "nexus-command",        "url": "https://github.com/johndoe6345789/nexus-command.git",        "branch": "main"},
+    {"name": "strategy-execution-p", "url": "https://github.com/johndoe6345789/strategy-execution-p.git", "branch": "main"},
+    {"name": "workforce-pay-bill-p", "url": "https://github.com/johndoe6345789/workforce-pay-bill-p.git", "branch": "main"}
+  ]
+}
