@@ -1,0 +1,42 @@
+{
+  "extends": ["next/core-web-vitals"],
+  "rules": {
+    "no-console": ["warn", { "allow": ["warn", "error"] }],
+    "max-len": ["error", {
+      "code": 80,
+      "ignoreUrls": true,
+      "ignorePattern": "^\\s*import .*$"
+    }],
+    "max-lines": ["error", {
+      "max": 100,
+      "skipBlankLines": true,
+      "skipComments": true
+    }],
+    "max-lines-per-function": ["warn", {
+      "max": 75,
+      "skipBlankLines": true,
+      "skipComments": true,
+      "IIFEs": true
+    }]
+  },
+  "overrides": [
+    {
+      "files": [
+        "components/**/*.tsx",
+        "app/**/*.tsx",
+        "app/**/*.ts"
+      ],
+      "rules": {
+        "no-restricted-imports": ["error", {
+          "paths": [
+            {
+              "name": "react",
+              "importNames": ["useState", "useReducer"],
+              "message": "State hooks must live in hooks/ — extract to a custom hook"
+            }
+          ]
+        }]
+      }
+    }
+  ]
+}

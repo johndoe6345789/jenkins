@@ -1,7 +1,4 @@
 'use client'
-import { useState, type FormEvent } from 'react'
-import { useRouter } from 'next/navigation'
-import { useTranslation } from 'react-i18next'
 import Alert from '@mui/material/Alert'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
@@ -9,34 +6,19 @@ import LockIcon from '@mui/icons-material/Lock'
 import Paper from '@mui/material/Paper'
 import TextField from '@mui/material/TextField'
 import Typography from '@mui/material/Typography'
-import { useAuth } from '../../hooks/useAuth'
+import { useLoginForm } from '../../hooks/useLoginForm'
 import '../../lib/i18n'
 
 export default function LoginPage() {
-  const [password, setPassword] = useState('')
-  const [error, setError]       = useState('')
-  const [loading, setLoading]   = useState(false)
-  const { login } = useAuth()
-  const { t } = useTranslation()
-  const router = useRouter()
-
-  const submit = async (e: FormEvent) => {
-    e.preventDefault()
-    setLoading(true)
-    setError('')
-    const result = await login(password)
-    if (result.ok) {
-      router.push('/vault')
-    } else {
-      setError(result.error ?? t('login.invalidPassword'))
-      setLoading(false)
-    }
-  }
+  const { password, setPassword, error, loading, submit, t } =
+    useLoginForm()
 
   return (
     <Box sx={{
       minHeight: '100vh',
-      display: 'flex', alignItems: 'center', justifyContent: 'center',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
     }}>
       <Paper variant="outlined" sx={{ p: 5, width: 360 }}>
         <Box sx={{ textAlign: 'center', mb: 3 }}>

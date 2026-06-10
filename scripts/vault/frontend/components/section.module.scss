@@ -1,0 +1,53 @@
+.sectionWrap {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.sectionHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 4px;
+}
+
+.title {
+  color: var(--muted) !important;
+}
+
+.groupStack {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.groupCard {
+  overflow: hidden;
+}
+
+.groupHeader {
+  padding: 10px 20px;
+  border-bottom: 1px solid var(--border);
+}
+
+.groupLabel {
+  font-size: 10px !important;
+  font-weight: 700 !important;
+  text-transform: uppercase;
+  letter-spacing: 1.8px;
+  color: var(--muted) !important;
+}
+
+.headCell {
+  color: var(--muted) !important;
+  font-size: 11px !important;
+  font-weight: 500 !important;
+  letter-spacing: 0.6px !important;
+  background: var(--surf2);
+}
+
+.spacerCell {
+  height: 14px !important;
+  padding: 0 !important;
+  border: none !important;
+}

@@ -11,7 +11,9 @@
     "test:coverage": "jest --coverage",
     "e2e": "playwright test",
     "e2e:report": "playwright show-report",
-    "e2e:coverage": "node e2e/coverage-reporter.js"
+    "e2e:coverage": "node e2e/coverage-reporter.js",
+    "lint": "next lint",
+    "lint:fix": "next lint --fix"
   },
   "dependencies": {
     "@emotion/cache": "^11.11.0",
@@ -35,8 +37,11 @@
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
+    "eslint": "^8.57.1",
+    "eslint-config-next": "^14.2.35",
     "jest": "^29.7.0",
     "jest-environment-jsdom": "^29.7.0",
+    "sass": "^1.77.0",
     "typescript": "^5",
     "v8-to-istanbul": "^9.3.0"
   }

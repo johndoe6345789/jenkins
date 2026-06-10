@@ -1,7 +1,5 @@
 'use client'
-import { useState } from 'react'
 import Box from '@mui/material/Box'
-import Chip from '@mui/material/Chip'
 import IconButton from '@mui/material/IconButton'
 import TableCell from '@mui/material/TableCell'
 import TableRow from '@mui/material/TableRow'
@@ -11,80 +9,60 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import OpenInNewIcon from '@mui/icons-material/OpenInNew'
 import Link from 'next/link'
 import { useTranslation } from 'react-i18next'
+import { useGroupToggle } from '../hooks/useGroupToggle'
 import type { Credential, ToastType } from '../lib/types'
 import { CredRow } from './CredRow'
+import s from './serviceGroup.module.scss'
 
 interface Props {
   name: string
   app_url?: string
-  repo_path?: string
   users: Credential[]
   onRotated: () => void
   onToast: (msg: string, type: ToastType) => void
 }
 
-export function ServiceGroup({ name, app_url, repo_path, users, onRotated, onToast }: Props) {
-  const [open, setOpen] = useState(true)
+export function ServiceGroup({
+  name, app_url, users, onRotated, onToast,
+}: Props) {
+  const { open, toggle } = useGroupToggle()
   const { t } = useTranslation()
 
   return (
     <>
       <TableRow
-        onClick={() => setOpen(o => !o)}
-        sx={{
-          cursor: 'pointer',
-          bgcolor: 'action.hover',
-          borderLeft: 3,
-          borderLeftColor: 'primary.main',
-          '&:hover': { bgcolor: 'action.selected' },
-        }}
+        onClick={toggle}
+        className={s.row}
+        data-testid={`service-group-${name}`}
       >
-        <TableCell colSpan={4} sx={{ py: 1.25, borderBottom: open ? 1 : 'none', borderColor: 'divider' }}>
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+        <TableCell
+          colSpan={4}
+          className={`${s.cell}${open ? '' : ` ${s.noBorder}`}`}
+        >
+          <Box className={s.inner}>
             <ExpandMoreIcon
-              sx={{
-                fontSize: 18,
-                color: 'text.secondary',
-                transform: open ? 'rotate(0deg)' : 'rotate(-90deg)',
-                transition: 'transform 0.2s ease',
-                flexShrink: 0,
-              }}
+              className={`${s.chevron}${open ? '' : ` ${s.closed}`}`}
             />
             <Typography
               component={Link}
               href={`/vault/service/${encodeURIComponent(name)}`}
               onClick={(e: React.MouseEvent) => e.stopPropagation()}
-              variant="body2"
-              fontWeight={700}
-              sx={{ color: 'text.primary', textDecoration: 'none', '&:hover': { textDecoration: 'underline' } }}
+              className={s.name}
             >
               {name}
             </Typography>
-            <Chip
-              label={users.length}
-              size="small"
-              sx={{ height: 18, fontSize: 10, ml: 0.25 }}
-            />
-            {repo_path && (
-              <Typography
-                component="span"
-                variant="caption"
-                fontFamily="monospace"
-                color="text.secondary"
-                sx={{ ml: 0.5, display: { xs: 'none', sm: 'inline' } }}
-              >
-                {repo_path}
-              </Typography>
-            )}
             {app_url && (
               <Tooltip title={t('cred.open')}>
                 <IconButton
                   size="small"
-                  sx={{ p: 0.25, ml: 'auto' }}
-                  onClick={e => { e.stopPropagation(); window.open(app_url, '_blank', 'noopener,noreferrer') }}
+                  className={s.openBtn}
+                  onClick={e => {
+                    e.stopPropagation()
+                    window.open(app_url, '_blank', 'noopener,noreferrer')
+                  }}
                   data-testid={`open-btn-${name}`}
                 >
-                  <OpenInNewIcon sx={{ fontSize: 14 }} />
+                  <OpenInNewIcon className={s.openIcon} />
                 </IconButton>
               </Tooltip>
             )}
@@ -93,10 +71,8 @@ export function ServiceGroup({ name, app_url, repo_path, users, onRotated, onToa
       </TableRow>
       {open && users.map(item => (
         <CredRow
-          key={item.name}
-          item={item}
-          onRotated={onRotated}
-          onToast={onToast}
+          key={item.name} item={item}
+          onRotated={onRotated} onToast={onToast}
         />
       ))}
     </>

@@ -1,0 +1,24 @@
+.cell {
+  padding: 11px 20px !important;
+}
+
+.actCell {
+  white-space: nowrap;
+}
+
+.badge {
+  font-family: var(--mono) !important;
+  font-size: 10px !important;
+}
+
+.pw {
+  font-family: var(--mono) !important;
+  font-size: 12px !important;
+  word-break: break-all;
+}
+
+.actions {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}

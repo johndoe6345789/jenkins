@@ -31,8 +31,8 @@ describe('Section', () => {
         onRotated={onRotated} onToast={onToast} />,
       { preloadedState: { auth: { token: 'tok' } } },
     )
-    expect(screen.getByText('uksodev')).toBeInTheDocument()
-    expect(screen.getByText('admin')).toBeInTheDocument()
+    expect(screen.getAllByText('uksodev').length).toBeGreaterThanOrEqual(1)
+    expect(screen.getAllByText('admin').length).toBeGreaterThanOrEqual(1)
   })
 
   it('Rotate all disabled when items is empty', () => {

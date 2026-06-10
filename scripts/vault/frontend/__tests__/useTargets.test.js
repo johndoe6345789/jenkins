@@ -21,7 +21,7 @@ describe('useTargets', () => {
       () => useTargets(), { wrapper: wrapper(store) },
     )
     await act(async () => {})
-    expect(result.current.data.jenkins).toEqual(payload.jenkins)
+    expect(result.current.sections.jenkins).toEqual(payload.jenkins)
     expect(result.current.loading).toBe(false)
   })
 

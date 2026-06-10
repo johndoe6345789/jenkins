@@ -25,7 +25,7 @@ function configMocks({ isAuth = true, loading = false, error = null } = {}) {
     isAuth, token: isAuth ? 'tok' : null, logout: mockLogout,
   })
   useTargets.mockReturnValue({
-    data: EMPTY_DATA, loading, error, reload: mockReload,
+    sections: EMPTY_DATA, loading, error, reload: mockReload,
   })
   useToast.mockReturnValue({ toasts: [], push: mockPush })
 }

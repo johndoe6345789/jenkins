@@ -1,5 +1,40 @@
 const { test, expect, VAULT_PASSWORD } = require('../fixtures')
 
+test.describe('Light mode', () => {
+  test('theme-bg carries data-theme="dark" by default', async ({ authedPage: page }) => {
+    await expect(page.getByTestId('theme-bg')).toHaveAttribute('data-theme', 'dark')
+  })
+
+  test('toggling theme sets data-theme="light"', async ({ authedPage: page }) => {
+    await page.getByTestId('theme-toggle-btn').click()
+    await expect(page.getByTestId('theme-bg')).toHaveAttribute('data-theme', 'light')
+  })
+
+  test('light mode updates --surf2 CSS variable to a light colour', async ({ authedPage: page }) => {
+    await page.getByTestId('theme-toggle-btn').click()
+    await expect(page.getByTestId('theme-bg')).toHaveAttribute('data-theme', 'light')
+
+    const surf2 = await page.getByTestId('theme-bg').evaluate(el =>
+      getComputedStyle(el).getPropertyValue('--surf2').trim()
+    )
+    // In dark mode this is #1e1e36; in light mode it must be a pale value.
+    expect(surf2).toBe('#eceaf6')
+  })
+
+  test('page background is light in light mode', async ({ authedPage: page }) => {
+    await page.getByTestId('theme-toggle-btn').click()
+    await expect(page.getByTestId('theme-bg')).toHaveAttribute('data-theme', 'light')
+
+    // theme-bg has bgcolor='background.default' from MUI theme.
+    // Dark: rgb(13,13,26)  Light: rgb(240,239,248)
+    const bg = await page.getByTestId('theme-bg').evaluate(el =>
+      getComputedStyle(el).backgroundColor
+    )
+    const r = parseInt(bg.match(/\d+/)[0], 10)
+    expect(r).toBeGreaterThan(200)
+  })
+})
+
 test.describe('Vault page', () => {
   test('redirects to /login when unauthenticated', async ({ page }) => {
     await page.goto('/vault')

@@ -36,7 +36,7 @@ test.describe('Credential row', () => {
     authedPage: page,
   }) => {
     // Inject a backend error to test the frontend error-display path
-    await page.route('/api/rotate/jenkins/admin', route =>
+    await page.route('/api/rotate/admin', route =>
       route.fulfill({ json: { ok: false, error: 'container offline' } }),
     )
     await page.getByTestId('rotate-btn-admin').click()
@@ -46,7 +46,7 @@ test.describe('Credential row', () => {
   test('Rotate with no error field shows fallback toast', async ({
     authedPage: page,
   }) => {
-    await page.route('/api/rotate/jenkins/admin', route =>
+    await page.route('/api/rotate/admin', route =>
       route.fulfill({ json: { ok: false } }),
     )
     await page.getByTestId('rotate-btn-admin').click()
@@ -56,7 +56,7 @@ test.describe('Credential row', () => {
   test('Rotate with network failure shows error toast', async ({
     authedPage: page,
   }) => {
-    await page.route('/api/rotate/jenkins/admin', route =>
+    await page.route('/api/rotate/admin', route =>
       route.abort('failed'),
     )
     await page.getByTestId('rotate-btn-admin').click()
@@ -74,7 +74,7 @@ test.describe('Section rotate-all', () => {
 
   test('reports partial failure in toast', async ({ authedPage: page }) => {
     let n = 0
-    await page.route('/api/rotate/jenkins/**', route => {
+    await page.route('/api/rotate/**', route => {
       n++
       route.fulfill({
         json: n === 1 ? { ok: true, password: 'pw' } : { ok: false },

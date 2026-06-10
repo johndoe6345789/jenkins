@@ -1,0 +1,62 @@
+.row {
+  cursor: pointer;
+  background: var(--surf2) !important;
+
+  &:hover td {
+    background: rgba(124, 111, 247, 0.06) !important;
+  }
+}
+
+.cell {
+  padding: 9px 20px !important;
+  border-bottom: 1px solid var(--border) !important;
+
+  &.noBorder {
+    border-bottom: none !important;
+  }
+}
+
+.inner {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+// MUI SvgIcon sizes via font-size (icon uses width:1em / height:1em)
+.chevron {
+  font-size: 16px !important;
+  color: var(--muted) !important;
+  transition: transform 0.15s ease !important;
+  flex-shrink: 0;
+
+  &.closed {
+    transform: rotate(-90deg);
+  }
+}
+
+.name {
+  font-weight: 600 !important;
+  font-size: 13px !important;
+  color: var(--text) !important;
+  text-decoration: none !important;
+
+  &:hover {
+    text-decoration: underline !important;
+    color: var(--accent) !important;
+  }
+}
+
+.openBtn {
+  margin-left: auto !important;
+  padding: 3px !important;
+  color: var(--muted) !important;
+
+  &:hover {
+    color: var(--accent) !important;
+    background: rgba(124, 111, 247, 0.1) !important;
+  }
+}
+
+.openIcon {
+  font-size: 13px !important;
+}

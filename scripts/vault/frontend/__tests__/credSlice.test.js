@@ -1,7 +1,7 @@
 import credReducer, { fetchTargets } from '../lib/credSlice'
 import { makeStore } from './utils'
 
-const initial = { jenkins: [], frontends: [], loading: false, error: null }
+const initial = { sections: {}, loading: false, error: null }
 
 global.fetch = jest.fn()
 
@@ -16,14 +16,14 @@ describe('credSlice reducer', () => {
     expect(s.error).toBeNull()
   })
 
-  it('populates data on fulfilled', () => {
+  it('populates sections on fulfilled', () => {
     const payload = {
       jenkins:   [{ name: 'uksodev' }],
       frontends: [{ name: 'pkg-admin' }],
     }
     const s = credReducer(initial, fetchTargets.fulfilled(payload))
     expect(s.loading).toBe(false)
-    expect(s.jenkins).toEqual(payload.jenkins)
+    expect(s.sections.jenkins).toEqual(payload.jenkins)
   })
 
   it('stores error on rejected with payload', () => {
@@ -53,7 +53,7 @@ describe('fetchTargets thunk', () => {
       status: 200, ok: true, json: async () => payload,
     })
     await store.dispatch(fetchTargets('tok'))
-    expect(store.getState().creds.jenkins).toEqual(payload.jenkins)
+    expect(store.getState().creds.sections.jenkins).toEqual(payload.jenkins)
     expect(store.getState().creds.error).toBeNull()
   })
 

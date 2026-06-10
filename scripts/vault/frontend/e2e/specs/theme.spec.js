@@ -18,7 +18,9 @@ const themeBg  = page =>
 
 const sectionBg = page =>
   page.evaluate(() =>
-    getComputedStyle(document.querySelector('[data-testid="section-jenkins"]')).backgroundColor,
+    getComputedStyle(
+      document.querySelector('[data-testid="section-jenkins"] .MuiPaper-root'),
+    ).backgroundColor,
   )
 
 const lockIconColour = page =>
@@ -65,7 +67,7 @@ test.describe('Light mode (after toggle)', () => {
   test('section paper turns white', async ({ authedPage: page }) => {
     await page.getByTestId('section-jenkins').waitFor()
     await page.getByTestId('theme-toggle-btn').click()
-    await waitFor(page, '[data-testid="section-jenkins"]', LIGHT.paper)
+    await waitFor(page, '[data-testid="section-jenkins"] .MuiPaper-root', LIGHT.paper)
     expect(await sectionBg(page)).toBe(LIGHT.paper)
   })
 
@@ -84,7 +86,7 @@ test.describe('Light mode (after toggle)', () => {
     await page.getByTestId('section-jenkins').waitFor()
     await page.getByTestId('theme-toggle-btn').click()
     await page.getByTestId('theme-toggle-btn').click()
-    await waitFor(page, '[data-testid="section-jenkins"]', DARK.paper)
+    await waitFor(page, '[data-testid="section-jenkins"] .MuiPaper-root', DARK.paper)
     expect(await sectionBg(page)).toBe(DARK.paper)
   })
 })

@@ -1,5 +1,5 @@
 'use client'
-import { useState, type MouseEvent } from 'react'
+import { type MouseEvent } from 'react'
 import { useTranslation } from 'react-i18next'
 import Avatar from '@mui/material/Avatar'
 import IconButton from '@mui/material/IconButton'
@@ -9,6 +9,7 @@ import Menu from '@mui/material/Menu'
 import MenuItem from '@mui/material/MenuItem'
 import Tooltip from '@mui/material/Tooltip'
 import LogoutIcon from '@mui/icons-material/Logout'
+import { useUserMenu } from '../hooks/useUserMenu'
 
 interface Props {
   onLogout: () => void
@@ -16,16 +17,13 @@ interface Props {
 
 export function UserMenu({ onLogout }: Props) {
   const { t } = useTranslation()
-  const [anchor, setAnchor] = useState<HTMLElement | null>(null)
-  const close = () => setAnchor(null)
+  const { anchor, open, close } = useUserMenu()
 
   return (
     <>
       <Tooltip title="Account">
         <IconButton
-          onClick={(e: MouseEvent<HTMLButtonElement>) =>
-            setAnchor(e.currentTarget)
-          }
+          onClick={(e: MouseEvent<HTMLButtonElement>) => open(e)}
           size="small"
           sx={{ ml: 0.5 }}
           data-testid="avatar-btn"

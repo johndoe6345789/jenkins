@@ -2,8 +2,9 @@ import { screen, fireEvent } from '@testing-library/react'
 import { renderWithStore } from './utils'
 import { NavDrawer } from '../components/NavDrawer'
 
-const open  = { ui: { drawerOpen: true,  themeMode: 'dark', language: 'en' } }
-const closed = { ui: { drawerOpen: false, themeMode: 'dark', language: 'en' } }
+const credsWithSections = { creds: { sections: { jenkins: [], frontends: [] }, loading: false, error: null } }
+const open  = { ui: { drawerOpen: true,  themeMode: 'dark', language: 'en' }, ...credsWithSections }
+const closed = { ui: { drawerOpen: false, themeMode: 'dark', language: 'en' }, ...credsWithSections }
 
 describe('NavDrawer', () => {
   it('section links not present when closed', () => {

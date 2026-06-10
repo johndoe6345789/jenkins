@@ -39,7 +39,15 @@ export function ClientThemeProvider({ children }: { children: ReactNode }) {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <Box data-testid="theme-bg" sx={{ minHeight: '100vh', bgcolor: 'background.default', color: 'text.primary' }}>
+      <Box
+        data-testid="theme-bg"
+        data-theme={mode}
+        sx={{
+          minHeight: '100vh',
+          bgcolor: 'background.default',
+          color: 'text.primary',
+        }}
+      >
         {children}
       </Box>
     </ThemeProvider>
