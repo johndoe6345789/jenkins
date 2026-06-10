@@ -40,6 +40,8 @@ from .doctor import cmd_doctor
 from .host import cmd_inventory_host
 from .install_host_deps import cmd_install_host_deps
 from .jobs import cmd_register_jobs
+from .passwd import TARGETS as _PW_TARGETS
+from .passwd import cmd_reset_passwords
 from .recover import cmd_recover_key
 from .repos import cmd_clone_repos
 from .secretgen import cmd_secrets
@@ -63,6 +65,7 @@ def build_parser() -> argparse.ArgumentParser:
                    action="store_const", const=None,
                    help="mint a NEW keypair (then update compose + rebuild agents)")
     s.add_argument("--uksodev-password", help="default: generate a strong one")
+    s.add_argument("--admin-password", help="default: generate a strong one")
     s.add_argument("--nexus-user", default="admin")
     s.add_argument("--nexus-password", required=True,
                    help="must match the running Nexus admin password")
@@ -70,6 +73,26 @@ def build_parser() -> argparse.ArgumentParser:
     s.add_argument("--force", action="store_true", help="overwrite existing files")
     s.add_argument("--show", action="store_true", help="print the Jenkins password")
     s.set_defaults(func=cmd_secrets)
+
+    pw = sub.add_parser(
+        "reset-passwords",
+        help="rotate Jenkins UI or nexus-admin passwords in secrets/",
+    )
+    pw.add_argument("--secrets-dir", type=Path, default=REPO_ROOT / "secrets")
+    pw.add_argument(
+        "--targets", nargs="+", metavar="TARGET", choices=list(_PW_TARGETS),
+        help=f"which accounts to rotate (default: all); choices: {', '.join(_PW_TARGETS)}",
+    )
+    pw.add_argument(
+        "--password",
+        help="use this exact password (requires --targets with exactly one entry)",
+    )
+    pw.add_argument(
+        "--restart", action="store_true",
+        help="docker compose restart jenkins after updating",
+    )
+    pw.add_argument("--show", action="store_true", help="print new passwords to stdout")
+    pw.set_defaults(func=cmd_reset_passwords)
 
     r = sub.add_parser("recover-key",
                         help="decrypt the agent SSH key + Nexus password "

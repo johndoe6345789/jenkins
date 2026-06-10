@@ -8,7 +8,7 @@ jenkins:
       allowsSignup: false
       users:
         - id: admin
-          password: scrambled
+          password: "${JENKINS_ADMIN_PASSWORD}"
           properties:
             - mailer:
                 emailAddress: ""

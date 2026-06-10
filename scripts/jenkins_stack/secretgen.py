@@ -20,6 +20,7 @@ JINJA = Environment(keep_trailing_newline=True, autoescape=False)
 
 JENKINS_ENV_TMPL = JINJA.from_string(
     "JENKINS_UKSODEV_PASSWORD={{ uksodev_password }}\n"
+    "JENKINS_ADMIN_PASSWORD={{ admin_password }}\n"
 )
 NEXUS_ENV_TMPL = JINJA.from_string(
     "NEXUS_ADMIN_USER={{ nexus_user }}\n"
@@ -88,11 +89,12 @@ def cmd_secrets(a: argparse.Namespace) -> int:
         sys.exit(f"error: {', '.join(clash)} exist; pass --force to overwrite")
 
     uksodev_pw = a.uksodev_password or secrets.token_urlsafe(24)
+    admin_pw = a.admin_password or secrets.token_urlsafe(24)
     priv, pub_line = load_or_make_key(a.import_ssh_key)
 
     write_secret(
         a.secrets_dir / "jenkins.env",
-        JENKINS_ENV_TMPL.render(uksodev_password=uksodev_pw),
+        JENKINS_ENV_TMPL.render(uksodev_password=uksodev_pw, admin_password=admin_pw),
     )
     write_secret(
         a.secrets_dir / "nexus.env",
@@ -110,6 +112,8 @@ def cmd_secrets(a: argparse.Namespace) -> int:
     print(f"wrote {a.secrets_dir}/{{jenkins.env,nexus.env,credentials.yaml}} (0600)")
     if a.show or not a.uksodev_password:
         print(f"JENKINS_UKSODEV_PASSWORD: {uksodev_pw}  (save this)")
+    if a.show or not a.admin_password:
+        print(f"JENKINS_ADMIN_PASSWORD:   {admin_pw}  (save this)")
     if a.import_ssh_key is None:
         print("\nNEW agent key minted — set JENKINS_AGENT_SSH_PUBKEY in")
         print(f"docker-compose.yml to:\n  {pub_line}\nthen rebuild all agents.")

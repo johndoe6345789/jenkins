@@ -1,0 +1,43 @@
+{
+  "app": {
+    "title": "Vault",
+    "subtitle": "Gestionnaire d'identifiants Jenkins"
+  },
+  "nav": {
+    "jenkins": "Jenkins",
+    "frontends": "Frontends"
+  },
+  "header": {
+    "lock": "Verrouiller",
+    "logout": "Se déconnecter",
+    "themeLight": "Passer en mode clair",
+    "themeDark": "Passer en mode sombre"
+  },
+  "section": {
+    "rotateAll": "Tout renouveler",
+    "rotating": "Renouvellement…",
+    "user": "Utilisateur",
+    "type": "Type",
+    "password": "Mot de passe",
+    "actions": "Actions",
+    "rotatedAll": "{{count}} renouvelés",
+    "rotateSummary": "{{ok}} réussis, {{fail}} échoués"
+  },
+  "cred": {
+    "show": "Afficher",
+    "hide": "Masquer",
+    "copy": "Copier",
+    "rotate": "Renouveler",
+    "open": "Ouvrir l'app",
+    "copied": "Copié dans le presse-papiers",
+    "rotated": "{{name}} renouvelé",
+    "rotateFailed": "Échec du renouvellement"
+  },
+  "login": {
+    "masterPassword": "Mot de passe maître",
+    "placeholder": "Entrez le mot de passe maître",
+    "unlock": "Déverrouiller",
+    "unlocking": "Déverrouillage…",
+    "invalidPassword": "Mot de passe invalide"
+  }
+}

@@ -1,10 +1,66 @@
 {
-  "$schema_note": "Targets are rotated in array order. secret_env_key is the name written to jenkins/secrets/rotated.env (and rotated.latest.env). adapter is a Python module name under jenkins/scripts/rotator/adapters/. params is passed verbatim to the adapter's rotate() / status() functions.",
+  "$schema_note": "Targets are rotated in array order. secret_env_key is written to secrets/rotated.env. adapter is a Python module under rotator/adapters/. section groups entries in the vault UI. service_name groups multiple users under one service card. group is an optional sub-label within a section.",
   "targets": [
     {
+      "name": "uksodev",
+      "section": "jenkins",
+      "group": "controllers",
+      "service_name": "jenkins",
+      "username": "uksodev",
+      "badge": "jenkins",
+      "adapter": "env_var",
+      "secret_env_key": "JENKINS_UKSODEV_PASSWORD",
+      "app_url": "http://wardcrew.com:8081",
+      "repo_path": "~/Documents/GitHub/jenkins",
+      "params": {
+        "env_file": "secrets/jenkins.env",
+        "env_key": "JENKINS_UKSODEV_PASSWORD",
+        "recreate_service": "jenkins"
+      }
+    },
+    {
+      "name": "admin",
+      "section": "jenkins",
+      "group": "controllers",
+      "service_name": "jenkins",
+      "username": "admin",
+      "badge": "jenkins",
+      "adapter": "env_var",
+      "secret_env_key": "JENKINS_ADMIN_PASSWORD",
+      "app_url": "http://wardcrew.com:8081",
+      "repo_path": "~/Documents/GitHub/jenkins",
+      "params": {
+        "env_file": "secrets/jenkins.env",
+        "env_key": "JENKINS_ADMIN_PASSWORD",
+        "recreate_service": "jenkins"
+      }
+    },
+    {
+      "name": "nexus-admin",
+      "section": "jenkins",
+      "group": "registry",
+      "service_name": "nexus",
+      "username": "admin",
+      "badge": "nexus",
+      "adapter": "env_var",
+      "secret_env_key": "NEXUS_ADMIN_PASSWORD",
+      "repo_path": "~/Documents/GitHub/jenkins",
+      "params": {
+        "env_file": "secrets/nexus.env",
+        "env_key": "NEXUS_ADMIN_PASSWORD",
+        "recreate_service": "nexus-registry"
+      }
+    },
+    {
       "name": "postgres-dashboard-admin",
+      "section": "frontends",
+      "group": "metabuilder",
+      "service_name": "postgres-dashboard",
+      "username": "admin",
       "adapter": "db_bcrypt",
       "secret_env_key": "POSTGRES_DASHBOARD_ADMIN_PASSWORD",
+      "app_url": "http://wardcrew.com:8900/postgres",
+      "repo_path": "~/Documents/GitHub/metabuilder/frontends/postgres",
       "params": {
         "db_container": "metabuilder-postgres",
         "db_name": "metabuilder",
@@ -19,8 +75,14 @@
     },
     {
       "name": "packagerepo-admin",
+      "section": "frontends",
+      "group": "metabuilder",
+      "service_name": "packagerepo",
+      "username": "admin",
       "adapter": "db_bcrypt",
       "secret_env_key": "PACKAGEREPO_ADMIN_PASSWORD",
+      "app_url": "http://wardcrew.com:8900/packagerepo",
+      "repo_path": "~/Documents/GitHub/metabuilder/frontends/packagerepo",
       "params": {
         "db_container": "metabuilder-packagerepo-db",
         "db_name": "packagerepo",
@@ -35,8 +97,14 @@
     },
     {
       "name": "dockerterminal-admin",
+      "section": "frontends",
+      "group": "metabuilder",
+      "service_name": "dockerterminal",
+      "username": "admin",
       "adapter": "env_var",
       "secret_env_key": "DOCKERTERMINAL_ADMIN_PASSWORD",
+      "app_url": "http://wardcrew.com:8900/terminal",
+      "repo_path": "~/Documents/GitHub/metabuilder/frontends/dockerterminal",
       "params": {
         "env_file": "secrets/dockerterminal.env",
         "env_key": "ADMIN_PASSWORD",
@@ -45,8 +113,14 @@
     },
     {
       "name": "workflowui-nextauth-secret",
+      "section": "frontends",
+      "group": "metabuilder",
+      "service_name": "workflowui",
+      "username": "nextauth",
       "adapter": "env_var",
       "secret_env_key": "WORKFLOWUI_NEXTAUTH_SECRET",
+      "app_url": "http://wardcrew.com:8900/workflowui",
+      "repo_path": "~/Documents/GitHub/metabuilder/frontends/workflowui",
       "params": {
         "env_file": "secrets/workflowui.env",
         "env_key": "NEXTAUTH_SECRET",
@@ -56,8 +130,14 @@
     },
     {
       "name": "emailclient-redis",
+      "section": "frontends",
+      "group": "metabuilder",
+      "service_name": "emailclient",
+      "username": "redis",
       "adapter": "env_var",
       "secret_env_key": "EMAILCLIENT_REDIS_PASSWORD",
+      "app_url": "http://wardcrew.com:8900/emailclient",
+      "repo_path": "~/Documents/GitHub/metabuilder/frontends/emailclient",
       "params": {
         "env_file": "secrets/emailclient.env",
         "env_key": "REDIS_PASSWORD",
@@ -66,8 +146,14 @@
     },
     {
       "name": "businessplanner-keycloak-devadmin",
+      "section": "frontends",
+      "group": "keycloak apps",
+      "service_name": "businessplanner",
+      "username": "devadmin",
       "adapter": "keycloak_realm",
       "secret_env_key": "BUSINESSPLANNER_DEVADMIN_PASSWORD",
+      "app_url": "http://wardcrew.com:8892/app/en",
+      "repo_path": "~/Documents/GitHub/businessplanner",
       "params": {
         "kc_url": "http://localhost:8080",
         "kc_master_user": "admin",
@@ -78,14 +164,51 @@
     },
     {
       "name": "next-extra-primary-keycloak-devadmin",
+      "section": "frontends",
+      "group": "keycloak apps",
+      "service_name": "next-extra-primary",
+      "username": "devadmin",
       "adapter": "keycloak_realm",
       "secret_env_key": "NEXTRA_DEVADMIN_PASSWORD",
+      "app_url": "http://wardcrew.com:8889/app/en",
+      "repo_path": "~/Documents/GitHub/next_extra_primary",
       "params": {
         "kc_url": "http://localhost:8080",
         "kc_master_user": "admin",
         "kc_master_password_env": "NEXTRA_KC_MASTER_PASSWORD",
         "realm": "nextra",
         "user": "devadmin"
+      }
+    },
+    {
+      "name": "caprover-admin",
+      "section": "frontends",
+      "group": "infrastructure",
+      "service_name": "caprover",
+      "username": "admin",
+      "adapter": "caprover",
+      "secret_env_key": "CAPROVER_ADMIN_PASSWORD",
+      "app_url": "https://captain.wardcrew.com",
+      "params": {
+        "caprover_url": "https://captain.wardcrew.com",
+        "env_file": "secrets/caprover.env",
+        "env_key": "CAPROVER_ADMIN_PASSWORD"
+      }
+    },
+    {
+      "name": "hamradio-jwt-secret",
+      "section": "frontends",
+      "group": "infrastructure",
+      "service_name": "hamradio",
+      "username": "jwt-secret",
+      "adapter": "env_var",
+      "secret_env_key": "HAMRADIO_JWT_SECRET",
+      "app_url": "https://hamradio.wardcrew.com",
+      "repo_path": "~/Documents/GitHub/hamradiosite",
+      "params": {
+        "env_file": "secrets/hamradio.env",
+        "env_key": "JWT_SECRET_KEY",
+        "recreate_service": "hamradiosite-backend-1"
       }
     }
   ]

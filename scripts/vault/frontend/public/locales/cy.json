@@ -1,0 +1,43 @@
+{
+  "app": {
+    "title": "Vault",
+    "subtitle": "Rheolwr cymwysterau Jenkins"
+  },
+  "nav": {
+    "jenkins": "Jenkins",
+    "frontends": "Rhyngwynebau"
+  },
+  "header": {
+    "lock": "Cloi",
+    "logout": "Allgofnodi",
+    "themeLight": "Newid i fodd golau",
+    "themeDark": "Newid i fodd tywyll"
+  },
+  "section": {
+    "rotateAll": "Cylchdroi pob un",
+    "rotating": "Cylchdroi…",
+    "user": "Defnyddiwr",
+    "type": "Math",
+    "password": "Cyfrinair",
+    "actions": "Camau",
+    "rotatedAll": "{{count}} wedi'u cylchdroi",
+    "rotateSummary": "{{ok}} llwyddiannus, {{fail}} wedi methu"
+  },
+  "cred": {
+    "show": "Dangos",
+    "hide": "Cuddio",
+    "copy": "Copïo",
+    "rotate": "Cylchdroi",
+    "open": "Agor yr ap",
+    "copied": "Wedi copïo i'r clipfwrdd",
+    "rotated": "{{name}} wedi'i gylchdroi",
+    "rotateFailed": "Methodd y cylchdroi"
+  },
+  "login": {
+    "masterPassword": "Prif gyfrinair",
+    "placeholder": "Rhowch y prif gyfrinair",
+    "unlock": "Datgloi",
+    "unlocking": "Yn datgloi…",
+    "invalidPassword": "Cyfrinair annilys"
+  }
+}

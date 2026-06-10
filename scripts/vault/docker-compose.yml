@@ -1,0 +1,28 @@
+services:
+  vault-backend:
+    build:
+      context: ../..
+      dockerfile: scripts/vault/backend/Dockerfile
+    container_name: vault-backend
+    restart: unless-stopped
+    ports:
+      - "5055:5050"
+    volumes:
+      - ../../secrets:/app/secrets
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      - FLASK_ENV=production
+      - VAULT_REPO_ROOT=/app     # scripts/ copied to /app/scripts/ in image
+
+  vault-frontend:
+    build:
+      context: frontend
+      dockerfile: Dockerfile
+    container_name: vault-frontend
+    restart: unless-stopped
+    ports:
+      - "4100:3000"
+    environment:
+      - FLASK_URL=http://vault-backend:5050
+    depends_on:
+      - vault-backend

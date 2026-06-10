@@ -1,0 +1,43 @@
+{
+  "app": {
+    "title": "Vault",
+    "subtitle": "Jenkins credential manager"
+  },
+  "nav": {
+    "jenkins": "Jenkins",
+    "frontends": "Frontends"
+  },
+  "header": {
+    "lock": "Lock",
+    "logout": "Log out",
+    "themeLight": "Switch to light mode",
+    "themeDark": "Switch to dark mode"
+  },
+  "section": {
+    "rotateAll": "Rotate all",
+    "rotating": "Rotating…",
+    "user": "User",
+    "type": "Type",
+    "password": "Password",
+    "actions": "Actions",
+    "rotatedAll": "All {{count}} rotated",
+    "rotateSummary": "{{ok}} rotated, {{fail}} failed"
+  },
+  "cred": {
+    "show": "Show",
+    "hide": "Hide",
+    "copy": "Copy",
+    "rotate": "Rotate",
+    "open": "Open app",
+    "copied": "Copied to clipboard",
+    "rotated": "Rotated {{name}}",
+    "rotateFailed": "Rotation failed"
+  },
+  "login": {
+    "masterPassword": "Master password",
+    "placeholder": "Enter master password",
+    "unlock": "Unlock",
+    "unlocking": "Unlocking…",
+    "invalidPassword": "Invalid password"
+  }
+}

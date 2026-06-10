@@ -10,12 +10,41 @@ applies it.
 
 ## Jenkins
 
-| What | Login | URL | Source |
+Ports: UI `:8081` (nginx → jenkins:8080), resource root `:8082`, JNLP
+inbound agent port `:50000`, Docker registry `:5001`.
+
+### Users (`casc.yaml` — `securityRealm.local`)
+
+Both accounts survive every restart; JCasC re-applies them on every boot.
+Anonymous read is disabled (`allowAnonymousRead: false`).
+
+| User | Password | Source |
+| --- | --- | --- |
+| `uksodev` | `nY53RyXdtxMdpcHHH09SXweT6afrNdiV` | `secrets/jenkins.env` `JENKINS_UKSODEV_PASSWORD`; regenerated each `secrets` run |
+| `admin` | see `secrets/jenkins.env` `JENKINS_ADMIN_PASSWORD` | `casc.yaml` — JCasC re-applies on every boot |
+
+### JCasC credentials (`secrets/credentials.yaml`)
+
+Loaded at every controller boot alongside `casc.yaml`.
+
+| Credential ID | Type / scope | Resolved value | Purpose |
 | --- | --- | --- | --- |
-| Jenkins UI | `uksodev` / `nY53RyXdtxMdpcHHH09SXweT6afrNdiV` | http://localhost:8081 | `secrets/jenkins.env` → JCasC re-applies on every boot from `JENKINS_UKSODEV_PASSWORD` |
-| Nexus admin (legacy) | `admin` / `4bbdce5c9a04959c52a44dc3e71e2747` | n/a | `secrets/jenkins.env` — Nexus was replaced by unauthenticated `registry:2` on `:5001`; kept as a record |
-| Agent SSH key | user `jenkins`, ed25519 private key inline | n/a | `secrets/credentials.yaml` — matching pubkey baked into agent images; mismatch ⇒ all 8 agents offline |
-| Docker registry | no auth | http://localhost:5001 | `docker-compose.yml` runs `registry:2` insecure |
+| `jenkins-agent-ssh-key` | SSH private key, SYSTEM, user `jenkins` | ed25519 key inline (see file) | Used by all 8 permanent SSH nodes (`agent-1..8`); mismatch → all agents offline |
+| `nexus-admin` | Username/password, GLOBAL | `admin` / `4bbdce5c9a04959c52a44dc3e71e2747` | Legacy Nexus push credential kept in store; values interpolated from `secrets/nexus.env` (`NEXUS_ADMIN_USER` / `NEXUS_ADMIN_PASSWORD`) |
+
+Agent SSH public key — baked into every agent image via `JENKINS_AGENT_SSH_PUBKEY`
+in `docker-compose.yml` (update + rebuild all 8 agents if the key is rotated):
+
+```
+ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINPCCdpG9EpNhiLiLoJgeC4ELi0KDVmMSSDQcbD8zIG/ jenkins-agent
+```
+
+### Docker registry (`:5001`)
+
+`registry:2` with no authentication — jobs push/pull without `docker login`.
+`NEXUS_REGISTRY=localhost:5001` in `secrets/nexus.env` is the endpoint
+reference consumed by jobs (name kept for backward compatibility; Nexus itself
+is gone).
 
 ## businessplanner
 
@@ -132,6 +161,88 @@ No committed demo creds in: `caproverforge`, `cli`, `codegen`, `dbal`,
 | `nexus-command` | — | no committed demo creds | — |
 | `strategy-execution-p` | — | no committed demo creds | — |
 | `workforce-pay-bill-p` | — | no committed demo creds | — |
+
+## Password management
+
+Two separate CLIs cover rotation — one for Jenkins itself, one for every
+sibling-repo frontend.
+
+### Jenkins passwords — `scripts/setup.py reset-passwords`
+
+Rotates the Jenkins UI accounts and the legacy nexus-admin credential.
+New passwords are written back to the relevant `secrets/` file; the old
+values are overwritten in place (no archive). JCasC re-applies on the next
+boot, so pass `--restart` to make the change live immediately.
+
+```sh
+# Rotate all three targets (uksodev, admin, nexus-admin) — auto-generated
+scripts/setup.py reset-passwords --show
+
+# Rotate only the main login, print the new password
+scripts/setup.py reset-passwords --targets uksodev --show
+
+# Rotate and restart Jenkins in one step
+scripts/setup.py reset-passwords --restart
+
+# Set a specific password for one target
+scripts/setup.py reset-passwords --targets admin --password 'MyPass123!'
+```
+
+Targets and their `secrets/` keys:
+
+| Target | File | Env key |
+| --- | --- | --- |
+| `uksodev` | `secrets/jenkins.env` | `JENKINS_UKSODEV_PASSWORD` |
+| `admin` | `secrets/jenkins.env` | `JENKINS_ADMIN_PASSWORD` |
+| `nexus-admin` | `secrets/nexus.env` | `NEXUS_ADMIN_PASSWORD` |
+
+### Frontend passwords — `scripts/rotator/rotate.py`
+
+JSON-orchestrated rotator that covers all sibling-repo credentials. Each
+target in `scripts/rotator/manifest.json` names an adapter that knows how
+to apply the password to the live service.
+
+```sh
+# Show current status of all targets (read-only)
+scripts/rotator/rotate.py status
+
+# Rotate everything — auto-generated 32-char alphanumeric passwords
+scripts/rotator/rotate.py rotate
+
+# Rotate one target, print a preview without writing
+scripts/rotator/rotate.py rotate --only postgres-dashboard-admin --dry-run
+
+# Rotate one target with a specific password
+scripts/rotator/rotate.py rotate --only packagerepo-admin --password 'MyPass123!'
+
+# See what keys would be emitted without rotating
+scripts/rotator/rotate.py generate
+```
+
+New passwords land in two places:
+
+| File | Contents |
+| --- | --- |
+| `secrets/rotated.env` | Live merged view — all rotated keys, updated each run |
+| `secrets/rotated/<timestamp>.env` | Per-run archive of keys touched that run |
+| `secrets/rotated.history.json` | Metadata log (target name, adapter, result — no plaintext) |
+
+Current manifest targets and their adapters:
+
+| Target | Adapter | What it rotates |
+| --- | --- | --- |
+| `postgres-dashboard-admin` | `db_bcrypt` | metabuilder Postgres dashboard `admin` user |
+| `packagerepo-admin` | `db_bcrypt` | metabuilder packagerepo `admin` user |
+| `dockerterminal-admin` | `env_var` | metabuilder dockerterminal `ADMIN_PASSWORD` |
+| `workflowui-nextauth-secret` | `env_var` | metabuilder workflowui `NEXTAUTH_SECRET` |
+| `emailclient-redis` | `env_var` | metabuilder emailclient Redis password |
+| `businessplanner-keycloak-devadmin` | `keycloak_realm` | businessplanner Keycloak `devadmin` realm user |
+| `next-extra-primary-keycloak-devadmin` | `keycloak_realm` | next_extra_primary Keycloak `devadmin` realm user |
+
+**Adapters:**
+- `db_bcrypt` — connects to a named Postgres container, re-hashes with bcrypt and updates the row directly
+- `env_var` — writes a new value into a `secrets/` env file then `docker compose` recreates the target service
+- `keycloak_realm` — calls the Keycloak admin REST API to set the user's password in the specified realm
 
 ## Notes for re-deriving this file
 

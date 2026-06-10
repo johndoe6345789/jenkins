@@ -1,0 +1,43 @@
+{
+  "app": {
+    "title": "Vault",
+    "subtitle": "Gestor de credenciales de Jenkins"
+  },
+  "nav": {
+    "jenkins": "Jenkins",
+    "frontends": "Frontends"
+  },
+  "header": {
+    "lock": "Bloquear",
+    "logout": "Cerrar sesión",
+    "themeLight": "Cambiar a modo claro",
+    "themeDark": "Cambiar a modo oscuro"
+  },
+  "section": {
+    "rotateAll": "Rotar todo",
+    "rotating": "Rotando…",
+    "user": "Usuario",
+    "type": "Tipo",
+    "password": "Contraseña",
+    "actions": "Acciones",
+    "rotatedAll": "{{count}} rotados",
+    "rotateSummary": "{{ok}} exitosos, {{fail}} fallidos"
+  },
+  "cred": {
+    "show": "Mostrar",
+    "hide": "Ocultar",
+    "copy": "Copiar",
+    "rotate": "Rotar",
+    "open": "Abrir app",
+    "copied": "Copiado al portapapeles",
+    "rotated": "{{name}} rotado",
+    "rotateFailed": "Error al rotar"
+  },
+  "login": {
+    "masterPassword": "Contraseña maestra",
+    "placeholder": "Introduce la contraseña maestra",
+    "unlock": "Desbloquear",
+    "unlocking": "Desbloqueando…",
+    "invalidPassword": "Contraseña inválida"
+  }
+}

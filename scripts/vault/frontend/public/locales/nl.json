@@ -1,0 +1,43 @@
+{
+  "app": {
+    "title": "Vault",
+    "subtitle": "Jenkins inloggegevensbeheer"
+  },
+  "nav": {
+    "jenkins": "Jenkins",
+    "frontends": "Frontends"
+  },
+  "header": {
+    "lock": "Vergrendelen",
+    "logout": "Uitloggen",
+    "themeLight": "Overschakelen naar lichte modus",
+    "themeDark": "Overschakelen naar donkere modus"
+  },
+  "section": {
+    "rotateAll": "Alles vernieuwen",
+    "rotating": "Vernieuwen…",
+    "user": "Gebruiker",
+    "type": "Type",
+    "password": "Wachtwoord",
+    "actions": "Acties",
+    "rotatedAll": "{{count}} vernieuwd",
+    "rotateSummary": "{{ok}} geslaagd, {{fail}} mislukt"
+  },
+  "cred": {
+    "show": "Tonen",
+    "hide": "Verbergen",
+    "copy": "Kopiëren",
+    "rotate": "Vernieuwen",
+    "open": "App openen",
+    "copied": "Gekopieerd naar klembord",
+    "rotated": "{{name}} vernieuwd",
+    "rotateFailed": "Vernieuwen mislukt"
+  },
+  "login": {
+    "masterPassword": "Hoofdwachtwoord",
+    "placeholder": "Voer het hoofdwachtwoord in",
+    "unlock": "Ontgrendelen",
+    "unlocking": "Ontgrendelen…",
+    "invalidPassword": "Ongeldig wachtwoord"
+  }
+}
