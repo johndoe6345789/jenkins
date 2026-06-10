@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react'
 import type { Metadata, Viewport } from 'next'
-import './globals.css'
+import './globals.scss'
 import { ThemeRegistry } from '../lib/ThemeRegistry'
 import { Providers } from '../lib/Providers'
 
