@@ -1,5 +1,5 @@
 'use client'
-import { useMemo, type ReactNode } from 'react'
+import { useEffect, useMemo, type ReactNode } from 'react'
 import { ThemeProvider, createTheme } from '@mui/material/styles'
 import Box from '@mui/material/Box'
 import CssBaseline from '@mui/material/CssBaseline'
@@ -19,6 +19,10 @@ const LIGHT_PALETTE = {
 
 export function ClientThemeProvider({ children }: { children: ReactNode }) {
   const mode = useAppSelector(state => state.ui.themeMode)
+
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', mode)
+  }, [mode])
 
   const theme = useMemo(
     () =>

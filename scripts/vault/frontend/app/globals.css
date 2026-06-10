@@ -27,7 +27,7 @@
 }
 
 body {
-  background: var(--bg);
+  background: var(--bg) !important;
   color: var(--text);
   font-family: system-ui, -apple-system, sans-serif;
   font-size: 14px;

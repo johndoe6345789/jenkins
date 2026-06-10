@@ -1,5 +1,23 @@
 const { test, expect, VAULT_PASSWORD } = require('../fixtures')
 
+test.describe('Login page controls', () => {
+  test('theme toggle button is visible', async ({ page }) => {
+    await page.goto('/login')
+    await expect(page.getByTestId('theme-toggle-btn')).toBeVisible()
+  })
+
+  test('language selector is visible', async ({ page }) => {
+    await page.goto('/login')
+    await expect(page.getByTestId('lang-select')).toBeVisible()
+  })
+
+  test('theme toggle switches to light mode', async ({ page }) => {
+    await page.goto('/login')
+    await page.getByTestId('theme-toggle-btn').click()
+    await expect(page.getByTestId('theme-bg')).toHaveAttribute('data-theme', 'light')
+  })
+})
+
 test.describe('Login page', () => {
   test('/ redirects to /login', async ({ page }) => {
     await page.goto('/')

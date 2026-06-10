@@ -2,16 +2,17 @@
 import Alert from '@mui/material/Alert'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
-import LockIcon from '@mui/icons-material/Lock'
 import Paper from '@mui/material/Paper'
 import TextField from '@mui/material/TextField'
 import Typography from '@mui/material/Typography'
+import LockIcon from '@mui/icons-material/Lock'
+import { LanguageSelector } from '../../components/LanguageSelector'
+import { ThemeToggle } from '../../components/ThemeToggle'
 import { useLoginForm } from '../../hooks/useLoginForm'
 import '../../lib/i18n'
 
 export default function LoginPage() {
-  const { password, setPassword, error, loading, submit, t } =
-    useLoginForm()
+  const { password, setPassword, error, loading, submit, t } = useLoginForm()
 
   return (
     <Box sx={{
@@ -19,7 +20,15 @@ export default function LoginPage() {
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
+      position: 'relative',
     }}>
+      <Box sx={{
+        position: 'absolute', top: 16, right: 16,
+        display: 'flex', gap: 1, alignItems: 'center',
+      }}>
+        <ThemeToggle />
+        <LanguageSelector />
+      </Box>
       <Paper variant="outlined" sx={{ p: 5, width: 360 }}>
         <Box sx={{ textAlign: 'center', mb: 3 }}>
           <LockIcon sx={{ fontSize: 48, color: 'primary.main', mb: 1 }} />

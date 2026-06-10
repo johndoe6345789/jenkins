@@ -16,6 +16,9 @@ const themeBg  = page =>
     getComputedStyle(document.querySelector('[data-testid="theme-bg"]')).backgroundColor,
   )
 
+const bodyBg = page =>
+  page.evaluate(() => getComputedStyle(document.body).backgroundColor)
+
 const sectionBg = page =>
   page.evaluate(() =>
     getComputedStyle(
@@ -58,6 +61,23 @@ test.describe('Dark mode (default)', () => {
 })
 
 test.describe('Light mode (after toggle)', () => {
+  test('body background turns lavender (no dark chin)', async ({
+    authedPage: page,
+  }) => {
+    await page.getByTestId('theme-toggle-btn').click()
+    await waitFor(page, '[data-testid="theme-bg"]', LIGHT.bg)
+    expect(await bodyBg(page)).toBe(LIGHT.bg)
+  })
+
+  test('body background reverts to dark on second toggle', async ({
+    authedPage: page,
+  }) => {
+    await page.getByTestId('theme-toggle-btn').click()
+    await page.getByTestId('theme-toggle-btn').click()
+    await waitFor(page, '[data-testid="theme-bg"]', DARK.bg)
+    expect(await bodyBg(page)).toBe(DARK.bg)
+  })
+
   test('page background turns lavender', async ({ authedPage: page }) => {
     await page.getByTestId('theme-toggle-btn').click()
     await waitFor(page, '[data-testid="theme-bg"]', LIGHT.bg)
