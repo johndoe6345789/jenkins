@@ -43,7 +43,7 @@ export function VaultContent() {
     <>
       <Header onLogout={lock} />
       <NavDrawer />
-      <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
+      <Container maxWidth="lg" sx={{ mt: 4, mb: 14 }}>
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
           {Object.entries(sections ?? {}).map(([sectionId, items]) => (
             <Box key={sectionId} id={sectionId}>

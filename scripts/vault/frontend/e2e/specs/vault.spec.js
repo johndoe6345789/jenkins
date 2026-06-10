@@ -35,6 +35,22 @@ test.describe('Light mode', () => {
   })
 })
 
+test.describe('Page layout', () => {
+  test('last credential row is not obscured by the FAB when scrolled to bottom', async ({
+    authedPage: page,
+  }) => {
+    const lastRow = page.locator('[data-testid^="cred-row-"]').last()
+    await lastRow.scrollIntoViewIfNeeded()
+
+    const rowBox = await lastRow.boundingBox()
+    const fabBox = await page.locator('[aria-label="add credential"]').boundingBox()
+
+    // Both boxes are now in viewport coordinates.
+    // The bottom edge of the last row must clear the top edge of the FAB.
+    expect(rowBox.y + rowBox.height).toBeLessThan(fabBox.y)
+  })
+})
+
 test.describe('Vault page', () => {
   test('redirects to /login when unauthenticated', async ({ page }) => {
     await page.goto('/vault')
