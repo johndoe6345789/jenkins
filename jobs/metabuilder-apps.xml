@@ -117,6 +117,10 @@ PY
     // (typically a base that was not published to Nexus) marks the build
     // UNSTABLE and the stage skipped, instead of aborting the whole run, so
     // every buildable image still reaches the push stage.
+    // --force is REQUIRED: build apps skips when metabuilder-deploy-&lt;svc&gt;
+    // already exists locally, and the deploy job hydrates exactly those tags
+    // onto these shared agents. Without --force a fresh commit silently reuses
+    // a stale image and never deploys the new code.
     stage('Build App Images (per-image)') {
       options { timeout(time: 120, unit: 'MINUTES') }
       steps {
@@ -133,7 +137,7 @@ PY
                 sh """
                   set -e
                   cd deployment
-                  python3 deployment.py build apps ${svc}
+                  python3 deployment.py build apps --force ${svc}
                   docker builder prune -f --filter until=24h || true
                 """
               }
