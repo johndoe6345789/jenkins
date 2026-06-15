@@ -15,7 +15,7 @@
   options {
     timestamps()
     buildDiscarder(logRotator(numToKeepStr: '15', artifactNumToKeepStr: '5'))
-    timeout(time: 150, unit: 'MINUTES')
+    timeout(time: 240, unit: 'MINUTES')
     disableConcurrentBuilds()
   }
 
@@ -117,12 +117,18 @@ PY
     // (typically a base that was not published to Nexus) marks the build
     // UNSTABLE and the stage skipped, instead of aborting the whole run, so
     // every buildable image still reaches the push stage.
-    // --force is REQUIRED: build apps skips when metabuilder-deploy-&lt;svc&gt;
-    // already exists locally, and the deploy job hydrates exactly those tags
-    // onto these shared agents. Without --force a fresh commit silently reuses
-    // a stale image and never deploys the new code.
+    //
+    // CHANGE-AWARE: only rebuild apps whose source changed since the last
+    // SUCCESSFUL build; rebuild EVERYTHING when shared code changes or the diff
+    // can't be trusted. This keeps full-fleet builds (all ~16 apps, &gt;2h) for
+    // the rare shared-code change while making the common single-app change
+    // fast, so runs stop hitting the job timeout. Safe-by-default: any doubt =&gt;
+    // rebuild. Built apps still use --force (the deploy job hydrates stale
+    // metabuilder-deploy-&lt;svc&gt; tags onto these shared agents, which would
+    // otherwise make the skip logic reuse old code); skipped apps keep their
+    // existing registry :latest, which the deploy job re-pulls unchanged.
     stage('Build App Images (per-image)') {
-      options { timeout(time: 120, unit: 'MINUTES') }
+      options { timeout(time: 210, unit: 'MINUTES') }
       steps {
         script {
           def defs = readJSON file: 'deployment/cli/commands.json'
@@ -130,8 +136,67 @@ PY
           if (defs.definitions.nexus_images.heavy_apps) {
             apps += defs.definitions.nexus_images.heavy_apps
           }
+
+          def shared = ['redux/','components/','hooks/','types/','interfaces/',
+                        'translations/','workflow/','scss/','config/','packages/',
+                        'schemas/','deployment/','package.json',
+                        'package-lock.json','.npmrc']
+          def appPaths = [
+            'pastebin': ['frontends/pastebin/'],
+            'pastebin-backend': ['frontends/pastebin/backend/'],
+            'frontend-app': ['frontends/nextjs/'],
+            'workflowui': ['frontends/workflowui/'],
+            'postgres-dashboard': ['frontends/postgres/'],
+            'codegen': ['frontends/codegen/'],
+            'emailclient-app': ['frontends/emailclient/'],
+            'email-service': ['frontends/emailclient/'],
+            'exploded-diagrams': ['frontends/exploded-diagrams/'],
+            'storybook': ['storybook/'],
+            'dbal': ['dbal/'],
+            'dbal-init': ['dbal/'],
+            'smtp-relay': ['services/smtprelay/'],
+            'media-daemon': ['services/media_daemon/'],
+            'nginx': ['deployment/config/nginx/'],
+            'nginx-stream': ['deployment/config/nginx/']
+          ]
+
+          def buildAll = false
+          def changed = []
+          def prev = env.GIT_PREVIOUS_SUCCESSFUL_COMMIT
+          if (!prev) {
+            echo 'No previous successful commit -&gt; building ALL apps.'
+            buildAll = true
+          } else {
+            def known = sh(script: "git cat-file -e ${prev} 2&gt;/dev/null", returnStatus: true)
+            if (known != 0) {
+              echo "Previous commit ${prev} not in history -&gt; building ALL apps."
+              buildAll = true
+            } else {
+              def out = sh(script: "git diff --name-only ${prev} HEAD", returnStdout: true).trim()
+              changed = out ? out.readLines() : []
+              echo "Changed files since ${prev}: ${changed.size()}"
+              if (changed.any { f -&gt; shared.any { p -&gt; f.startsWith(p) } }) {
+                echo 'Shared/CI code changed -&gt; building ALL apps.'
+                buildAll = true
+              }
+            }
+          }
+
           for (entry in apps) {
             def svc = entry.name
+            def doBuild = buildAll
+            if (!doBuild) {
+              def prefixes = appPaths[svc]
+              if (prefixes == null) {
+                doBuild = true
+              } else {
+                doBuild = changed.any { f -&gt; prefixes.any { p -&gt; f.startsWith(p) } }
+              }
+            }
+            if (!doBuild) {
+              echo "Skipping ${svc} -- no source changes since last successful build"
+              continue
+            }
             stage("app: ${svc}") {
               catchError(message: "app ${svc} build failed (likely a base image not yet published to Nexus)", buildResult: 'UNSTABLE', stageResult: 'FAILURE') {
                 sh """
