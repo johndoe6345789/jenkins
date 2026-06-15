@@ -160,16 +160,36 @@ PY
             'nginx-stream': ['deployment/config/nginx/']
           ]
 
+          // Reference commit = the SHA recorded by the most recent prior build
+          // that completed (SUCCESS/UNSTABLE). Stored in the build description so
+          // it survives the ephemeral, shared agents (env.GIT_PREVIOUS_SUCCESSFUL_COMMIT
+          // is unreliable with the scripted git step). Record HEAD now so the
+          // next run can diff against it; worst case (no prior SHA / bad diff)
+          // falls through to building ALL apps, which is always safe.
+          def headSha = sh(script: 'git rev-parse HEAD', returnStdout: true).trim()
+          currentBuild.description = headSha
+
+          def prev = null
+          def pb = currentBuild.previousBuild
+          while (pb != null) {
+            def r = pb.result
+            def d = pb.description
+            if ((r == 'SUCCESS' || r == 'UNSTABLE') &amp;&amp; d != null &amp;&amp; d ==~ /[0-9a-f]{40}/) {
+              prev = d.trim()
+              break
+            }
+            pb = pb.previousBuild
+          }
+
           def buildAll = false
           def changed = []
-          def prev = env.GIT_PREVIOUS_SUCCESSFUL_COMMIT
           if (!prev) {
-            echo 'No previous successful commit -&gt; building ALL apps.'
+            echo 'No prior built commit recorded -&gt; building ALL apps.'
             buildAll = true
           } else {
             def known = sh(script: "git cat-file -e ${prev} 2&gt;/dev/null", returnStatus: true)
             if (known != 0) {
-              echo "Previous commit ${prev} not in history -&gt; building ALL apps."
+              echo "Prior commit ${prev} not in history -&gt; building ALL apps."
               buildAll = true
             } else {
               def out = sh(script: "git diff --name-only ${prev} HEAD", returnStdout: true).trim()
