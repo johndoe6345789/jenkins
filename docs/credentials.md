@@ -16,7 +16,8 @@ inbound agent port `:50000`, Docker registry `:5001`.
 ### Users (`casc.yaml` — `securityRealm.local`)
 
 Both accounts survive every restart; JCasC re-applies them on every boot.
-Anonymous read is disabled (`allowAnonymousRead: false`).
+Anonymous users have read-only access (`allowAnonymousRead: true`); write,
+configure, and build actions still require login.
 
 | User | Password | Source |
 | --- | --- | --- |
