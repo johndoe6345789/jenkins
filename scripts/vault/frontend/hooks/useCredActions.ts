@@ -17,6 +17,12 @@ export function useCredActions({ item, onRotated, onToast }: Opts) {
 
   const toggleShown = () => setShown(s => !s)
 
+  const copyUsername = async () => {
+    if (!item.username) return
+    await navigator.clipboard.writeText(item.username)
+    onToast(t('cred.copiedUsername'), 'success')
+  }
+
   const copy = async () => {
     if (!item.password) return
     await navigator.clipboard.writeText(item.password)
@@ -47,5 +53,5 @@ export function useCredActions({ item, onRotated, onToast }: Opts) {
     }
   }
 
-  return { shown, toggleShown, rotating, copy, rotate }
+  return { shown, toggleShown, rotating, copyUsername, copy, rotate }
 }

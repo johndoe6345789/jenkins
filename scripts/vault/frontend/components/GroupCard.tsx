@@ -51,6 +51,7 @@ export function GroupCard({ bucket, onRotated, onToast }: Props) {
               <ServiceGroup
                 name={g.name}
                 app_url={g.app_url}
+                repo_path={g.repo_path}
                 users={g.users}
                 onRotated={onRotated}
                 onToast={onToast}

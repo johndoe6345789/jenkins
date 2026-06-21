@@ -74,24 +74,109 @@
       }
     },
     {
+      "name": "postgres-dashboard-editor",
+      "section": "frontends",
+      "group": "metabuilder",
+      "service_name": "postgres-dashboard",
+      "username": "editor",
+      "adapter": "db_bcrypt",
+      "secret_env_key": "POSTGRES_DASHBOARD_EDITOR_PASSWORD",
+      "app_url": "http://wardcrew.com:8900/postgres",
+      "repo_path": "~/Documents/GitHub/metabuilder/frontends/postgres",
+      "params": {
+        "db_container": "metabuilder-postgres",
+        "db_name": "metabuilder",
+        "db_user": "metabuilder",
+        "table": "admin_users",
+        "username_column": "username",
+        "hash_column": "password_hash",
+        "updated_at_column": "updated_at",
+        "username": "editor",
+        "bcrypt_cost": 10
+      }
+    },
+    {
+      "name": "postgres-dashboard-viewer",
+      "section": "frontends",
+      "group": "metabuilder",
+      "service_name": "postgres-dashboard",
+      "username": "viewer",
+      "adapter": "db_bcrypt",
+      "secret_env_key": "POSTGRES_DASHBOARD_VIEWER_PASSWORD",
+      "app_url": "http://wardcrew.com:8900/postgres",
+      "repo_path": "~/Documents/GitHub/metabuilder/frontends/postgres",
+      "params": {
+        "db_container": "metabuilder-postgres",
+        "db_name": "metabuilder",
+        "db_user": "metabuilder",
+        "table": "admin_users",
+        "username_column": "username",
+        "hash_column": "password_hash",
+        "updated_at_column": "updated_at",
+        "username": "viewer",
+        "bcrypt_cost": 10
+      }
+    },
+    {
       "name": "packagerepo-admin",
       "section": "frontends",
       "group": "metabuilder",
       "service_name": "packagerepo",
       "username": "admin",
-      "adapter": "db_bcrypt",
+      "adapter": "db_bcrypt_sqlite",
       "secret_env_key": "PACKAGEREPO_ADMIN_PASSWORD",
       "app_url": "http://wardcrew.com:8900/packagerepo",
       "repo_path": "~/Documents/GitHub/metabuilder/frontends/packagerepo",
       "params": {
-        "db_container": "metabuilder-packagerepo-db",
-        "db_name": "packagerepo",
-        "db_user": "packagerepo",
+        "db_container": "metabuilder-packagerepo-backend",
+        "db_path": "/app/users.db",
         "table": "users",
         "username_column": "username",
         "hash_column": "password_hash",
         "updated_at_column": "updated_at",
         "username": "admin",
+        "bcrypt_cost": 10
+      }
+    },
+    {
+      "name": "packagerepo-publisher",
+      "section": "frontends",
+      "group": "metabuilder",
+      "service_name": "packagerepo",
+      "username": "publisher",
+      "adapter": "db_bcrypt_sqlite",
+      "secret_env_key": "PACKAGEREPO_PUBLISHER_PASSWORD",
+      "app_url": "http://wardcrew.com:8900/packagerepo",
+      "repo_path": "~/Documents/GitHub/metabuilder/frontends/packagerepo",
+      "params": {
+        "db_container": "metabuilder-packagerepo-backend",
+        "db_path": "/app/users.db",
+        "table": "users",
+        "username_column": "username",
+        "hash_column": "password_hash",
+        "updated_at_column": "updated_at",
+        "username": "publisher",
+        "bcrypt_cost": 10
+      }
+    },
+    {
+      "name": "packagerepo-viewer",
+      "section": "frontends",
+      "group": "metabuilder",
+      "service_name": "packagerepo",
+      "username": "viewer",
+      "adapter": "db_bcrypt_sqlite",
+      "secret_env_key": "PACKAGEREPO_VIEWER_PASSWORD",
+      "app_url": "http://wardcrew.com:8900/packagerepo",
+      "repo_path": "~/Documents/GitHub/metabuilder/frontends/packagerepo",
+      "params": {
+        "db_container": "metabuilder-packagerepo-backend",
+        "db_path": "/app/users.db",
+        "table": "users",
+        "username_column": "username",
+        "hash_column": "password_hash",
+        "updated_at_column": "updated_at",
+        "username": "viewer",
         "bcrypt_cost": 10
       }
     },
@@ -129,6 +214,63 @@
       }
     },
     {
+      "name": "workflowui-admin",
+      "section": "frontends",
+      "group": "metabuilder",
+      "service_name": "workflowui",
+      "username": "admin@wf.local",
+      "adapter": "db_sha512",
+      "secret_env_key": "WORKFLOWUI_ADMIN_PASSWORD",
+      "app_url": "http://wardcrew.com:8900/workflowui",
+      "repo_path": "~/Documents/GitHub/metabuilder/frontends/workflowui",
+      "params": {
+        "db_container": "metabuilder-workflowui",
+        "db_path": "/app/frontends/workflowui/instance/workflows.db",
+        "table": "users",
+        "username_column": "email",
+        "hash_column": "password_hash",
+        "username": "admin@wf.local"
+      }
+    },
+    {
+      "name": "workflowui-user",
+      "section": "frontends",
+      "group": "metabuilder",
+      "service_name": "workflowui",
+      "username": "user@wf.local",
+      "adapter": "db_sha512",
+      "secret_env_key": "WORKFLOWUI_USER_PASSWORD",
+      "app_url": "http://wardcrew.com:8900/workflowui",
+      "repo_path": "~/Documents/GitHub/metabuilder/frontends/workflowui",
+      "params": {
+        "db_container": "metabuilder-workflowui",
+        "db_path": "/app/frontends/workflowui/instance/workflows.db",
+        "table": "users",
+        "username_column": "email",
+        "hash_column": "password_hash",
+        "username": "user@wf.local"
+      }
+    },
+    {
+      "name": "workflowui-viewer",
+      "section": "frontends",
+      "group": "metabuilder",
+      "service_name": "workflowui",
+      "username": "viewer@wf.local",
+      "adapter": "db_sha512",
+      "secret_env_key": "WORKFLOWUI_VIEWER_PASSWORD",
+      "app_url": "http://wardcrew.com:8900/workflowui",
+      "repo_path": "~/Documents/GitHub/metabuilder/frontends/workflowui",
+      "params": {
+        "db_container": "metabuilder-workflowui",
+        "db_path": "/app/frontends/workflowui/instance/workflows.db",
+        "table": "users",
+        "username_column": "email",
+        "hash_column": "password_hash",
+        "username": "viewer@wf.local"
+      }
+    },
+    {
       "name": "emailclient-redis",
       "section": "frontends",
       "group": "metabuilder",
@@ -159,6 +301,652 @@
         "env_key": "JWT_SECRET_KEY",
         "recreate_service": "metabuilder-pastebin-backend",
         "length": 64
+      }
+    },
+    {
+      "name": "pastebin-demo",
+      "section": "frontends",
+      "group": "metabuilder",
+      "service_name": "pastebin",
+      "username": "demo",
+      "adapter": "db_werkzeug",
+      "secret_env_key": "PASTEBIN_DEMO_PASSWORD",
+      "app_url": "http://wardcrew.com:8900/pastebin",
+      "repo_path": "~/Documents/GitHub/metabuilder/frontends/pastebin",
+      "params": {
+        "db_container": "metabuilder-pastebin-backend",
+        "db_path": "/app/data/snippets.db",
+        "table": "user_auth",
+        "username_column": "username",
+        "hash_column": "password_hash",
+        "username": "demo"
+      }
+    },
+    {
+      "name": "pastebin-alice",
+      "section": "frontends",
+      "group": "metabuilder",
+      "service_name": "pastebin",
+      "username": "alice",
+      "adapter": "db_werkzeug",
+      "secret_env_key": "PASTEBIN_ALICE_PASSWORD",
+      "app_url": "http://wardcrew.com:8900/pastebin",
+      "repo_path": "~/Documents/GitHub/metabuilder/frontends/pastebin",
+      "params": {
+        "db_container": "metabuilder-pastebin-backend",
+        "db_path": "/app/data/snippets.db",
+        "table": "user_auth",
+        "username_column": "username",
+        "hash_column": "password_hash",
+        "username": "alice"
+      }
+    },
+    {
+      "name": "pastebin-bob",
+      "section": "frontends",
+      "group": "metabuilder",
+      "service_name": "pastebin",
+      "username": "bob",
+      "adapter": "db_werkzeug",
+      "secret_env_key": "PASTEBIN_BOB_PASSWORD",
+      "app_url": "http://wardcrew.com:8900/pastebin",
+      "repo_path": "~/Documents/GitHub/metabuilder/frontends/pastebin",
+      "params": {
+        "db_container": "metabuilder-pastebin-backend",
+        "db_path": "/app/data/snippets.db",
+        "table": "user_auth",
+        "username_column": "username",
+        "hash_column": "password_hash",
+        "username": "bob"
+      }
+    },
+    {
+      "name": "pastebin-playwright",
+      "section": "frontends",
+      "group": "metabuilder",
+      "service_name": "pastebin",
+      "username": "playwright",
+      "adapter": "db_werkzeug",
+      "secret_env_key": "PASTEBIN_PLAYWRIGHT_PASSWORD",
+      "app_url": "http://wardcrew.com:8900/pastebin",
+      "repo_path": "~/Documents/GitHub/metabuilder/frontends/pastebin",
+      "params": {
+        "db_container": "metabuilder-pastebin-backend",
+        "db_path": "/app/data/snippets.db",
+        "table": "user_auth",
+        "username_column": "username",
+        "hash_column": "password_hash",
+        "username": "playwright"
+      }
+    },
+    {
+      "name": "pastebin-javascript",
+      "section": "frontends",
+      "group": "metabuilder",
+      "service_name": "pastebin",
+      "username": "javascript",
+      "adapter": "db_werkzeug",
+      "secret_env_key": "PASTEBIN_JAVASCRIPT_PASSWORD",
+      "app_url": "http://wardcrew.com:8900/pastebin",
+      "repo_path": "~/Documents/GitHub/metabuilder/frontends/pastebin",
+      "params": {
+        "db_container": "metabuilder-pastebin-backend",
+        "db_path": "/app/data/snippets.db",
+        "table": "user_auth",
+        "username_column": "username",
+        "hash_column": "password_hash",
+        "username": "javascript"
+      }
+    },
+    {
+      "name": "pastebin-typescript",
+      "section": "frontends",
+      "group": "metabuilder",
+      "service_name": "pastebin",
+      "username": "typescript",
+      "adapter": "db_werkzeug",
+      "secret_env_key": "PASTEBIN_TYPESCRIPT_PASSWORD",
+      "app_url": "http://wardcrew.com:8900/pastebin",
+      "repo_path": "~/Documents/GitHub/metabuilder/frontends/pastebin",
+      "params": {
+        "db_container": "metabuilder-pastebin-backend",
+        "db_path": "/app/data/snippets.db",
+        "table": "user_auth",
+        "username_column": "username",
+        "hash_column": "password_hash",
+        "username": "typescript"
+      }
+    },
+    {
+      "name": "pastebin-jsx",
+      "section": "frontends",
+      "group": "metabuilder",
+      "service_name": "pastebin",
+      "username": "jsx",
+      "adapter": "db_werkzeug",
+      "secret_env_key": "PASTEBIN_JSX_PASSWORD",
+      "app_url": "http://wardcrew.com:8900/pastebin",
+      "repo_path": "~/Documents/GitHub/metabuilder/frontends/pastebin",
+      "params": {
+        "db_container": "metabuilder-pastebin-backend",
+        "db_path": "/app/data/snippets.db",
+        "table": "user_auth",
+        "username_column": "username",
+        "hash_column": "password_hash",
+        "username": "jsx"
+      }
+    },
+    {
+      "name": "pastebin-tsx",
+      "section": "frontends",
+      "group": "metabuilder",
+      "service_name": "pastebin",
+      "username": "tsx",
+      "adapter": "db_werkzeug",
+      "secret_env_key": "PASTEBIN_TSX_PASSWORD",
+      "app_url": "http://wardcrew.com:8900/pastebin",
+      "repo_path": "~/Documents/GitHub/metabuilder/frontends/pastebin",
+      "params": {
+        "db_container": "metabuilder-pastebin-backend",
+        "db_path": "/app/data/snippets.db",
+        "table": "user_auth",
+        "username_column": "username",
+        "hash_column": "password_hash",
+        "username": "tsx"
+      }
+    },
+    {
+      "name": "pastebin-python",
+      "section": "frontends",
+      "group": "metabuilder",
+      "service_name": "pastebin",
+      "username": "python",
+      "adapter": "db_werkzeug",
+      "secret_env_key": "PASTEBIN_PYTHON_PASSWORD",
+      "app_url": "http://wardcrew.com:8900/pastebin",
+      "repo_path": "~/Documents/GitHub/metabuilder/frontends/pastebin",
+      "params": {
+        "db_container": "metabuilder-pastebin-backend",
+        "db_path": "/app/data/snippets.db",
+        "table": "user_auth",
+        "username_column": "username",
+        "hash_column": "password_hash",
+        "username": "python"
+      }
+    },
+    {
+      "name": "pastebin-java",
+      "section": "frontends",
+      "group": "metabuilder",
+      "service_name": "pastebin",
+      "username": "java",
+      "adapter": "db_werkzeug",
+      "secret_env_key": "PASTEBIN_JAVA_PASSWORD",
+      "app_url": "http://wardcrew.com:8900/pastebin",
+      "repo_path": "~/Documents/GitHub/metabuilder/frontends/pastebin",
+      "params": {
+        "db_container": "metabuilder-pastebin-backend",
+        "db_path": "/app/data/snippets.db",
+        "table": "user_auth",
+        "username_column": "username",
+        "hash_column": "password_hash",
+        "username": "java"
+      }
+    },
+    {
+      "name": "pastebin-cpp",
+      "section": "frontends",
+      "group": "metabuilder",
+      "service_name": "pastebin",
+      "username": "cpp",
+      "adapter": "db_werkzeug",
+      "secret_env_key": "PASTEBIN_CPP_PASSWORD",
+      "app_url": "http://wardcrew.com:8900/pastebin",
+      "repo_path": "~/Documents/GitHub/metabuilder/frontends/pastebin",
+      "params": {
+        "db_container": "metabuilder-pastebin-backend",
+        "db_path": "/app/data/snippets.db",
+        "table": "user_auth",
+        "username_column": "username",
+        "hash_column": "password_hash",
+        "username": "cpp"
+      }
+    },
+    {
+      "name": "pastebin-csharp",
+      "section": "frontends",
+      "group": "metabuilder",
+      "service_name": "pastebin",
+      "username": "csharp",
+      "adapter": "db_werkzeug",
+      "secret_env_key": "PASTEBIN_CSHARP_PASSWORD",
+      "app_url": "http://wardcrew.com:8900/pastebin",
+      "repo_path": "~/Documents/GitHub/metabuilder/frontends/pastebin",
+      "params": {
+        "db_container": "metabuilder-pastebin-backend",
+        "db_path": "/app/data/snippets.db",
+        "table": "user_auth",
+        "username_column": "username",
+        "hash_column": "password_hash",
+        "username": "csharp"
+      }
+    },
+    {
+      "name": "pastebin-go",
+      "section": "frontends",
+      "group": "metabuilder",
+      "service_name": "pastebin",
+      "username": "go",
+      "adapter": "db_werkzeug",
+      "secret_env_key": "PASTEBIN_GO_PASSWORD",
+      "app_url": "http://wardcrew.com:8900/pastebin",
+      "repo_path": "~/Documents/GitHub/metabuilder/frontends/pastebin",
+      "params": {
+        "db_container": "metabuilder-pastebin-backend",
+        "db_path": "/app/data/snippets.db",
+        "table": "user_auth",
+        "username_column": "username",
+        "hash_column": "password_hash",
+        "username": "go"
+      }
+    },
+    {
+      "name": "pastebin-rust",
+      "section": "frontends",
+      "group": "metabuilder",
+      "service_name": "pastebin",
+      "username": "rust",
+      "adapter": "db_werkzeug",
+      "secret_env_key": "PASTEBIN_RUST_PASSWORD",
+      "app_url": "http://wardcrew.com:8900/pastebin",
+      "repo_path": "~/Documents/GitHub/metabuilder/frontends/pastebin",
+      "params": {
+        "db_container": "metabuilder-pastebin-backend",
+        "db_path": "/app/data/snippets.db",
+        "table": "user_auth",
+        "username_column": "username",
+        "hash_column": "password_hash",
+        "username": "rust"
+      }
+    },
+    {
+      "name": "pastebin-ruby",
+      "section": "frontends",
+      "group": "metabuilder",
+      "service_name": "pastebin",
+      "username": "ruby",
+      "adapter": "db_werkzeug",
+      "secret_env_key": "PASTEBIN_RUBY_PASSWORD",
+      "app_url": "http://wardcrew.com:8900/pastebin",
+      "repo_path": "~/Documents/GitHub/metabuilder/frontends/pastebin",
+      "params": {
+        "db_container": "metabuilder-pastebin-backend",
+        "db_path": "/app/data/snippets.db",
+        "table": "user_auth",
+        "username_column": "username",
+        "hash_column": "password_hash",
+        "username": "ruby"
+      }
+    },
+    {
+      "name": "pastebin-php",
+      "section": "frontends",
+      "group": "metabuilder",
+      "service_name": "pastebin",
+      "username": "php",
+      "adapter": "db_werkzeug",
+      "secret_env_key": "PASTEBIN_PHP_PASSWORD",
+      "app_url": "http://wardcrew.com:8900/pastebin",
+      "repo_path": "~/Documents/GitHub/metabuilder/frontends/pastebin",
+      "params": {
+        "db_container": "metabuilder-pastebin-backend",
+        "db_path": "/app/data/snippets.db",
+        "table": "user_auth",
+        "username_column": "username",
+        "hash_column": "password_hash",
+        "username": "php"
+      }
+    },
+    {
+      "name": "pastebin-swift",
+      "section": "frontends",
+      "group": "metabuilder",
+      "service_name": "pastebin",
+      "username": "swift",
+      "adapter": "db_werkzeug",
+      "secret_env_key": "PASTEBIN_SWIFT_PASSWORD",
+      "app_url": "http://wardcrew.com:8900/pastebin",
+      "repo_path": "~/Documents/GitHub/metabuilder/frontends/pastebin",
+      "params": {
+        "db_container": "metabuilder-pastebin-backend",
+        "db_path": "/app/data/snippets.db",
+        "table": "user_auth",
+        "username_column": "username",
+        "hash_column": "password_hash",
+        "username": "swift"
+      }
+    },
+    {
+      "name": "pastebin-kotlin",
+      "section": "frontends",
+      "group": "metabuilder",
+      "service_name": "pastebin",
+      "username": "kotlin",
+      "adapter": "db_werkzeug",
+      "secret_env_key": "PASTEBIN_KOTLIN_PASSWORD",
+      "app_url": "http://wardcrew.com:8900/pastebin",
+      "repo_path": "~/Documents/GitHub/metabuilder/frontends/pastebin",
+      "params": {
+        "db_container": "metabuilder-pastebin-backend",
+        "db_path": "/app/data/snippets.db",
+        "table": "user_auth",
+        "username_column": "username",
+        "hash_column": "password_hash",
+        "username": "kotlin"
+      }
+    },
+    {
+      "name": "pastebin-scala",
+      "section": "frontends",
+      "group": "metabuilder",
+      "service_name": "pastebin",
+      "username": "scala",
+      "adapter": "db_werkzeug",
+      "secret_env_key": "PASTEBIN_SCALA_PASSWORD",
+      "app_url": "http://wardcrew.com:8900/pastebin",
+      "repo_path": "~/Documents/GitHub/metabuilder/frontends/pastebin",
+      "params": {
+        "db_container": "metabuilder-pastebin-backend",
+        "db_path": "/app/data/snippets.db",
+        "table": "user_auth",
+        "username_column": "username",
+        "hash_column": "password_hash",
+        "username": "scala"
+      }
+    },
+    {
+      "name": "pastebin-haskell",
+      "section": "frontends",
+      "group": "metabuilder",
+      "service_name": "pastebin",
+      "username": "haskell",
+      "adapter": "db_werkzeug",
+      "secret_env_key": "PASTEBIN_HASKELL_PASSWORD",
+      "app_url": "http://wardcrew.com:8900/pastebin",
+      "repo_path": "~/Documents/GitHub/metabuilder/frontends/pastebin",
+      "params": {
+        "db_container": "metabuilder-pastebin-backend",
+        "db_path": "/app/data/snippets.db",
+        "table": "user_auth",
+        "username_column": "username",
+        "hash_column": "password_hash",
+        "username": "haskell"
+      }
+    },
+    {
+      "name": "pastebin-r",
+      "section": "frontends",
+      "group": "metabuilder",
+      "service_name": "pastebin",
+      "username": "r",
+      "adapter": "db_werkzeug",
+      "secret_env_key": "PASTEBIN_R_PASSWORD",
+      "app_url": "http://wardcrew.com:8900/pastebin",
+      "repo_path": "~/Documents/GitHub/metabuilder/frontends/pastebin",
+      "params": {
+        "db_container": "metabuilder-pastebin-backend",
+        "db_path": "/app/data/snippets.db",
+        "table": "user_auth",
+        "username_column": "username",
+        "hash_column": "password_hash",
+        "username": "r"
+      }
+    },
+    {
+      "name": "pastebin-julia",
+      "section": "frontends",
+      "group": "metabuilder",
+      "service_name": "pastebin",
+      "username": "julia",
+      "adapter": "db_werkzeug",
+      "secret_env_key": "PASTEBIN_JULIA_PASSWORD",
+      "app_url": "http://wardcrew.com:8900/pastebin",
+      "repo_path": "~/Documents/GitHub/metabuilder/frontends/pastebin",
+      "params": {
+        "db_container": "metabuilder-pastebin-backend",
+        "db_path": "/app/data/snippets.db",
+        "table": "user_auth",
+        "username_column": "username",
+        "hash_column": "password_hash",
+        "username": "julia"
+      }
+    },
+    {
+      "name": "pastebin-elixir",
+      "section": "frontends",
+      "group": "metabuilder",
+      "service_name": "pastebin",
+      "username": "elixir",
+      "adapter": "db_werkzeug",
+      "secret_env_key": "PASTEBIN_ELIXIR_PASSWORD",
+      "app_url": "http://wardcrew.com:8900/pastebin",
+      "repo_path": "~/Documents/GitHub/metabuilder/frontends/pastebin",
+      "params": {
+        "db_container": "metabuilder-pastebin-backend",
+        "db_path": "/app/data/snippets.db",
+        "table": "user_auth",
+        "username_column": "username",
+        "hash_column": "password_hash",
+        "username": "elixir"
+      }
+    },
+    {
+      "name": "pastebin-dart",
+      "section": "frontends",
+      "group": "metabuilder",
+      "service_name": "pastebin",
+      "username": "dart",
+      "adapter": "db_werkzeug",
+      "secret_env_key": "PASTEBIN_DART_PASSWORD",
+      "app_url": "http://wardcrew.com:8900/pastebin",
+      "repo_path": "~/Documents/GitHub/metabuilder/frontends/pastebin",
+      "params": {
+        "db_container": "metabuilder-pastebin-backend",
+        "db_path": "/app/data/snippets.db",
+        "table": "user_auth",
+        "username_column": "username",
+        "hash_column": "password_hash",
+        "username": "dart"
+      }
+    },
+    {
+      "name": "pastebin-lua",
+      "section": "frontends",
+      "group": "metabuilder",
+      "service_name": "pastebin",
+      "username": "lua",
+      "adapter": "db_werkzeug",
+      "secret_env_key": "PASTEBIN_LUA_PASSWORD",
+      "app_url": "http://wardcrew.com:8900/pastebin",
+      "repo_path": "~/Documents/GitHub/metabuilder/frontends/pastebin",
+      "params": {
+        "db_container": "metabuilder-pastebin-backend",
+        "db_path": "/app/data/snippets.db",
+        "table": "user_auth",
+        "username_column": "username",
+        "hash_column": "password_hash",
+        "username": "lua"
+      }
+    },
+    {
+      "name": "pastebin-perl",
+      "section": "frontends",
+      "group": "metabuilder",
+      "service_name": "pastebin",
+      "username": "perl",
+      "adapter": "db_werkzeug",
+      "secret_env_key": "PASTEBIN_PERL_PASSWORD",
+      "app_url": "http://wardcrew.com:8900/pastebin",
+      "repo_path": "~/Documents/GitHub/metabuilder/frontends/pastebin",
+      "params": {
+        "db_container": "metabuilder-pastebin-backend",
+        "db_path": "/app/data/snippets.db",
+        "table": "user_auth",
+        "username_column": "username",
+        "hash_column": "password_hash",
+        "username": "perl"
+      }
+    },
+    {
+      "name": "pastebin-bash",
+      "section": "frontends",
+      "group": "metabuilder",
+      "service_name": "pastebin",
+      "username": "bash",
+      "adapter": "db_werkzeug",
+      "secret_env_key": "PASTEBIN_BASH_PASSWORD",
+      "app_url": "http://wardcrew.com:8900/pastebin",
+      "repo_path": "~/Documents/GitHub/metabuilder/frontends/pastebin",
+      "params": {
+        "db_container": "metabuilder-pastebin-backend",
+        "db_path": "/app/data/snippets.db",
+        "table": "user_auth",
+        "username_column": "username",
+        "hash_column": "password_hash",
+        "username": "bash"
+      }
+    },
+    {
+      "name": "pastebin-html",
+      "section": "frontends",
+      "group": "metabuilder",
+      "service_name": "pastebin",
+      "username": "html",
+      "adapter": "db_werkzeug",
+      "secret_env_key": "PASTEBIN_HTML_PASSWORD",
+      "app_url": "http://wardcrew.com:8900/pastebin",
+      "repo_path": "~/Documents/GitHub/metabuilder/frontends/pastebin",
+      "params": {
+        "db_container": "metabuilder-pastebin-backend",
+        "db_path": "/app/data/snippets.db",
+        "table": "user_auth",
+        "username_column": "username",
+        "hash_column": "password_hash",
+        "username": "html"
+      }
+    },
+    {
+      "name": "pastebin-css",
+      "section": "frontends",
+      "group": "metabuilder",
+      "service_name": "pastebin",
+      "username": "css",
+      "adapter": "db_werkzeug",
+      "secret_env_key": "PASTEBIN_CSS_PASSWORD",
+      "app_url": "http://wardcrew.com:8900/pastebin",
+      "repo_path": "~/Documents/GitHub/metabuilder/frontends/pastebin",
+      "params": {
+        "db_container": "metabuilder-pastebin-backend",
+        "db_path": "/app/data/snippets.db",
+        "table": "user_auth",
+        "username_column": "username",
+        "hash_column": "password_hash",
+        "username": "css"
+      }
+    },
+    {
+      "name": "pastebin-sql",
+      "section": "frontends",
+      "group": "metabuilder",
+      "service_name": "pastebin",
+      "username": "sql",
+      "adapter": "db_werkzeug",
+      "secret_env_key": "PASTEBIN_SQL_PASSWORD",
+      "app_url": "http://wardcrew.com:8900/pastebin",
+      "repo_path": "~/Documents/GitHub/metabuilder/frontends/pastebin",
+      "params": {
+        "db_container": "metabuilder-pastebin-backend",
+        "db_path": "/app/data/snippets.db",
+        "table": "user_auth",
+        "username_column": "username",
+        "hash_column": "password_hash",
+        "username": "sql"
+      }
+    },
+    {
+      "name": "pastebin-sql_sqlite",
+      "section": "frontends",
+      "group": "metabuilder",
+      "service_name": "pastebin",
+      "username": "sql_sqlite",
+      "adapter": "db_werkzeug",
+      "secret_env_key": "PASTEBIN_SQL_SQLITE_PASSWORD",
+      "app_url": "http://wardcrew.com:8900/pastebin",
+      "repo_path": "~/Documents/GitHub/metabuilder/frontends/pastebin",
+      "params": {
+        "db_container": "metabuilder-pastebin-backend",
+        "db_path": "/app/data/snippets.db",
+        "table": "user_auth",
+        "username_column": "username",
+        "hash_column": "password_hash",
+        "username": "sql_sqlite"
+      }
+    },
+    {
+      "name": "pastebin-sql_mysql",
+      "section": "frontends",
+      "group": "metabuilder",
+      "service_name": "pastebin",
+      "username": "sql_mysql",
+      "adapter": "db_werkzeug",
+      "secret_env_key": "PASTEBIN_SQL_MYSQL_PASSWORD",
+      "app_url": "http://wardcrew.com:8900/pastebin",
+      "repo_path": "~/Documents/GitHub/metabuilder/frontends/pastebin",
+      "params": {
+        "db_container": "metabuilder-pastebin-backend",
+        "db_path": "/app/data/snippets.db",
+        "table": "user_auth",
+        "username_column": "username",
+        "hash_column": "password_hash",
+        "username": "sql_mysql"
+      }
+    },
+    {
+      "name": "pastebin-sql_postgres",
+      "section": "frontends",
+      "group": "metabuilder",
+      "service_name": "pastebin",
+      "username": "sql_postgres",
+      "adapter": "db_werkzeug",
+      "secret_env_key": "PASTEBIN_SQL_POSTGRES_PASSWORD",
+      "app_url": "http://wardcrew.com:8900/pastebin",
+      "repo_path": "~/Documents/GitHub/metabuilder/frontends/pastebin",
+      "params": {
+        "db_container": "metabuilder-pastebin-backend",
+        "db_path": "/app/data/snippets.db",
+        "table": "user_auth",
+        "username_column": "username",
+        "hash_column": "password_hash",
+        "username": "sql_postgres"
+      }
+    },
+    {
+      "name": "pastebin-other",
+      "section": "frontends",
+      "group": "metabuilder",
+      "service_name": "pastebin",
+      "username": "other",
+      "adapter": "db_werkzeug",
+      "secret_env_key": "PASTEBIN_OTHER_PASSWORD",
+      "app_url": "http://wardcrew.com:8900/pastebin",
+      "repo_path": "~/Documents/GitHub/metabuilder/frontends/pastebin",
+      "params": {
+        "db_container": "metabuilder-pastebin-backend",
+        "db_path": "/app/data/snippets.db",
+        "table": "user_auth",
+        "username_column": "username",
+        "hash_column": "password_hash",
+        "username": "other"
       }
     },
     {
@@ -206,7 +994,7 @@
       "app_url": "http://wardcrew.com:8892/app/en",
       "repo_path": "~/Documents/GitHub/businessplanner",
       "params": {
-        "kc_url": "http://localhost:8080",
+        "kc_url": "http://172.24.0.13:8080/sso",
         "kc_master_user": "admin",
         "kc_master_password_env": "BUSINESSPLANNER_KC_MASTER_PASSWORD",
         "realm": "businessplanner",
@@ -224,7 +1012,7 @@
       "app_url": "http://wardcrew.com:8889/app/en",
       "repo_path": "~/Documents/GitHub/next_extra_primary",
       "params": {
-        "kc_url": "http://localhost:8080",
+        "kc_url": "http://172.25.0.37:8080/sso",
         "kc_master_user": "admin",
         "kc_master_password_env": "NEXTRA_KC_MASTER_PASSWORD",
         "realm": "nextra",
@@ -268,13 +1056,205 @@
       "group": "monitoring",
       "service_name": "grafana",
       "username": "admin",
-      "adapter": "env_var",
+      "adapter": "grafana_api",
       "secret_env_key": "GRAFANA_ADMIN_PASSWORD",
       "app_url": "http://wardcrew.com:8900/grafana",
       "params": {
-        "env_file": "secrets/grafana.env",
-        "env_key": "GF_SECURITY_ADMIN_PASSWORD",
-        "recreate_service": "metabuilder-grafana"
+        "grafana_url": "http://172.21.0.36:3000",
+        "admin_password_env": "GRAFANA_ADMIN_PASSWORD",
+        "login": "admin"
+      }
+    },
+    {
+      "name": "grafana-editor",
+      "section": "frontends",
+      "group": "monitoring",
+      "service_name": "grafana",
+      "username": "editor",
+      "adapter": "grafana_api",
+      "secret_env_key": "GRAFANA_EDITOR_PASSWORD",
+      "app_url": "http://wardcrew.com:8900/grafana",
+      "params": {
+        "grafana_url": "http://172.21.0.36:3000",
+        "admin_password_env": "GRAFANA_ADMIN_PASSWORD",
+        "login": "editor"
+      }
+    },
+    {
+      "name": "grafana-viewer",
+      "section": "frontends",
+      "group": "monitoring",
+      "service_name": "grafana",
+      "username": "viewer",
+      "adapter": "grafana_api",
+      "secret_env_key": "GRAFANA_VIEWER_PASSWORD",
+      "app_url": "http://wardcrew.com:8900/grafana",
+      "params": {
+        "grafana_url": "http://172.21.0.36:3000",
+        "admin_password_env": "GRAFANA_ADMIN_PASSWORD",
+        "login": "viewer"
+      }
+    },
+    {
+      "name": "businessplanner-keycloak-devmod",
+      "section": "frontends",
+      "group": "keycloak apps",
+      "service_name": "businessplanner",
+      "username": "devmod",
+      "adapter": "keycloak_realm",
+      "secret_env_key": "BUSINESSPLANNER_DEVMOD_PASSWORD",
+      "app_url": "http://wardcrew.com:8892/app/en",
+      "repo_path": "~/Documents/GitHub/businessplanner",
+      "params": {
+        "kc_url": "http://172.24.0.13:8080/sso",
+        "kc_master_user": "admin",
+        "kc_master_password_env": "BUSINESSPLANNER_KC_MASTER_PASSWORD",
+        "realm": "businessplanner",
+        "user": "devmod"
+      }
+    },
+    {
+      "name": "businessplanner-keycloak-devuser",
+      "section": "frontends",
+      "group": "keycloak apps",
+      "service_name": "businessplanner",
+      "username": "devuser",
+      "adapter": "keycloak_realm",
+      "secret_env_key": "BUSINESSPLANNER_DEVUSER_PASSWORD",
+      "app_url": "http://wardcrew.com:8892/app/en",
+      "repo_path": "~/Documents/GitHub/businessplanner",
+      "params": {
+        "kc_url": "http://172.24.0.13:8080/sso",
+        "kc_master_user": "admin",
+        "kc_master_password_env": "BUSINESSPLANNER_KC_MASTER_PASSWORD",
+        "realm": "businessplanner",
+        "user": "devuser"
+      }
+    },
+    {
+      "name": "next-extra-primary-keycloak-devmod",
+      "section": "frontends",
+      "group": "keycloak apps",
+      "service_name": "next-extra-primary",
+      "username": "devmod",
+      "adapter": "keycloak_realm",
+      "secret_env_key": "NEXTRA_DEVMOD_PASSWORD",
+      "app_url": "http://wardcrew.com:8889/app/en",
+      "repo_path": "~/Documents/GitHub/next_extra_primary",
+      "params": {
+        "kc_url": "http://172.25.0.37:8080/sso",
+        "kc_master_user": "admin",
+        "kc_master_password_env": "NEXTRA_KC_MASTER_PASSWORD",
+        "realm": "nextra",
+        "user": "devmod"
+      }
+    },
+    {
+      "name": "next-extra-primary-keycloak-devuser",
+      "section": "frontends",
+      "group": "keycloak apps",
+      "service_name": "next-extra-primary",
+      "username": "devuser",
+      "adapter": "keycloak_realm",
+      "secret_env_key": "NEXTRA_DEVUSER_PASSWORD",
+      "app_url": "http://wardcrew.com:8889/app/en",
+      "repo_path": "~/Documents/GitHub/next_extra_primary",
+      "params": {
+        "kc_url": "http://172.25.0.37:8080/sso",
+        "kc_master_user": "admin",
+        "kc_master_password_env": "NEXTRA_KC_MASTER_PASSWORD",
+        "realm": "nextra",
+        "user": "devuser"
+      }
+    },
+    {
+      "name": "pyracms-superadmin",
+      "section": "frontends",
+      "group": "pyracms",
+      "service_name": "PyraCMS",
+      "username": "superadmin",
+      "badge": "cms",
+      "adapter": "pyracms_pbkdf2",
+      "secret_env_key": "PYRACMS_SUPERADMIN_PASSWORD",
+      "app_url": "https://pyracms.wardcrew.com",
+      "repo_path": "~/Documents/GitHub/pyracms_core/pyracms-cpp-port",
+      "params": {
+        "db_container": "pyracms-cpp-port-postgres-1",
+        "db_name": "pyracms",
+        "db_user": "pyracms",
+        "username": "superadmin"
+      }
+    },
+    {
+      "name": "pyracms-admin",
+      "section": "frontends",
+      "group": "pyracms",
+      "service_name": "PyraCMS",
+      "username": "admin",
+      "badge": "cms",
+      "adapter": "pyracms_pbkdf2",
+      "secret_env_key": "PYRACMS_ADMIN_PASSWORD",
+      "app_url": "https://pyracms.wardcrew.com",
+      "repo_path": "~/Documents/GitHub/pyracms_core/pyracms-cpp-port",
+      "params": {
+        "db_container": "pyracms-cpp-port-postgres-1",
+        "db_name": "pyracms",
+        "db_user": "pyracms",
+        "username": "admin"
+      }
+    },
+    {
+      "name": "pyracms-moderator",
+      "section": "frontends",
+      "group": "pyracms",
+      "service_name": "PyraCMS",
+      "username": "moderator",
+      "badge": "cms",
+      "adapter": "pyracms_pbkdf2",
+      "secret_env_key": "PYRACMS_MODERATOR_PASSWORD",
+      "app_url": "https://pyracms.wardcrew.com",
+      "repo_path": "~/Documents/GitHub/pyracms_core/pyracms-cpp-port",
+      "params": {
+        "db_container": "pyracms-cpp-port-postgres-1",
+        "db_name": "pyracms",
+        "db_user": "pyracms",
+        "username": "moderator"
+      }
+    },
+    {
+      "name": "pyracms-alice",
+      "section": "frontends",
+      "group": "pyracms",
+      "service_name": "PyraCMS",
+      "username": "alice",
+      "badge": "cms",
+      "adapter": "pyracms_pbkdf2",
+      "secret_env_key": "PYRACMS_ALICE_PASSWORD",
+      "app_url": "https://pyracms.wardcrew.com",
+      "repo_path": "~/Documents/GitHub/pyracms_core/pyracms-cpp-port",
+      "params": {
+        "db_container": "pyracms-cpp-port-postgres-1",
+        "db_name": "pyracms",
+        "db_user": "pyracms",
+        "username": "alice"
+      }
+    },
+    {
+      "name": "pyracms-bob",
+      "section": "frontends",
+      "group": "pyracms",
+      "service_name": "PyraCMS",
+      "username": "bob",
+      "badge": "cms",
+      "adapter": "pyracms_pbkdf2",
+      "secret_env_key": "PYRACMS_BOB_PASSWORD",
+      "app_url": "https://pyracms.wardcrew.com",
+      "repo_path": "~/Documents/GitHub/pyracms_core/pyracms-cpp-port",
+      "params": {
+        "db_container": "pyracms-cpp-port-postgres-1",
+        "db_name": "pyracms",
+        "db_user": "pyracms",
+        "username": "bob"
       }
     }
   ]

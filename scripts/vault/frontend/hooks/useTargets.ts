@@ -5,7 +5,7 @@ import { useAppDispatch, useAppSelector } from '../lib/store'
 
 export function useTargets() {
   const dispatch = useAppDispatch()
-  const { sections, loading, error } = useAppSelector(state => state.creds)
+  const { sections, loading, initialLoad, error } = useAppSelector(state => state.creds)
   const token = useAppSelector(state => state.auth.token)
 
   const reload = useCallback(() => {
@@ -14,5 +14,5 @@ export function useTargets() {
 
   useEffect(() => { reload() }, [reload])
 
-  return { sections, loading, error, reload }
+  return { sections, loading, initialLoad, error, reload }
 }

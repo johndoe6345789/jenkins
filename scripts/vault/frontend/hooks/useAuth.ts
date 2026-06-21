@@ -1,15 +1,17 @@
 'use client'
-import { useCallback, useEffect } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { setToken, clearToken, TOKEN_KEY } from '../lib/authSlice'
 import { useAppDispatch, useAppSelector } from '../lib/store'
 
 export function useAuth() {
   const dispatch = useAppDispatch()
-  const token = useAppSelector(state => state.auth.token)
+  const token    = useAppSelector(state => state.auth.token)
+  const [hydrated, setHydrated] = useState(false)
 
   useEffect(() => {
     const stored = localStorage.getItem(TOKEN_KEY)
     if (stored) dispatch(setToken(stored))
+    setHydrated(true)
   }, [dispatch])
 
   const login = useCallback(
@@ -41,5 +43,5 @@ export function useAuth() {
     dispatch(clearToken())
   }, [dispatch, token])
 
-  return { token, isAuth: !!token, login, logout }
+  return { token, isAuth: !!token, hydrated, login, logout }
 }

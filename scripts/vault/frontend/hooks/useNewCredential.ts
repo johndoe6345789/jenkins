@@ -1,6 +1,7 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useMemo, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useAuth } from './useAuth'
+import { useRequireAuth } from './useRequireAuth'
 import { useTargets } from './useTargets'
 import type { NewCredForm } from '../components/NewCredentialForm'
 
@@ -10,16 +11,13 @@ const blank: NewCredForm = {
 }
 
 export function useNewCredential() {
-  const { isAuth, logout, token } = useAuth()
-  const { sections }              = useTargets()
-  const router                    = useRouter()
-  const [form, setForm]           = useState<NewCredForm>(blank)
-  const [error, setError]         = useState('')
-  const [saving, setSaving]       = useState(false)
-
-  useEffect(() => {
-    if (!isAuth) router.replace('/login')
-  }, [isAuth, router])
+  const { logout, token } = useAuth()
+  const isAuth            = useRequireAuth()
+  const { sections }      = useTargets()
+  const router            = useRouter()
+  const [form, setForm]   = useState<NewCredForm>(blank)
+  const [error, setError] = useState('')
+  const [saving, setSaving] = useState(false)
 
   const existingServices = useMemo(() => {
     const s = new Set<string>()

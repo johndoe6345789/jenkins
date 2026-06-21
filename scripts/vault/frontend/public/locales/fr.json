@@ -27,9 +27,12 @@
     "show": "Afficher",
     "hide": "Masquer",
     "copy": "Copier",
+    "copyUsername": "Copier le nom d'utilisateur",
+    "copyPassword": "Copier le mot de passe",
     "rotate": "Renouveler",
     "open": "Ouvrir l'app",
-    "copied": "Copié dans le presse-papiers",
+    "copied": "Mot de passe copié",
+    "copiedUsername": "Nom d'utilisateur copié",
     "rotated": "{{name}} renouvelé",
     "rotateFailed": "Échec du renouvellement"
   },

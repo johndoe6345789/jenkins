@@ -27,9 +27,12 @@
     "show": "Mostrar",
     "hide": "Ocultar",
     "copy": "Copiar",
+    "copyUsername": "Copiar usuario",
+    "copyPassword": "Copiar contraseña",
     "rotate": "Rotar",
     "open": "Abrir app",
-    "copied": "Copiado al portapapeles",
+    "copied": "Contraseña copiada",
+    "copiedUsername": "Usuario copiado",
     "rotated": "{{name}} rotado",
     "rotateFailed": "Error al rotar"
   },

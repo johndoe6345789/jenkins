@@ -1,4 +1,5 @@
 'use client'
+import { Suspense } from 'react'
 import Alert from '@mui/material/Alert'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
@@ -11,9 +12,44 @@ import { ThemeToggle } from '../../components/ThemeToggle'
 import { useLoginForm } from '../../hooks/useLoginForm'
 import '../../lib/i18n'
 
-export default function LoginPage() {
+function LoginForm() {
   const { password, setPassword, error, loading, submit, t } = useLoginForm()
+  return (
+    <Paper variant="outlined" sx={{ p: 5, width: 360 }}>
+      <Box sx={{ textAlign: 'center', mb: 3 }}>
+        <LockIcon sx={{ fontSize: 48, color: 'primary.main', mb: 1 }} />
+        <Typography variant="h6" fontWeight={700}>
+          {t('app.title')}
+        </Typography>
+        <Typography variant="caption" color="text.secondary">
+          {t('app.subtitle')}
+        </Typography>
+      </Box>
+      <form onSubmit={submit}>
+        <TextField
+          fullWidth type="password"
+          label={t('login.masterPassword')}
+          placeholder={t('login.placeholder')}
+          value={password}
+          onChange={e => setPassword(e.target.value)}
+          autoFocus size="small" sx={{ mb: 2 }}
+          inputProps={{ style: { fontFamily: 'monospace' } }}
+        />
+        {error && (
+          <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>
+        )}
+        <Button
+          fullWidth type="submit" variant="contained"
+          disabled={loading || !password}
+        >
+          {loading ? t('login.unlocking') : t('login.unlock')}
+        </Button>
+      </form>
+    </Paper>
+  )
+}
 
+export default function LoginPage() {
   return (
     <Box sx={{
       minHeight: '100vh',
@@ -29,37 +65,9 @@ export default function LoginPage() {
         <ThemeToggle />
         <LanguageSelector />
       </Box>
-      <Paper variant="outlined" sx={{ p: 5, width: 360 }}>
-        <Box sx={{ textAlign: 'center', mb: 3 }}>
-          <LockIcon sx={{ fontSize: 48, color: 'primary.main', mb: 1 }} />
-          <Typography variant="h6" fontWeight={700}>
-            {t('app.title')}
-          </Typography>
-          <Typography variant="caption" color="text.secondary">
-            {t('app.subtitle')}
-          </Typography>
-        </Box>
-        <form onSubmit={submit}>
-          <TextField
-            fullWidth type="password"
-            label={t('login.masterPassword')}
-            placeholder={t('login.placeholder')}
-            value={password}
-            onChange={e => setPassword(e.target.value)}
-            autoFocus size="small" sx={{ mb: 2 }}
-            inputProps={{ style: { fontFamily: 'monospace' } }}
-          />
-          {error && (
-            <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>
-          )}
-          <Button
-            fullWidth type="submit" variant="contained"
-            disabled={loading || !password}
-          >
-            {loading ? t('login.unlocking') : t('login.unlock')}
-          </Button>
-        </form>
-      </Paper>
+      <Suspense>
+        <LoginForm />
+      </Suspense>
     </Box>
   )
 }

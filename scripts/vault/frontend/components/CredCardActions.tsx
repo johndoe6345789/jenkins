@@ -10,7 +10,9 @@ interface Props {
   shown: boolean
   rotating: boolean
   hasPw: boolean
+  hasUsername: boolean
   onToggleShown: () => void
+  onCopyUsername: () => void
   onCopy: () => void
   onRotate: () => void
   editHref?: string
@@ -18,14 +20,14 @@ interface Props {
 }
 
 export function CredCardActions({
-  shown, rotating, hasPw,
-  onToggleShown, onCopy, onRotate,
+  shown, rotating, hasPw, hasUsername,
+  onToggleShown, onCopyUsername, onCopy, onRotate,
   editHref, onDelete,
 }: Props) {
   const { t } = useTranslation()
   return (
     <>
-      <Box sx={{ display: 'flex', gap: 1 }}>
+      <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
         <Button
           size="small" variant="outlined"
           onClick={onToggleShown}
@@ -36,9 +38,15 @@ export function CredCardActions({
         </Button>
         <Button
           size="small" variant="outlined"
+          onClick={onCopyUsername} disabled={!hasUsername}
+        >
+          {t('cred.copyUsername')}
+        </Button>
+        <Button
+          size="small" variant="outlined"
           onClick={onCopy} disabled={!hasPw}
         >
-          {t('cred.copy')}
+          {t('cred.copyPassword')}
         </Button>
         <Button
           size="small" variant="contained"

@@ -2,3 +2,10 @@ secrets/
 .env
 __pycache__/
 *.pyc
+coverage/
+playwright-report/
+test-results/
+scripts/vault/frontend/coverage/
+scripts/vault/frontend/playwright-report/
+scripts/vault/frontend/test-results/
+scripts/vault/test-results/

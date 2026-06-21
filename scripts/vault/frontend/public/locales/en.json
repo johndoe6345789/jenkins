@@ -27,9 +27,12 @@
     "show": "Show",
     "hide": "Hide",
     "copy": "Copy",
+    "copyUsername": "Copy username",
+    "copyPassword": "Copy password",
     "rotate": "Rotate",
     "open": "Open app",
-    "copied": "Copied to clipboard",
+    "copied": "Password copied",
+    "copiedUsername": "Username copied",
     "rotated": "Rotated {{name}}",
     "rotateFailed": "Rotation failed"
   },

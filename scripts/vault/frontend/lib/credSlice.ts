@@ -17,6 +17,7 @@ export const fetchTargets = createAsyncThunk<
 interface CredState {
   sections: Record<string, Credential[]>
   loading: boolean
+  initialLoad: boolean
   error: string | null
 }
 
@@ -25,6 +26,7 @@ const credSlice = createSlice({
   initialState: {
     sections: {},
     loading: false,
+    initialLoad: true,
     error: null,
   } as CredState,
   reducers: {},
@@ -36,10 +38,12 @@ const credSlice = createSlice({
       })
       .addCase(fetchTargets.fulfilled, (state, { payload }) => {
         state.loading = false
+        state.initialLoad = false
         state.sections = payload
       })
       .addCase(fetchTargets.rejected, (state, { payload }) => {
         state.loading = false
+        state.initialLoad = false
         state.error = payload ?? 'Unknown error'
       })
   },

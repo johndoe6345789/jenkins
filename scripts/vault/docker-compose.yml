@@ -10,9 +10,16 @@ services:
     volumes:
       - ../../secrets:/app/secrets
       - /var/run/docker.sock:/var/run/docker.sock
+    env_file:
+      - ../../secrets/keycloak.env
     environment:
       - FLASK_ENV=production
       - VAULT_REPO_ROOT=/app     # scripts/ copied to /app/scripts/ in image
+    networks:
+      - default
+      - businessplanner_kc
+      - nextra_kc
+      - metabuilder_net
 
   vault-frontend:
     build:
@@ -26,3 +33,15 @@ services:
       - FLASK_URL=http://vault-backend:5050
     depends_on:
       - vault-backend
+
+networks:
+  default: {}
+  businessplanner_kc:
+    external: true
+    name: businessplanner-deploy_default
+  nextra_kc:
+    external: true
+    name: next_extra_primary-deploy_default
+  metabuilder_net:
+    external: true
+    name: metabuilder-network

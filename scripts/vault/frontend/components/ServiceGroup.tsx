@@ -17,13 +17,14 @@ import s from './serviceGroup.module.scss'
 interface Props {
   name: string
   app_url?: string
+  repo_path?: string
   users: Credential[]
   onRotated: () => void
   onToast: (msg: string, type: ToastType) => void
 }
 
 export function ServiceGroup({
-  name, app_url, users, onRotated, onToast,
+  name, app_url, repo_path, users, onRotated, onToast,
 }: Props) {
   const { open, toggle } = useGroupToggle()
   const { t } = useTranslation()
@@ -43,14 +44,21 @@ export function ServiceGroup({
             <ExpandMoreIcon
               className={`${s.chevron}${open ? '' : ` ${s.closed}`}`}
             />
-            <Typography
-              component={Link}
-              href={`/vault/service/${encodeURIComponent(name)}`}
-              onClick={(e: React.MouseEvent) => e.stopPropagation()}
-              className={s.name}
-            >
-              {name}
-            </Typography>
+            <Box className={s.nameStack}>
+              <Typography
+                component={Link}
+                href={`/vault/service/${encodeURIComponent(name)}`}
+                onClick={(e: React.MouseEvent) => e.stopPropagation()}
+                className={s.name}
+              >
+                {name}
+              </Typography>
+              {repo_path && (
+                <Typography className={s.repoPath} component="span">
+                  {repo_path.replace(/^~\/Documents\/GitHub\//, '')}
+                </Typography>
+              )}
+            </Box>
             {app_url && (
               <Tooltip title={t('cred.open')}>
                 <IconButton

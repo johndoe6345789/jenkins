@@ -1,6 +1,6 @@
 'use client'
 import { useEffect } from 'react'
-import { useRouter } from 'next/navigation'
+import { useRouter, usePathname } from 'next/navigation'
 import Box from '@mui/material/Box'
 import CircularProgress from '@mui/material/CircularProgress'
 import Container from '@mui/material/Container'
@@ -17,18 +17,20 @@ import { Section } from './Section'
 import { ToastList } from './Toast'
 
 export function VaultContent() {
-  const { logout }               = useAuth()
-  const { sections, loading, error, reload } = useTargets()
+  const { logout, hydrated }     = useAuth()
+  const { sections, loading, initialLoad, error, reload } = useTargets()
   const { toasts, push }         = useToast()
   const router                   = useRouter()
+  const pathname                 = usePathname()
 
   useEffect(() => {
-    if (error === 'unauthenticated') router.replace('/login')
-  }, [error, router])
+    if (hydrated && error === 'unauthenticated')
+      router.replace(`/login?from=${encodeURIComponent(pathname)}`)
+  }, [hydrated, error, router, pathname])
 
   const lock = async () => { await logout(); router.replace('/login') }
 
-  if (loading) {
+  if (loading && initialLoad) {
     return (
       <Box sx={{
         display: 'flex', alignItems: 'center',

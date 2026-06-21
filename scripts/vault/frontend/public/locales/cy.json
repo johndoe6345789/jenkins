@@ -27,9 +27,12 @@
     "show": "Dangos",
     "hide": "Cuddio",
     "copy": "Copïo",
+    "copyUsername": "Copïo enw defnyddiwr",
+    "copyPassword": "Copïo cyfrinair",
     "rotate": "Cylchdroi",
     "open": "Agor yr ap",
-    "copied": "Wedi copïo i'r clipfwrdd",
+    "copied": "Cyfrinair wedi'i gopïo",
+    "copiedUsername": "Enw defnyddiwr wedi'i gopïo",
     "rotated": "{{name}} wedi'i gylchdroi",
     "rotateFailed": "Methodd y cylchdroi"
   },

@@ -18,7 +18,7 @@ interface Props {
 
 export function CredRow({ item, onRotated, onToast }: Props) {
   const { t } = useTranslation()
-  const { shown, toggleShown, rotating, copy, rotate } =
+  const { shown, toggleShown, rotating, copyUsername, copy, rotate } =
     useCredActions({ item, onRotated, onToast })
 
   const masked = item.password
@@ -59,11 +59,19 @@ export function CredRow({ item, onRotated, onToast }: Props) {
           </Button>
           <Button
             size="small" variant="outlined"
+            onClick={copyUsername}
+            disabled={!item.username}
+            data-testid={`copy-user-btn-${item.name}`}
+          >
+            {t('cred.copyUsername')}
+          </Button>
+          <Button
+            size="small" variant="outlined"
             onClick={copy}
             disabled={!item.password}
             data-testid={`copy-btn-${item.name}`}
           >
-            {t('cred.copy')}
+            {t('cred.copyPassword')}
           </Button>
           <Button
             size="small" variant="contained"

@@ -27,9 +27,12 @@
     "show": "Tonen",
     "hide": "Verbergen",
     "copy": "Kopiëren",
+    "copyUsername": "Gebruikersnaam kopiëren",
+    "copyPassword": "Wachtwoord kopiëren",
     "rotate": "Vernieuwen",
     "open": "App openen",
-    "copied": "Gekopieerd naar klembord",
+    "copied": "Wachtwoord gekopieerd",
+    "copiedUsername": "Gebruikersnaam gekopieerd",
     "rotated": "{{name}} vernieuwd",
     "rotateFailed": "Vernieuwen mislukt"
   },

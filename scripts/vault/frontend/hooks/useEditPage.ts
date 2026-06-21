@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useRouter, useParams } from 'next/navigation'
 import { useAuth } from './useAuth'
+import { useRequireAuth } from './useRequireAuth'
 import { useTargets } from './useTargets'
 import { useEditHandlers } from './useEditHandlers'
 import type { Meta } from '../components/EditForms'
@@ -11,9 +12,10 @@ const BLANK: Meta = {
 }
 
 export function useEditPage() {
-  const { isAuth, logout, token } = useAuth()
-  const { sections, reload }      = useTargets()
-  const router                    = useRouter()
+  const { logout, token }    = useAuth()
+  const isAuth               = useRequireAuth()
+  const { sections, reload } = useTargets()
+  const router               = useRouter()
   const { name } = useParams() as { name: string }
 
   const cred = useMemo(() => {
@@ -30,10 +32,6 @@ export function useEditPage() {
   const [pw, setPw]         = useState('')
   const [error, setError]   = useState('')
   const [saving, setSaving] = useState(false)
-
-  useEffect(() => {
-    if (!isAuth) router.replace('/login')
-  }, [isAuth, router])
 
   useEffect(() => {
     if (!cred) return
