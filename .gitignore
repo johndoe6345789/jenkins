@@ -9,3 +9,5 @@ scripts/vault/frontend/coverage/
 scripts/vault/frontend/playwright-report/
 scripts/vault/frontend/test-results/
 scripts/vault/test-results/
+scripts/vault/backend/build/
+scripts/vault/backend/CMakeUserPresets.json

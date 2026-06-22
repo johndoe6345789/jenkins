@@ -1,0 +1,12 @@
+[requires]
+drogon/1.9.3
+openssl/3.3.2
+libcurl/8.10.1
+
+[options]
+drogon/*:with_postgres=True
+libcurl/*:with_ssl=openssl
+
+[generators]
+CMakeDeps
+CMakeToolchain

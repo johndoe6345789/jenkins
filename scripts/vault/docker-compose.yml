@@ -1,4 +1,15 @@
 services:
+  vault-db:
+    image: postgres:16-alpine
+    container_name: vault-db
+    restart: unless-stopped
+    environment:
+      - POSTGRES_DB=vault
+      - POSTGRES_USER=vault
+      - POSTGRES_PASSWORD=vault
+    volumes:
+      - vault-db:/var/lib/postgresql/data
+
   vault-backend:
     build:
       context: ../..
@@ -13,8 +24,10 @@ services:
     env_file:
       - ../../secrets/keycloak.env
     environment:
-      - FLASK_ENV=production
       - VAULT_REPO_ROOT=/app     # scripts/ copied to /app/scripts/ in image
+      - VAULT_DATABASE_URL=host=vault-db port=5432 dbname=vault user=vault password=vault
+    depends_on:
+      - vault-db
     networks:
       - default
       - businessplanner_kc
@@ -45,3 +58,6 @@ networks:
   metabuilder_net:
     external: true
     name: metabuilder-network
+
+volumes:
+  vault-db:
