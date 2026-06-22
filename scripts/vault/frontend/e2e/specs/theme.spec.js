@@ -28,7 +28,7 @@ const sectionBg = page =>
 
 const lockIconColour = page =>
   page.evaluate(() =>
-    getComputedStyle(document.querySelector('[data-testid="LockIcon"]')).color,
+    getComputedStyle(document.querySelector('[data-testid="login-lock-icon"]')).color,
   )
 
 async function waitFor(page, sel, color) {

@@ -22,7 +22,7 @@ test.describe('Credential row', () => {
     authedPage: page,
   }) => {
     await page.getByTestId('copy-btn-uksodev').click()
-    await expect(page.getByText('Copied to clipboard')).toBeVisible()
+    await expect(page.getByText('Password copied')).toBeVisible()
     const clip = await page.evaluate(() => navigator.clipboard.readText())
     expect(clip.length).toBeGreaterThan(0)
   })

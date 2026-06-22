@@ -17,7 +17,10 @@ function LoginForm() {
   return (
     <Paper variant="outlined" sx={{ p: 5, width: 360 }}>
       <Box sx={{ textAlign: 'center', mb: 3 }}>
-        <LockIcon sx={{ fontSize: 48, color: 'primary.main', mb: 1 }} />
+        <LockIcon
+          data-testid="login-lock-icon"
+          sx={{ fontSize: 48, color: 'primary.main', mb: 1 }}
+        />
         <Typography variant="h6" fontWeight={700}>
           {t('app.title')}
         </Typography>

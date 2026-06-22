@@ -54,7 +54,8 @@ test.describe('Page layout', () => {
 test.describe('Vault page', () => {
   test('redirects to /login when unauthenticated', async ({ page }) => {
     await page.goto('/vault')
-    await expect(page).toHaveURL('/login')
+    // useRequireAuth redirects with a ?from= return-path param
+    await expect(page).toHaveURL(/\/login(\?from=.*)?$/)
   })
 
   test('renders Jenkins section', async ({ authedPage: page }) => {
