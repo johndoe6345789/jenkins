@@ -26,6 +26,7 @@ VAULT_ADAPTER(PyracmsPbkdf2Adapter);   ///< postgres UPDATE, PBKDF2 salt:hash
 VAULT_ADAPTER(GrafanaApiAdapter);      ///< Grafana admin REST
 VAULT_ADAPTER(KeycloakRealmAdapter);   ///< Keycloak admin REST
 VAULT_ADAPTER(CaproverAdapter);        ///< CapRover dashboard REST
+VAULT_ADAPTER(RegistryApiAdapter);     ///< packagerepo/registry /auth REST
 
 #undef VAULT_ADAPTER
 

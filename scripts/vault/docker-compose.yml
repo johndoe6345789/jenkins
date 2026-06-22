@@ -33,6 +33,7 @@ services:
       - businessplanner_kc
       - nextra_kc
       - metabuilder_net
+      - businessplanner_pkgrepo   # reach pkgrepo-backend (:5002) for rotation
 
   vault-frontend:
     build:
@@ -58,6 +59,9 @@ networks:
   metabuilder_net:
     external: true
     name: metabuilder-network
+  businessplanner_pkgrepo:
+    external: true
+    name: businessplanner_default
 
 volumes:
   vault-db:

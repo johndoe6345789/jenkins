@@ -181,6 +181,24 @@
       }
     },
     {
+      "name": "packagerepo-registry-admin",
+      "section": "frontends",
+      "group": "businessplanner",
+      "service_name": "packagerepo-registry",
+      "username": "admin",
+      "badge": "registry",
+      "adapter": "registry_api",
+      "secret_env_key": "PACKAGEREPO_REGISTRY_PASSWORD",
+      "app_url": "http://localhost:5002",
+      "repo_path": "~/Documents/GitHub/businessplanner/services/package-repository",
+      "params": {
+        "api_url": "http://pkgrepo-backend:5000",
+        "username": "admin",
+        "env_file": "secrets/pkgrepo-registry.env",
+        "env_key": "PACKAGEREPO_REGISTRY_PASSWORD"
+      }
+    },
+    {
       "name": "dockerterminal-admin",
       "section": "frontends",
       "group": "metabuilder",

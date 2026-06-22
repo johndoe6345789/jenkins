@@ -28,6 +28,8 @@ std::unique_ptr<Adapter> makeAdapter(const std::string& name)
             {"keycloak_realm",
              [] { return std::make_unique<KeycloakRealmAdapter>(); }},
             {"caprover", [] { return std::make_unique<CaproverAdapter>(); }},
+            {"registry_api",
+             [] { return std::make_unique<RegistryApiAdapter>(); }},
         };
 
     auto it = kFactories.find(name);
