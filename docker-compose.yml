@@ -9,6 +9,10 @@ x-agent-base: &agent-base
     - JENKINS_AGENT_SSH_PUBKEY=ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINPCCdpG9EpNhiLiLoJgeC4ELi0KDVmMSSDQcbD8zIG/ jenkins-agent
   group_add:
     - "${DOCKER_GID:-984}"
+  # Reach host-published services (e.g. the pkgrepo package cache on :5002)
+  # by a stable name from agent steps. docker build uses --add-host likewise.
+  extra_hosts:
+    - "host.docker.internal:host-gateway"
   networks:
     - jenkins_net
 

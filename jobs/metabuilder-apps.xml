@@ -21,6 +21,8 @@
 
   environment {
     NEXUS_REGISTRY = 'localhost:5001'
+    // pkgrepo package cache (npm/conan pull-through) on the host NVMe.
+    PKGREPO_REGISTRY = 'http://host.docker.internal:5002'
   }
 
   stages {
@@ -93,6 +95,9 @@ PY
       options { timeout(time: 25, unit: 'MINUTES') }
       steps {
         sh '''
+          # Resolve deps through the pkgrepo npm cache (proxies npmjs.org onto
+          # the host NVMe). Falls back to npmjs for the @esbuild-kit scope.
+          npm config set registry "$PKGREPO_REGISTRY/npm" --location=project
           npm config set @esbuild-kit:registry https://registry.npmjs.org/ --location=project
           npm install --no-audit --no-fund
         '''
