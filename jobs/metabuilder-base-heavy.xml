@@ -23,6 +23,9 @@
     // gameengine do FROM localhost:5001/johndoe6345789/metabuilder/base-apt
     // :latest -- pulled from Nexus (base-apt published by the routine job).
     BASE_REGISTRY = 'localhost:5001/johndoe6345789/metabuilder'
+    // Route Conan deps through the pkgrepo cache (proxies conancenter onto the
+    // host NVMe). Base builds use --network=host, so localhost:5002 resolves.
+    CONAN_REMOTE = 'http://localhost:5002/conan'
   }
 
   stages {
