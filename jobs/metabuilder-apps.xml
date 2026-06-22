@@ -30,6 +30,16 @@
       }
     }
 
+    stage('Registry login') {
+      steps {
+        // :5001 packagerepo registry requires auth on push; create the
+        // 'packagerepo-registry' Jenkins credential (user with push scope).
+        withCredentials([usernamePassword(credentialsId: 'packagerepo-registry', usernameVariable: 'REG_USER', passwordVariable: 'REG_PASS')]) {
+          sh 'echo "$REG_PASS" | docker login "$NEXUS_REGISTRY" -u "$REG_USER" --password-stdin'
+        }
+      }
+    }
+
     stage('Docker Preflight') {
       options { timeout(time: 10, unit: 'MINUTES') }
       steps {
