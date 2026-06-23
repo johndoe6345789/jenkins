@@ -22,7 +22,7 @@
   environment {
     NEXUS_REGISTRY = 'localhost:5001'
     // pkgrepo package cache (npm/conan pull-through) on the host NVMe.
-    PKGREPO_REGISTRY = 'http://host.docker.internal:5002'
+    PKGREPO_REGISTRY = 'http://172.17.0.1:5002'
   }
 
   stages {
@@ -95,14 +95,13 @@ PY
       options { timeout(time: 25, unit: 'MINUTES') }
       steps {
         sh '''
-          # Force the workspace .npmrc default registry to npmjs so the app
-          # docker builds (which COPY .npmrc and run on a bridge network) always
-          # have a reachable registry -- never a pkgrepo host URL left behind.
-          npm config set registry https://registry.npmjs.org/ --location=project
+          # Route ALL npm through the pkgrepo cache (fetch from npmjs -> store in
+          # S3 -> serve) at the docker host-gateway URL (172.17.0.1), which is
+          # reachable from the agent AND the bridge-network app docker builds
+          # that COPY this .npmrc.
+          npm config set registry "$PKGREPO_REGISTRY/npm" --location=project
           npm config set @esbuild-kit:registry https://registry.npmjs.org/ --location=project
-          # The agent's own install still pulls through the pkgrepo cache (host
-          # NVMe) via the --registry FLAG, which does not touch .npmrc/lockfile.
-          npm install --no-audit --no-fund --no-package-lock --registry "$PKGREPO_REGISTRY/npm"
+          npm install --no-audit --no-fund
         '''
       }
     }
