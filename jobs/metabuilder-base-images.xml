@@ -69,7 +69,7 @@
           docker version
         '''
         script {
-          def routine = ['apt', 'node-deps', 'pip-deps', 'android-sdk', 'conan-cli', 'conan-media']
+          def routine = ['apt', 'node-deps', 'postgres-deps', 'pip-deps', 'android-sdk', 'conan-cli', 'conan-media']
           for (nm in routine) {
             def keep = (nm == 'apt') ? '1' : '0'
             stage("base: ${nm}") {
