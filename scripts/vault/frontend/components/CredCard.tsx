@@ -22,8 +22,9 @@ export function CredCard({
   item, lastRotated, onRotated, onToast, editHref, onDelete,
 }: Props) {
   const { t } = useTranslation()
-  const { shown, toggleShown, rotating, copyUsername, copy, copyTurboLogin, rotate } =
-    useCredActions({ item, onRotated, onToast })
+  const {
+    shown, toggleShown, rotating, copyUsername, copy, copyTurboLogin, rotate,
+  } = useCredActions({ item, onRotated, onToast })
 
   const masked = item.password
     ? '•'.repeat(Math.min(item.password.length, 32))
