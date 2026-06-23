@@ -18,8 +18,9 @@ interface Props {
 
 export function CredRow({ item, onRotated, onToast }: Props) {
   const { t } = useTranslation()
-  const { shown, toggleShown, rotating, copyUsername, copy, rotate } =
-    useCredActions({ item, onRotated, onToast })
+  const {
+    shown, toggleShown, rotating, copyUsername, copy, copyTurboLogin, rotate,
+  } = useCredActions({ item, onRotated, onToast })
 
   const masked = item.password
     ? '•'.repeat(Math.min(item.password.length, 24))
@@ -72,6 +73,14 @@ export function CredRow({ item, onRotated, onToast }: Props) {
             data-testid={`copy-btn-${item.name}`}
           >
             {t('cred.copyPassword')}
+          </Button>
+          <Button
+            size="small" variant="outlined"
+            onClick={copyTurboLogin}
+            disabled={!item.password || !item.username}
+            data-testid={`turbo-btn-${item.name}`}
+          >
+            {t('cred.copyTurboLogin')}
           </Button>
           <Button
             size="small" variant="contained"
