@@ -95,11 +95,13 @@ PY
       options { timeout(time: 25, unit: 'MINUTES') }
       steps {
         sh '''
+          # Force the workspace .npmrc default registry to npmjs so the app
+          # docker builds (which COPY .npmrc and run on a bridge network) always
+          # have a reachable registry -- never a pkgrepo host URL left behind.
+          npm config set registry https://registry.npmjs.org/ --location=project
           npm config set @esbuild-kit:registry https://registry.npmjs.org/ --location=project
-          # Cache deps through the pkgrepo npm cache (proxies npmjs.org onto the
-          # host NVMe) via FLAGS only -- do not write registry= into .npmrc or
-          # rewrite package-lock.json, or the downstream app docker builds
-          # (bridge network, cannot reach pkgrepo) inherit it and hang.
+          # The agent's own install still pulls through the pkgrepo cache (host
+          # NVMe) via the --registry FLAG, which does not touch .npmrc/lockfile.
           npm install --no-audit --no-fund --no-package-lock --registry "$PKGREPO_REGISTRY/npm"
         '''
       }
