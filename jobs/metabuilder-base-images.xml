@@ -27,6 +27,8 @@
     // Route Conan deps through the pkgrepo cache (proxies conancenter onto the
     // host NVMe). 172.17.0.1 (docker0 gateway) is reachable from host- and bridge-network builds.
     CONAN_REMOTE = 'http://172.17.0.1:5002/conan'
+    // Route pip deps (pip-deps base) through the pkgrepo pypi cache the same way.
+    PIP_INDEX_URL = 'http://172.17.0.1:5002/pypi/simple/'
   }
 
   stages {
