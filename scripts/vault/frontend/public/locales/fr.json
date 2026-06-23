@@ -34,7 +34,9 @@
     "copied": "Mot de passe copié",
     "copiedUsername": "Nom d'utilisateur copié",
     "rotated": "{{name}} renouvelé",
-    "rotateFailed": "Échec du renouvellement"
+    "rotateFailed": "Échec du renouvellement",
+    "copyTurboLogin": "Copier Turbologin",
+    "copiedTurboLogin": "Turbologin copié"
   },
   "login": {
     "masterPassword": "Mot de passe maître",

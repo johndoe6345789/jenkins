@@ -34,7 +34,9 @@
     "copied": "Contraseña copiada",
     "copiedUsername": "Usuario copiado",
     "rotated": "{{name}} rotado",
-    "rotateFailed": "Error al rotar"
+    "rotateFailed": "Error al rotar",
+    "copyTurboLogin": "Copiar Turbologin",
+    "copiedTurboLogin": "Turbologin copiado"
   },
   "login": {
     "masterPassword": "Contraseña maestra",

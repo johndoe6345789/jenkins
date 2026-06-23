@@ -34,7 +34,9 @@
     "copied": "Cyfrinair wedi'i gopïo",
     "copiedUsername": "Enw defnyddiwr wedi'i gopïo",
     "rotated": "{{name}} wedi'i gylchdroi",
-    "rotateFailed": "Methodd y cylchdroi"
+    "rotateFailed": "Methodd y cylchdroi",
+    "copyTurboLogin": "Copïo Turbologin",
+    "copiedTurboLogin": "Turbologin wedi'i gopïo"
   },
   "login": {
     "masterPassword": "Prif gyfrinair",

@@ -34,7 +34,9 @@
     "copied": "Password copied",
     "copiedUsername": "Username copied",
     "rotated": "Rotated {{name}}",
-    "rotateFailed": "Rotation failed"
+    "rotateFailed": "Rotation failed",
+    "copyTurboLogin": "Copy Turbologin",
+    "copiedTurboLogin": "Turbologin copied"
   },
   "login": {
     "masterPassword": "Master password",

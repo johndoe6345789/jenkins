@@ -29,6 +29,18 @@ export function useCredActions({ item, onRotated, onToast }: Opts) {
     onToast(t('cred.copied'), 'success')
   }
 
+  const copyTurboLogin = async () => {
+    if (!item.username || !item.password) return
+    const payload = JSON.stringify({
+      user: item.username,
+      pass: item.password,
+      rememberMe: true,
+      loginMethod: 'password',
+    })
+    await navigator.clipboard.writeText(payload)
+    onToast(t('cred.copiedTurboLogin'), 'success')
+  }
+
   const rotate = async () => {
     setRotating(true)
     try {
@@ -53,5 +65,5 @@ export function useCredActions({ item, onRotated, onToast }: Opts) {
     }
   }
 
-  return { shown, toggleShown, rotating, copyUsername, copy, rotate }
+  return { shown, toggleShown, rotating, copyUsername, copy, copyTurboLogin, rotate }
 }

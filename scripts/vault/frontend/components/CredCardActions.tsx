@@ -14,6 +14,7 @@ interface Props {
   onToggleShown: () => void
   onCopyUsername: () => void
   onCopy: () => void
+  onCopyTurboLogin: () => void
   onRotate: () => void
   editHref?: string
   onDelete?: () => Promise<void>
@@ -21,7 +22,7 @@ interface Props {
 
 export function CredCardActions({
   shown, rotating, hasPw, hasUsername,
-  onToggleShown, onCopyUsername, onCopy, onRotate,
+  onToggleShown, onCopyUsername, onCopy, onCopyTurboLogin, onRotate,
   editHref, onDelete,
 }: Props) {
   const { t } = useTranslation()
@@ -47,6 +48,13 @@ export function CredCardActions({
           onClick={onCopy} disabled={!hasPw}
         >
           {t('cred.copyPassword')}
+        </Button>
+        <Button
+          size="small" variant="outlined"
+          onClick={onCopyTurboLogin}
+          disabled={!hasPw || !hasUsername}
+        >
+          {t('cred.copyTurboLogin')}
         </Button>
         <Button
           size="small" variant="contained"

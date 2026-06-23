@@ -22,7 +22,7 @@ export function CredCard({
   item, lastRotated, onRotated, onToast, editHref, onDelete,
 }: Props) {
   const { t } = useTranslation()
-  const { shown, toggleShown, rotating, copyUsername, copy, rotate } =
+  const { shown, toggleShown, rotating, copyUsername, copy, copyTurboLogin, rotate } =
     useCredActions({ item, onRotated, onToast })
 
   const masked = item.password
@@ -76,7 +76,8 @@ export function CredCard({
           shown={shown} rotating={rotating}
           hasPw={!!item.password} hasUsername={!!item.username}
           onToggleShown={toggleShown}
-          onCopyUsername={copyUsername} onCopy={copy} onRotate={rotate}
+          onCopyUsername={copyUsername} onCopy={copy}
+          onCopyTurboLogin={copyTurboLogin} onRotate={rotate}
           editHref={editHref} onDelete={onDelete}
         />
       </CardContent>

@@ -34,7 +34,9 @@
     "copied": "Wachtwoord gekopieerd",
     "copiedUsername": "Gebruikersnaam gekopieerd",
     "rotated": "{{name}} vernieuwd",
-    "rotateFailed": "Vernieuwen mislukt"
+    "rotateFailed": "Vernieuwen mislukt",
+    "copyTurboLogin": "Turbologin kopiëren",
+    "copiedTurboLogin": "Turbologin gekopieerd"
   },
   "login": {
     "masterPassword": "Hoofdwachtwoord",
