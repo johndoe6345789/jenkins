@@ -36,7 +36,7 @@ static std::string req(const std::string& url,
 void backup(const std::string& url, const std::string& tok,
             const std::string& path) {
     auto r = json::parse(
-        req(url + "/api/v2/user/apps/list", tok));
+        req(url + "/api/v2/user/apps/appDefinitions/", tok));
     if (r.value("status", -1) != 100)
         throw std::runtime_error(
             r.value("description", r.dump()));

@@ -3,6 +3,7 @@
 #include <curl/curl.h>
 #include <fstream>
 #include <iostream>
+#include <iterator>
 #include <nlohmann/json.hpp>
 #include <stdexcept>
 
@@ -10,7 +11,7 @@ namespace dashy {
 
 using json = nlohmann::json;
 
-// GET (no data) or POST (with data). key="" or "-" = no auth.
+// GET (no data) or POST (with data). key="-" or empty = no auth.
 static std::string call(const std::string& url,
                         const std::string& key,
                         const std::string& data = {}) {
@@ -35,28 +36,28 @@ static std::string call(const std::string& url,
     return out;
 }
 
+// Backup: GET /conf.yml and write YAML to file as-is.
 void backup(const std::string& url, const std::string& key,
             const std::string& path) {
-    auto raw = call(url + "/api/config", key);
-    json r   = json::parse(raw);
-    // Dashy may wrap the config in {"config":{...}}; unwrap it.
-    json cfg = r.contains("config") ? r["config"] : r;
+    auto yaml = call(url + "/conf.yml", key);
+    if (yaml.empty())
+        throw std::runtime_error("/conf.yml returned empty");
     std::ofstream f(path);
     if (!f) throw std::runtime_error("cannot open: " + path);
-    f << cfg.dump(2) << "\n";
+    f << yaml;
 }
 
+// Restore: POST /config-manager/save with {"config":"<yaml>"}
 void restore(const std::string& url, const std::string& key,
              const std::string& path) {
     std::ifstream f(path);
     if (!f) throw std::runtime_error("cannot open: " + path);
-    json cfg = json::parse(f);
-    // POST the raw config; Dashy also accepts {"config":{...}}
-    // but the direct form is more widely compatible.
-    auto raw = call(url + "/api/config", key, cfg.dump());
+    std::string yaml(std::istreambuf_iterator<char>(f), {});
+    json body = {{"config", yaml}};
+    auto raw = call(url + "/config-manager/save", key, body.dump());
     json r   = json::parse(raw);
-    if (r.contains("error"))
-        throw std::runtime_error(r["error"].get<std::string>());
+    if (!r.value("success", false))
+        throw std::runtime_error(r.value("message", raw));
     std::cout << "Config restored to " << url << "\n";
 }
 

@@ -1,0 +1,621 @@
+{
+  "apps": [
+    {
+      "appDeployTokenConfig": {
+        "enabled": false
+      },
+      "appName": "dashy",
+      "captainDefinitionRelativeFilePath": "./captain-definition",
+      "containerHttpPort": 8080,
+      "customDomain": [
+        {
+          "hasSsl": true,
+          "publicDomain": "wardcrew.com"
+        }
+      ],
+      "deployedVersion": 1,
+      "description": "",
+      "envVars": [],
+      "forceSsl": false,
+      "hasDefaultSubDomainSsl": true,
+      "hasPersistentData": true,
+      "instanceCount": 1,
+      "isAppBuilding": false,
+      "networks": [
+        "captain-overlay-network"
+      ],
+      "nodeId": "6z85o0s425fi28jf5qqr4x0gt",
+      "notExposeAsWebApp": false,
+      "ports": [],
+      "preDeployFunction": "",
+      "projectId": "",
+      "redirectDomain": "",
+      "serviceUpdateOverride": "",
+      "tags": [],
+      "versions": [
+        {
+          "deployedImageName": "caprover/caprover-placeholder-app:latest",
+          "gitHash": "",
+          "timeStamp": "2026-05-22T16:25:58.648Z",
+          "version": 0
+        },
+        {
+          "deployedImageName": "lissy93/dashy:latest",
+          "gitHash": "",
+          "timeStamp": "2026-05-22T16:26:27.816Z",
+          "version": 1
+        }
+      ],
+      "volumes": [
+        {
+          "containerPath": "/app/user-data",
+          "volumeName": "userdata"
+        }
+      ],
+      "websocketSupport": true
+    },
+    {
+      "appDeployTokenConfig": {
+        "enabled": false
+      },
+      "appName": "jenkins",
+      "captainDefinitionRelativeFilePath": "./captain-definition",
+      "containerHttpPort": 80,
+      "customDomain": [],
+      "deployedVersion": 1,
+      "description": "",
+      "envVars": [
+        {
+          "key": "UPSTREAM_HTTP_ADDRESS",
+          "value": "http://wardcrew.com:8081"
+        },
+        {
+          "key": "CLIENT_MAX_BODY_SIZE",
+          "value": "256M"
+        }
+      ],
+      "forceSsl": false,
+      "hasDefaultSubDomainSsl": true,
+      "hasPersistentData": false,
+      "instanceCount": 1,
+      "isAppBuilding": false,
+      "networks": [
+        "captain-overlay-network"
+      ],
+      "notExposeAsWebApp": false,
+      "ports": [],
+      "preDeployFunction": "",
+      "projectId": "",
+      "redirectDomain": "",
+      "serviceUpdateOverride": "",
+      "tags": [
+        {
+          "tagName": "jenkins"
+        }
+      ],
+      "versions": [
+        {
+          "deployedImageName": "caprover/caprover-placeholder-app:latest",
+          "gitHash": "",
+          "timeStamp": "2026-05-22T16:54:25.426Z",
+          "version": 0
+        },
+        {
+          "deployedImageName": "caprover/nginx-reverse-proxy:1-ef5ffcb",
+          "gitHash": "",
+          "timeStamp": "2026-05-22T16:54:30.300Z",
+          "version": 1
+        }
+      ],
+      "volumes": [],
+      "websocketSupport": true
+    },
+    {
+      "appDeployTokenConfig": {
+        "enabled": false
+      },
+      "appName": "metabuilder",
+      "captainDefinitionRelativeFilePath": "./captain-definition",
+      "containerHttpPort": 80,
+      "customDomain": [],
+      "deployedVersion": 1,
+      "description": "",
+      "envVars": [
+        {
+          "key": "UPSTREAM_HTTP_ADDRESS",
+          "value": "http://wardcrew.com:8900"
+        },
+        {
+          "key": "CLIENT_MAX_BODY_SIZE",
+          "value": "256M"
+        }
+      ],
+      "forceSsl": false,
+      "hasDefaultSubDomainSsl": true,
+      "hasPersistentData": false,
+      "instanceCount": 1,
+      "isAppBuilding": false,
+      "networks": [
+        "captain-overlay-network"
+      ],
+      "notExposeAsWebApp": false,
+      "ports": [],
+      "preDeployFunction": "",
+      "projectId": "",
+      "redirectDomain": "",
+      "serviceUpdateOverride": "",
+      "tags": [
+        {
+          "tagName": "metabuilder"
+        }
+      ],
+      "versions": [
+        {
+          "deployedImageName": "caprover/caprover-placeholder-app:latest",
+          "gitHash": "",
+          "timeStamp": "2026-05-22T16:56:05.530Z",
+          "version": 0
+        },
+        {
+          "deployedImageName": "caprover/nginx-reverse-proxy:1-ef5ffcb",
+          "gitHash": "",
+          "timeStamp": "2026-05-22T16:56:10.368Z",
+          "version": 1
+        }
+      ],
+      "volumes": [],
+      "websocketSupport": true
+    },
+    {
+      "appDeployTokenConfig": {
+        "enabled": false
+      },
+      "appName": "hamradio",
+      "captainDefinitionRelativeFilePath": "./captain-definition",
+      "containerHttpPort": 80,
+      "customDomain": [],
+      "deployedVersion": 1,
+      "description": "",
+      "envVars": [
+        {
+          "key": "UPSTREAM_HTTP_ADDRESS",
+          "value": "http://wardcrew.com:7423"
+        },
+        {
+          "key": "CLIENT_MAX_BODY_SIZE",
+          "value": "256M"
+        }
+      ],
+      "forceSsl": false,
+      "hasDefaultSubDomainSsl": true,
+      "hasPersistentData": false,
+      "instanceCount": 1,
+      "isAppBuilding": false,
+      "networks": [
+        "captain-overlay-network"
+      ],
+      "notExposeAsWebApp": false,
+      "ports": [],
+      "preDeployFunction": "",
+      "projectId": "",
+      "redirectDomain": "",
+      "serviceUpdateOverride": "",
+      "tags": [
+        {
+          "tagName": "hamradio"
+        }
+      ],
+      "versions": [
+        {
+          "deployedImageName": "caprover/caprover-placeholder-app:latest",
+          "gitHash": "",
+          "timeStamp": "2026-05-22T16:57:53.700Z",
+          "version": 0
+        },
+        {
+          "deployedImageName": "caprover/nginx-reverse-proxy:1-ef5ffcb",
+          "gitHash": "",
+          "timeStamp": "2026-05-22T16:57:58.451Z",
+          "version": 1
+        }
+      ],
+      "volumes": [],
+      "websocketSupport": true
+    },
+    {
+      "appDeployTokenConfig": {
+        "enabled": false
+      },
+      "appName": "webdev",
+      "captainDefinitionRelativeFilePath": "./captain-definition",
+      "containerHttpPort": 80,
+      "customDomain": [],
+      "deployedVersion": 1,
+      "description": "",
+      "envVars": [
+        {
+          "key": "UPSTREAM_HTTP_ADDRESS",
+          "value": "http://wardcrew.com:8743"
+        },
+        {
+          "key": "CLIENT_MAX_BODY_SIZE",
+          "value": "256M"
+        }
+      ],
+      "forceSsl": false,
+      "hasDefaultSubDomainSsl": true,
+      "hasPersistentData": false,
+      "instanceCount": 1,
+      "isAppBuilding": false,
+      "networks": [
+        "captain-overlay-network"
+      ],
+      "notExposeAsWebApp": false,
+      "ports": [],
+      "preDeployFunction": "",
+      "projectId": "",
+      "redirectDomain": "",
+      "serviceUpdateOverride": "",
+      "tags": [
+        {
+          "tagName": "webdev"
+        }
+      ],
+      "versions": [
+        {
+          "deployedImageName": "caprover/caprover-placeholder-app:latest",
+          "gitHash": "",
+          "timeStamp": "2026-05-22T16:59:54.330Z",
+          "version": 0
+        },
+        {
+          "deployedImageName": "caprover/nginx-reverse-proxy:1-ef5ffcb",
+          "gitHash": "",
+          "timeStamp": "2026-05-22T16:59:59.080Z",
+          "version": 1
+        }
+      ],
+      "volumes": [],
+      "websocketSupport": true
+    },
+    {
+      "appDeployTokenConfig": {
+        "enabled": false
+      },
+      "appName": "businessplanner",
+      "captainDefinitionRelativeFilePath": "./captain-definition",
+      "containerHttpPort": 80,
+      "customDomain": [],
+      "deployedVersion": 1,
+      "description": "",
+      "envVars": [
+        {
+          "key": "UPSTREAM_HTTP_ADDRESS",
+          "value": "http://wardcrew.com:8892"
+        },
+        {
+          "key": "CLIENT_MAX_BODY_SIZE",
+          "value": "256M"
+        }
+      ],
+      "forceSsl": false,
+      "hasDefaultSubDomainSsl": true,
+      "hasPersistentData": false,
+      "instanceCount": 1,
+      "isAppBuilding": false,
+      "networks": [
+        "captain-overlay-network"
+      ],
+      "notExposeAsWebApp": false,
+      "ports": [],
+      "preDeployFunction": "",
+      "projectId": "",
+      "redirectDomain": "",
+      "serviceUpdateOverride": "",
+      "tags": [
+        {
+          "tagName": "businessplanner"
+        }
+      ],
+      "versions": [
+        {
+          "deployedImageName": "caprover/caprover-placeholder-app:latest",
+          "gitHash": "",
+          "timeStamp": "2026-05-22T17:00:44.459Z",
+          "version": 0
+        },
+        {
+          "deployedImageName": "caprover/nginx-reverse-proxy:1-ef5ffcb",
+          "gitHash": "",
+          "timeStamp": "2026-05-22T17:00:49.272Z",
+          "version": 1
+        }
+      ],
+      "volumes": [],
+      "websocketSupport": true
+    },
+    {
+      "appDeployTokenConfig": {
+        "enabled": false
+      },
+      "appName": "workforce",
+      "captainDefinitionRelativeFilePath": "./captain-definition",
+      "containerHttpPort": 80,
+      "customDomain": [],
+      "deployedVersion": 1,
+      "description": "",
+      "envVars": [
+        {
+          "key": "UPSTREAM_HTTP_ADDRESS",
+          "value": "http://wardcrew.com:8893"
+        },
+        {
+          "key": "CLIENT_MAX_BODY_SIZE",
+          "value": "256M"
+        }
+      ],
+      "forceSsl": false,
+      "hasDefaultSubDomainSsl": true,
+      "hasPersistentData": false,
+      "instanceCount": 1,
+      "isAppBuilding": false,
+      "networks": [
+        "captain-overlay-network"
+      ],
+      "notExposeAsWebApp": false,
+      "ports": [],
+      "preDeployFunction": "",
+      "projectId": "",
+      "redirectDomain": "",
+      "serviceUpdateOverride": "",
+      "tags": [
+        {
+          "tagName": "workforce"
+        }
+      ],
+      "versions": [
+        {
+          "deployedImageName": "caprover/caprover-placeholder-app:latest",
+          "gitHash": "",
+          "timeStamp": "2026-05-24T22:48:27.698Z",
+          "version": 0
+        },
+        {
+          "deployedImageName": "caprover/nginx-reverse-proxy:1-ef5ffcb",
+          "gitHash": "",
+          "timeStamp": "2026-05-24T22:48:32.633Z",
+          "version": 1
+        }
+      ],
+      "volumes": [],
+      "websocketSupport": true
+    },
+    {
+      "appDeployTokenConfig": {
+        "enabled": false
+      },
+      "appName": "strategy",
+      "captainDefinitionRelativeFilePath": "./captain-definition",
+      "containerHttpPort": 80,
+      "customDomain": [],
+      "deployedVersion": 1,
+      "description": "",
+      "envVars": [
+        {
+          "key": "UPSTREAM_HTTP_ADDRESS",
+          "value": "http://wardcrew.com:8894"
+        },
+        {
+          "key": "CLIENT_MAX_BODY_SIZE",
+          "value": "256M"
+        }
+      ],
+      "forceSsl": false,
+      "hasDefaultSubDomainSsl": true,
+      "hasPersistentData": false,
+      "instanceCount": 1,
+      "isAppBuilding": false,
+      "networks": [
+        "captain-overlay-network"
+      ],
+      "notExposeAsWebApp": false,
+      "ports": [],
+      "preDeployFunction": "",
+      "projectId": "",
+      "redirectDomain": "",
+      "serviceUpdateOverride": "",
+      "tags": [
+        {
+          "tagName": "strategy"
+        }
+      ],
+      "versions": [
+        {
+          "deployedImageName": "caprover/caprover-placeholder-app:latest",
+          "gitHash": "",
+          "timeStamp": "2026-05-24T22:49:06.699Z",
+          "version": 0
+        },
+        {
+          "deployedImageName": "caprover/nginx-reverse-proxy:1-ef5ffcb",
+          "gitHash": "",
+          "timeStamp": "2026-05-24T22:49:11.669Z",
+          "version": 1
+        }
+      ],
+      "volumes": [],
+      "websocketSupport": true
+    },
+    {
+      "appDeployTokenConfig": {
+        "enabled": false
+      },
+      "appName": "nexuscommand",
+      "captainDefinitionRelativeFilePath": "./captain-definition",
+      "containerHttpPort": 80,
+      "customDomain": [],
+      "deployedVersion": 1,
+      "description": "",
+      "envVars": [
+        {
+          "key": "UPSTREAM_HTTP_ADDRESS",
+          "value": "http://wardcrew.com:8721"
+        },
+        {
+          "key": "CLIENT_MAX_BODY_SIZE",
+          "value": "256M"
+        }
+      ],
+      "forceSsl": false,
+      "hasDefaultSubDomainSsl": true,
+      "hasPersistentData": false,
+      "instanceCount": 1,
+      "isAppBuilding": false,
+      "networks": [
+        "captain-overlay-network"
+      ],
+      "notExposeAsWebApp": false,
+      "ports": [],
+      "preDeployFunction": "",
+      "projectId": "",
+      "redirectDomain": "",
+      "serviceUpdateOverride": "",
+      "tags": [
+        {
+          "tagName": "nexuscommand"
+        }
+      ],
+      "versions": [
+        {
+          "deployedImageName": "caprover/caprover-placeholder-app:latest",
+          "gitHash": "",
+          "timeStamp": "2026-06-01T09:24:28.450Z",
+          "version": 0
+        },
+        {
+          "deployedImageName": "caprover/nginx-reverse-proxy:1-ef5ffcb",
+          "gitHash": "",
+          "timeStamp": "2026-06-01T09:24:33.296Z",
+          "version": 1
+        }
+      ],
+      "volumes": [],
+      "websocketSupport": true
+    },
+    {
+      "appDeployTokenConfig": {
+        "enabled": false
+      },
+      "appName": "vault",
+      "captainDefinitionRelativeFilePath": "./captain-definition",
+      "containerHttpPort": 80,
+      "customDomain": [],
+      "deployedVersion": 1,
+      "description": "",
+      "envVars": [
+        {
+          "key": "UPSTREAM_HTTP_ADDRESS",
+          "value": "http://wardcrew.com:4100"
+        },
+        {
+          "key": "CLIENT_MAX_BODY_SIZE",
+          "value": "256M"
+        }
+      ],
+      "forceSsl": false,
+      "hasDefaultSubDomainSsl": true,
+      "hasPersistentData": false,
+      "instanceCount": 1,
+      "isAppBuilding": false,
+      "networks": [
+        "captain-overlay-network"
+      ],
+      "notExposeAsWebApp": false,
+      "ports": [],
+      "preDeployFunction": "",
+      "projectId": "",
+      "redirectDomain": "",
+      "serviceUpdateOverride": "",
+      "tags": [
+        {
+          "tagName": "vault"
+        }
+      ],
+      "versions": [
+        {
+          "deployedImageName": "caprover/caprover-placeholder-app:latest",
+          "gitHash": "",
+          "timeStamp": "2026-06-09T18:28:48.509Z",
+          "version": 0
+        },
+        {
+          "deployedImageName": "caprover/nginx-reverse-proxy:1-ef5ffcb",
+          "gitHash": "",
+          "timeStamp": "2026-06-09T18:28:53.543Z",
+          "version": 1
+        }
+      ],
+      "volumes": [],
+      "websocketSupport": true
+    },
+    {
+      "appDeployTokenConfig": {
+        "enabled": false
+      },
+      "appName": "pyracms",
+      "captainDefinitionRelativeFilePath": "./captain-definition",
+      "containerHttpPort": 80,
+      "customDomain": [],
+      "deployedVersion": 1,
+      "description": "",
+      "envVars": [
+        {
+          "key": "UPSTREAM_HTTP_ADDRESS",
+          "value": "http://wardcrew.com:3199"
+        },
+        {
+          "key": "CLIENT_MAX_BODY_SIZE",
+          "value": "256M"
+        }
+      ],
+      "forceSsl": false,
+      "hasDefaultSubDomainSsl": true,
+      "hasPersistentData": false,
+      "instanceCount": 1,
+      "isAppBuilding": false,
+      "networks": [
+        "captain-overlay-network"
+      ],
+      "notExposeAsWebApp": false,
+      "ports": [],
+      "preDeployFunction": "",
+      "projectId": "",
+      "redirectDomain": "",
+      "serviceUpdateOverride": "",
+      "tags": [
+        {
+          "tagName": "pyracms"
+        }
+      ],
+      "versions": [
+        {
+          "deployedImageName": "caprover/caprover-placeholder-app:latest",
+          "gitHash": "",
+          "timeStamp": "2026-06-20T20:19:43.719Z",
+          "version": 0
+        },
+        {
+          "deployedImageName": "caprover/nginx-reverse-proxy:1-ef5ffcb",
+          "gitHash": "",
+          "timeStamp": "2026-06-20T20:19:51.111Z",
+          "version": 1
+        }
+      ],
+      "volumes": [],
+      "websocketSupport": true
+    }
+  ],
+  "root_domain": "wardcrew.com",
+  "source_url": "https://captain.wardcrew.com",
+  "version": 1
+}

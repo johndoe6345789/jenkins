@@ -21,6 +21,10 @@
 
   environment {
     NEXUS_REGISTRY = 'localhost:5001'
+    // BuildKit in Jenkins resolves the app parents from the registry rather
+    // than the local Docker image store, so app Dockerfiles must point at the
+    // pushed Nexus namespace instead of the bare local "metabuilder" name.
+    BASE_REGISTRY = 'localhost:5001/johndoe6345789/metabuilder'
     // pkgrepo package cache (npm/conan pull-through) on the host NVMe.
     PKGREPO_REGISTRY = 'http://172.17.0.1:5002'
   }
