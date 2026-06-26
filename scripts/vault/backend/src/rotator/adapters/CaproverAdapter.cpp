@@ -53,10 +53,15 @@ void CaproverAdapter::rotate(const Json::Value& p,
         throw std::runtime_error("current CapRover password not in " +
                                  path.string());
 
+    // CapRover enforces a 28-character maximum on new passwords.
+    static constexpr size_t CAP_MAX = 28;
+    std::string capPw = newPassword.size() > CAP_MAX
+                        ? newPassword.substr(0, CAP_MAX) : newPassword;
+
     std::string token = caproverLogin(p, current);
     Json::Value body;
     body["oldPassword"] = current;
-    body["newPassword"] = newPassword;
+    body["newPassword"] = capPw;
     // CapRover's change-password endpoint is /api/v2/user/changepassword and it
     // returns a JSON envelope ({status:100} on success), not an HTTP error — so
     // check the envelope and surface its description rather than a bare "Not
@@ -74,7 +79,7 @@ void CaproverAdapter::rotate(const Json::Value& p,
                                                 : desc));
     }
 
-    env[key] = newPassword;
+    env[key] = capPw;
     writeEnv(path, env);
 }
 
