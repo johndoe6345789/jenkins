@@ -123,20 +123,17 @@
       "group": "metabuilder",
       "service_name": "packagerepo",
       "username": "admin",
-      "adapter": "db_bcrypt_sqlite",
+      "adapter": "registry_api",
       "secret_env_key": "PACKAGEREPO_ADMIN_PASSWORD",
       "app_url": "http://wardcrew.com:8900/packagerepo",
       "repo_path": "~/Documents/GitHub/metabuilder/frontends/packagerepo",
       "params": {
-        "db_container": "metabuilder-packagerepo-backend",
-        "db_path": "/app/users.db",
-        "table": "users",
-        "username_column": "username",
-        "hash_column": "password_hash",
-        "updated_at_column": "updated_at",
+        "api_url": "http://metabuilder-packagerepo-backend:5000",
         "username": "admin",
-        "bcrypt_cost": 10
-      }
+        "env_file": "secrets/rotated.env",
+        "env_key": "PACKAGEREPO_ADMIN_PASSWORD"
+      },
+      "badge": "registry"
     },
     {
       "name": "packagerepo-publisher",
@@ -144,20 +141,17 @@
       "group": "metabuilder",
       "service_name": "packagerepo",
       "username": "publisher",
-      "adapter": "db_bcrypt_sqlite",
+      "adapter": "registry_api",
       "secret_env_key": "PACKAGEREPO_PUBLISHER_PASSWORD",
       "app_url": "http://wardcrew.com:8900/packagerepo",
       "repo_path": "~/Documents/GitHub/metabuilder/frontends/packagerepo",
       "params": {
-        "db_container": "metabuilder-packagerepo-backend",
-        "db_path": "/app/users.db",
-        "table": "users",
-        "username_column": "username",
-        "hash_column": "password_hash",
-        "updated_at_column": "updated_at",
+        "api_url": "http://metabuilder-packagerepo-backend:5000",
         "username": "publisher",
-        "bcrypt_cost": 10
-      }
+        "env_file": "secrets/rotated.env",
+        "env_key": "PACKAGEREPO_PUBLISHER_PASSWORD"
+      },
+      "badge": "registry"
     },
     {
       "name": "packagerepo-viewer",
@@ -165,20 +159,17 @@
       "group": "metabuilder",
       "service_name": "packagerepo",
       "username": "viewer",
-      "adapter": "db_bcrypt_sqlite",
+      "adapter": "registry_api",
       "secret_env_key": "PACKAGEREPO_VIEWER_PASSWORD",
       "app_url": "http://wardcrew.com:8900/packagerepo",
       "repo_path": "~/Documents/GitHub/metabuilder/frontends/packagerepo",
       "params": {
-        "db_container": "metabuilder-packagerepo-backend",
-        "db_path": "/app/users.db",
-        "table": "users",
-        "username_column": "username",
-        "hash_column": "password_hash",
-        "updated_at_column": "updated_at",
+        "api_url": "http://metabuilder-packagerepo-backend:5000",
         "username": "viewer",
-        "bcrypt_cost": 10
-      }
+        "env_file": "secrets/rotated.env",
+        "env_key": "PACKAGEREPO_VIEWER_PASSWORD"
+      },
+      "badge": "registry"
     },
     {
       "name": "packagerepo-registry-admin",
