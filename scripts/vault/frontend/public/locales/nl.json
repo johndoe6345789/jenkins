@@ -1,48 +1,52 @@
 {
-  "app": {
-    "title": "Vault",
-    "subtitle": "Jenkins inloggegevensbeheer"
-  },
-  "nav": {
-    "jenkins": "Jenkins",
-    "frontends": "Frontends"
-  },
-  "header": {
-    "lock": "Vergrendelen",
-    "logout": "Uitloggen",
-    "themeLight": "Overschakelen naar lichte modus",
-    "themeDark": "Overschakelen naar donkere modus"
-  },
-  "section": {
-    "rotateAll": "Alles vernieuwen",
-    "rotating": "Vernieuwen…",
-    "user": "Gebruiker",
-    "type": "Type",
-    "password": "Wachtwoord",
-    "actions": "Acties",
-    "rotatedAll": "{{count}} vernieuwd",
-    "rotateSummary": "{{ok}} geslaagd, {{fail}} mislukt"
-  },
-  "cred": {
-    "show": "Tonen",
-    "hide": "Verbergen",
-    "copy": "Kopiëren",
-    "copyUsername": "Gebruikersnaam kopiëren",
-    "copyPassword": "Wachtwoord kopiëren",
-    "rotate": "Vernieuwen",
-    "open": "App openen",
-    "copied": "Wachtwoord gekopieerd",
-    "copiedUsername": "Gebruikersnaam gekopieerd",
-    "rotated": "{{name}} vernieuwd",
-    "rotateFailed": "Vernieuwen mislukt",
-    "copyTurboLogin": "Turbologin kopiëren",
-    "copiedTurboLogin": "Turbologin gekopieerd"
-  },
-  "login": {
-    "masterPassword": "Hoofdwachtwoord",
-    "placeholder": "Voer het hoofdwachtwoord in",
-    "unlock": "Ontgrendelen",
-    "unlocking": "Ontgrendelen…",
-    "invalidPassword": "Ongeldig wachtwoord"
-  }
+ "app": {
+  "title": "Vault",
+  "subtitle": "Jenkins inloggegevensbeheer"
+ },
+ "nav": {
+  "jenkins": "Jenkins",
+  "frontends": "Frontends"
+ },
+ "header": {
+  "lock": "Vergrendelen",
+  "logout": "Uitloggen",
+  "themeLight": "Overschakelen naar lichte modus",
+  "themeDark": "Overschakelen naar donkere modus"
+ },
+ "section": {
+  "rotateAll": "Alles vernieuwen",
+  "rotating": "Vernieuwen…",
+  "user": "Gebruiker",
+  "type": "Type",
+  "password": "Wachtwoord",
+  "actions": "Acties",
+  "rotatedAll": "{{count}} vernieuwd",
+  "rotateSummary": "{{ok}} geslaagd, {{fail}} mislukt",
+  "rotateTitle": "Inloggegevens roteren",
+  "rotateProgress": "{{done}}/{{total}} · {{ok}} ok · {{fail}} mislukt",
+  "rotateFailures": "Fouten ({{count}})",
+  "close": "Sluiten"
+ },
+ "cred": {
+  "show": "Tonen",
+  "hide": "Verbergen",
+  "copy": "Kopiëren",
+  "copyUsername": "Gebruikersnaam kopiëren",
+  "copyPassword": "Wachtwoord kopiëren",
+  "rotate": "Vernieuwen",
+  "open": "App openen",
+  "copied": "Wachtwoord gekopieerd",
+  "copiedUsername": "Gebruikersnaam gekopieerd",
+  "rotated": "{{name}} vernieuwd",
+  "rotateFailed": "Vernieuwen mislukt",
+  "copyTurboLogin": "Turbologin kopiëren",
+  "copiedTurboLogin": "Turbologin gekopieerd"
+ },
+ "login": {
+  "masterPassword": "Hoofdwachtwoord",
+  "placeholder": "Voer het hoofdwachtwoord in",
+  "unlock": "Ontgrendelen",
+  "unlocking": "Ontgrendelen…",
+  "invalidPassword": "Ongeldig wachtwoord"
+ }
 }

@@ -7,6 +7,7 @@ import { buildBuckets } from '../lib/buckets'
 import { useRotateAll } from '../hooks/useRotateAll'
 import type { Credential, ToastType } from '../lib/types'
 import { GroupCard } from './GroupCard'
+import RotateProgressDialog from './RotateProgressDialog'
 import s from './section.module.scss'
 
 interface Props {
@@ -18,7 +19,8 @@ interface Props {
 
 export function Section({ title, items, onRotated, onToast }: Props) {
   const { t } = useTranslation()
-  const { busy, rotateAll } = useRotateAll({ items, onRotated, onToast })
+  const { busy, rotateAll, progress, dialogOpen, closeDialog } =
+    useRotateAll({ items, onRotated, onToast })
   const tid = title.toLowerCase()
 
   return (
@@ -50,6 +52,10 @@ export function Section({ title, items, onRotated, onToast }: Props) {
           />
         ))}
       </Box>
+      <RotateProgressDialog
+        open={dialogOpen} busy={busy} progress={progress}
+        onClose={closeDialog}
+      />
     </Box>
   )
 }

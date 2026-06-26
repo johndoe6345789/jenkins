@@ -1012,7 +1012,7 @@
       "app_url": "http://wardcrew.com:8892/app/en",
       "repo_path": "~/Documents/GitHub/businessplanner",
       "params": {
-        "kc_url": "http://172.24.0.13:8080/sso",
+        "kc_url": "http://businessplanner-deploy-keycloak-1:8080/sso",
         "kc_master_user": "admin",
         "kc_master_password_env": "BUSINESSPLANNER_KC_MASTER_PASSWORD",
         "realm": "businessplanner",
@@ -1030,7 +1030,7 @@
       "app_url": "http://wardcrew.com:8889/app/en",
       "repo_path": "~/Documents/GitHub/next_extra_primary",
       "params": {
-        "kc_url": "http://172.25.0.37:8080/sso",
+        "kc_url": "http://next_extra_primary-deploy-keycloak-1:8080/sso",
         "kc_master_user": "admin",
         "kc_master_password_env": "NEXTRA_KC_MASTER_PASSWORD",
         "realm": "nextra",
@@ -1078,7 +1078,7 @@
       "secret_env_key": "GRAFANA_ADMIN_PASSWORD",
       "app_url": "http://wardcrew.com:8900/grafana",
       "params": {
-        "grafana_url": "http://172.21.0.36:3000",
+        "grafana_url": "http://metabuilder-grafana:3000",
         "admin_password_env": "GRAFANA_ADMIN_PASSWORD",
         "login": "admin"
       }
@@ -1093,7 +1093,7 @@
       "secret_env_key": "GRAFANA_EDITOR_PASSWORD",
       "app_url": "http://wardcrew.com:8900/grafana",
       "params": {
-        "grafana_url": "http://172.21.0.36:3000",
+        "grafana_url": "http://metabuilder-grafana:3000",
         "admin_password_env": "GRAFANA_ADMIN_PASSWORD",
         "login": "editor"
       }
@@ -1108,7 +1108,7 @@
       "secret_env_key": "GRAFANA_VIEWER_PASSWORD",
       "app_url": "http://wardcrew.com:8900/grafana",
       "params": {
-        "grafana_url": "http://172.21.0.36:3000",
+        "grafana_url": "http://metabuilder-grafana:3000",
         "admin_password_env": "GRAFANA_ADMIN_PASSWORD",
         "login": "viewer"
       }
@@ -1124,7 +1124,7 @@
       "app_url": "http://wardcrew.com:8892/app/en",
       "repo_path": "~/Documents/GitHub/businessplanner",
       "params": {
-        "kc_url": "http://172.24.0.13:8080/sso",
+        "kc_url": "http://businessplanner-deploy-keycloak-1:8080/sso",
         "kc_master_user": "admin",
         "kc_master_password_env": "BUSINESSPLANNER_KC_MASTER_PASSWORD",
         "realm": "businessplanner",
@@ -1142,7 +1142,7 @@
       "app_url": "http://wardcrew.com:8892/app/en",
       "repo_path": "~/Documents/GitHub/businessplanner",
       "params": {
-        "kc_url": "http://172.24.0.13:8080/sso",
+        "kc_url": "http://businessplanner-deploy-keycloak-1:8080/sso",
         "kc_master_user": "admin",
         "kc_master_password_env": "BUSINESSPLANNER_KC_MASTER_PASSWORD",
         "realm": "businessplanner",
@@ -1160,7 +1160,7 @@
       "app_url": "http://wardcrew.com:8889/app/en",
       "repo_path": "~/Documents/GitHub/next_extra_primary",
       "params": {
-        "kc_url": "http://172.25.0.37:8080/sso",
+        "kc_url": "http://next_extra_primary-deploy-keycloak-1:8080/sso",
         "kc_master_user": "admin",
         "kc_master_password_env": "NEXTRA_KC_MASTER_PASSWORD",
         "realm": "nextra",
@@ -1178,7 +1178,7 @@
       "app_url": "http://wardcrew.com:8889/app/en",
       "repo_path": "~/Documents/GitHub/next_extra_primary",
       "params": {
-        "kc_url": "http://172.25.0.37:8080/sso",
+        "kc_url": "http://next_extra_primary-deploy-keycloak-1:8080/sso",
         "kc_master_user": "admin",
         "kc_master_password_env": "NEXTRA_KC_MASTER_PASSWORD",
         "realm": "nextra",

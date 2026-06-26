@@ -1,48 +1,52 @@
 {
-  "app": {
-    "title": "Vault",
-    "subtitle": "Jenkins credential manager"
-  },
-  "nav": {
-    "jenkins": "Jenkins",
-    "frontends": "Frontends"
-  },
-  "header": {
-    "lock": "Lock",
-    "logout": "Log out",
-    "themeLight": "Switch to light mode",
-    "themeDark": "Switch to dark mode"
-  },
-  "section": {
-    "rotateAll": "Rotate all",
-    "rotating": "Rotating…",
-    "user": "User",
-    "type": "Type",
-    "password": "Password",
-    "actions": "Actions",
-    "rotatedAll": "All {{count}} rotated",
-    "rotateSummary": "{{ok}} rotated, {{fail}} failed"
-  },
-  "cred": {
-    "show": "Show",
-    "hide": "Hide",
-    "copy": "Copy",
-    "copyUsername": "Copy username",
-    "copyPassword": "Copy password",
-    "rotate": "Rotate",
-    "open": "Open app",
-    "copied": "Password copied",
-    "copiedUsername": "Username copied",
-    "rotated": "Rotated {{name}}",
-    "rotateFailed": "Rotation failed",
-    "copyTurboLogin": "Copy Turbologin",
-    "copiedTurboLogin": "Turbologin copied"
-  },
-  "login": {
-    "masterPassword": "Master password",
-    "placeholder": "Enter master password",
-    "unlock": "Unlock",
-    "unlocking": "Unlocking…",
-    "invalidPassword": "Invalid password"
-  }
+ "app": {
+  "title": "Vault",
+  "subtitle": "Jenkins credential manager"
+ },
+ "nav": {
+  "jenkins": "Jenkins",
+  "frontends": "Frontends"
+ },
+ "header": {
+  "lock": "Lock",
+  "logout": "Log out",
+  "themeLight": "Switch to light mode",
+  "themeDark": "Switch to dark mode"
+ },
+ "section": {
+  "rotateAll": "Rotate all",
+  "rotating": "Rotating…",
+  "user": "User",
+  "type": "Type",
+  "password": "Password",
+  "actions": "Actions",
+  "rotatedAll": "All {{count}} rotated",
+  "rotateSummary": "{{ok}} rotated, {{fail}} failed",
+  "rotateTitle": "Rotating credentials",
+  "rotateProgress": "{{done}}/{{total}} · {{ok}} ok · {{fail}} failed",
+  "rotateFailures": "Failures ({{count}})",
+  "close": "Close"
+ },
+ "cred": {
+  "show": "Show",
+  "hide": "Hide",
+  "copy": "Copy",
+  "copyUsername": "Copy username",
+  "copyPassword": "Copy password",
+  "rotate": "Rotate",
+  "open": "Open app",
+  "copied": "Password copied",
+  "copiedUsername": "Username copied",
+  "rotated": "Rotated {{name}}",
+  "rotateFailed": "Rotation failed",
+  "copyTurboLogin": "Copy Turbologin",
+  "copiedTurboLogin": "Turbologin copied"
+ },
+ "login": {
+  "masterPassword": "Master password",
+  "placeholder": "Enter master password",
+  "unlock": "Unlock",
+  "unlocking": "Unlocking…",
+  "invalidPassword": "Invalid password"
+ }
 }
