@@ -35,9 +35,14 @@ static long grafanaUserId(const Json::Value& p, const std::string& basic)
                       urlEncode(requireParam(p, "login"));
     auto r = httpRequest("GET", url, {}, "", basic);
     auto j = parseJson(r.body);
-    if (!r.ok() || !j.isMember("id"))
-        throw std::runtime_error("user " + param(p, "login") +
-                                 " not found in Grafana");
+    if (!r.ok() || !j.isMember("id")) {
+        std::string why = r.status == 401 ? " (admin auth rejected — stale "
+                          "admin password?)" : r.status
+                          ? " (HTTP " + std::to_string(r.status) + ")"
+                          : " (" + r.transportError + ")";
+        throw std::runtime_error("Grafana user '" + param(p, "login") +
+                                 "' lookup failed" + why);
+    }
     return j["id"].asInt64();
 }
 

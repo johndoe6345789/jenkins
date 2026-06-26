@@ -57,12 +57,22 @@ void CaproverAdapter::rotate(const Json::Value& p,
     Json::Value body;
     body["oldPassword"] = current;
     body["newPassword"] = newPassword;
-    auto r = httpRequest("POST", baseUrl(p) + "/api/v2/user/password",
+    // CapRover's change-password endpoint is /api/v2/user/changepassword and it
+    // returns a JSON envelope ({status:100} on success), not an HTTP error — so
+    // check the envelope and surface its description rather than a bare "Not
+    // Found" from the wrong path.
+    auto r = httpRequest("POST", baseUrl(p) + "/api/v2/user/changepassword",
                          {{"Content-Type", "application/json"},
                           {"x-captain-auth", token}},
                          jsonCompact(body), "", !verifySsl(p));
-    if (!r.ok())
-        throw std::runtime_error("CapRover password change failed: " + r.body);
+    auto j = parseJson(r.body);
+    if (j["status"].asInt() != 100) {
+        std::string desc = j["description"].asString();
+        throw std::runtime_error("CapRover password change failed: " +
+                                 (desc.empty() ? "HTTP " +
+                                  std::to_string(r.status) + " " + r.body
+                                                : desc));
+    }
 
     env[key] = newPassword;
     writeEnv(path, env);
