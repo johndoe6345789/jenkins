@@ -15,3 +15,13 @@ target_link_libraries(caprover-backup PRIVATE
     nlohmann_json::nlohmann_json
 )
 target_include_directories(caprover-backup PRIVATE src)
+
+add_executable(dashy-backup
+    src/dashy_main.cpp
+    src/dashy.cpp
+)
+target_link_libraries(dashy-backup PRIVATE
+    CURL::libcurl
+    nlohmann_json::nlohmann_json
+)
+target_include_directories(dashy-backup PRIVATE src)
