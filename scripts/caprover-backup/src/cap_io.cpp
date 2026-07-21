@@ -57,7 +57,8 @@ void restore(const std::string& url, const std::string& tok,
     if (!f) throw std::runtime_error("cannot open: " + path);
     json bk = json::parse(f);
     int ok = 0, skip = 0;
-    std::string base = url + "/api/v2/user/apps";
+    std::string base =
+        url + "/api/v2/user/apps/appDefinitions";
     for (auto& app : bk["apps"]) {
         std::string name = app["appName"];
         json reg = {{"appName",         name},

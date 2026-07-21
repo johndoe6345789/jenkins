@@ -22,7 +22,8 @@ services:
       - ../../secrets:/app/secrets
       - /var/run/docker.sock:/var/run/docker.sock
     env_file:
-      - ../../secrets/keycloak.env
+      - path: ../../secrets/keycloak.env
+        required: false
     environment:
       - VAULT_REPO_ROOT=/app     # scripts/ copied to /app/scripts/ in image
       - VAULT_DATABASE_URL=host=vault-db port=5432 dbname=vault user=vault password=vault
