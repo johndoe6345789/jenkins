@@ -1,6 +1,7 @@
 import { screen, fireEvent, waitFor } from '@testing-library/react'
 import { renderWithStore, mockItem } from './utils'
 import { Section } from '../components/Section'
+import frontendLinks from '../lib/frontend-links.json'
 
 global.fetch = jest.fn()
 
@@ -51,6 +52,16 @@ describe('Section', () => {
         'href',
         'https://metabuilder.wardcrew.com/app/login',
       )
+  })
+
+  it('defines a URL for every frontend service', () => {
+    const services = [
+      'businessplanner', 'caprover', 'dbal', 'dockerterminal',
+      'emailclient', 'grafana', 'hamradio', 'next-extra-primary',
+      'packagerepo', 'packagerepo-registry', 'pastebin',
+      'postgres-dashboard', 'pyracms', 'workflowui',
+    ]
+    expect(Object.keys(frontendLinks.services).sort()).toEqual(services.sort())
   })
 
   it('Rotate all disabled when items is empty', () => {

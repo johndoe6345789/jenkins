@@ -1,0 +1,24 @@
+{
+  "groups": {
+    "metabuilder": {
+      "label": "Open login",
+      "url": "https://metabuilder.wardcrew.com/app/login"
+    }
+  },
+  "services": {
+    "businessplanner": "https://businessplanner.wardcrew.com/app/en/login",
+    "caprover": "https://captain.wardcrew.com",
+    "dbal": "https://metabuilder.wardcrew.com/dbal",
+    "dockerterminal": "https://metabuilder.wardcrew.com/terminal",
+    "emailclient": "https://metabuilder.wardcrew.com/emailclient",
+    "grafana": "https://metabuilder.wardcrew.com/grafana",
+    "hamradio": "https://hamradio.wardcrew.com/en/login",
+    "next-extra-primary": "http://wardcrew.com:8889/app/en/login",
+    "packagerepo": "https://metabuilder.wardcrew.com/packagerepo",
+    "packagerepo-registry": "https://businessplanner.wardcrew.com/repo",
+    "pastebin": "https://metabuilder.wardcrew.com/pastebin",
+    "postgres-dashboard": "https://metabuilder.wardcrew.com/postgres",
+    "pyracms": "https://pyracms.wardcrew.com/auth/login",
+    "workflowui": "https://metabuilder.wardcrew.com/workflowui"
+  }
+}

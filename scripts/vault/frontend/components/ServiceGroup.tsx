@@ -10,6 +10,7 @@ import OpenInNewIcon from '@mui/icons-material/OpenInNew'
 import Link from 'next/link'
 import { useTranslation } from 'react-i18next'
 import { useGroupToggle } from '../hooks/useGroupToggle'
+import frontendLinks from '../lib/frontend-links.json'
 import type { Credential, ToastType } from '../lib/types'
 import { CredRow } from './CredRow'
 import s from './serviceGroup.module.scss'
@@ -28,6 +29,8 @@ export function ServiceGroup({
 }: Props) {
   const { open, toggle } = useGroupToggle()
   const { t } = useTranslation()
+  const serviceKey = name.toLowerCase() as keyof typeof frontendLinks.services
+  const frontendUrl = frontendLinks.services[serviceKey] ?? app_url
 
   return (
     <>
@@ -59,14 +62,14 @@ export function ServiceGroup({
                 </Typography>
               )}
             </Box>
-            {app_url && (
+            {frontendUrl && (
               <Tooltip title={t('cred.open')}>
                 <IconButton
                   size="small"
                   className={s.openBtn}
                   onClick={e => {
                     e.stopPropagation()
-                    window.open(app_url, '_blank', 'noopener,noreferrer')
+                    window.open(frontendUrl, '_blank', 'noopener,noreferrer')
                   }}
                   data-testid={`open-btn-${name}`}
                 >

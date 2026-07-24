@@ -13,7 +13,7 @@ import Typography from '@mui/material/Typography'
 import OpenInNewIcon from '@mui/icons-material/OpenInNew'
 import type { ToastType } from '../lib/types'
 import type { GroupBucket } from '../lib/buckets'
-import groupLinks from '../lib/group-links.json'
+import frontendLinks from '../lib/frontend-links.json'
 import { ServiceGroup } from './ServiceGroup'
 import s from './section.module.scss'
 
@@ -25,8 +25,9 @@ interface Props {
 
 export function GroupCard({ bucket, onRotated, onToast }: Props) {
   const { t } = useTranslation()
-  const groupKey = bucket.group.toLowerCase() as keyof typeof groupLinks
-  const groupLink = groupLinks[groupKey]
+  const groupKey =
+    bucket.group.toLowerCase() as keyof typeof frontendLinks.groups
+  const groupLink = frontendLinks.groups[groupKey]
 
   return (
     <Paper variant="outlined" className={s.groupCard}>
