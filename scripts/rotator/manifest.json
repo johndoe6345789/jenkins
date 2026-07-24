@@ -1003,7 +1003,7 @@
       "app_url": "http://wardcrew.com:8892/app/en",
       "repo_path": "~/Documents/GitHub/businessplanner",
       "params": {
-        "kc_url": "http://businessplanner-deploy-keycloak-1:8080/sso",
+        "kc_url": "http://businessplanner-keycloak-1:8080/sso",
         "kc_master_user": "admin",
         "kc_master_password_env": "BUSINESSPLANNER_KC_MASTER_PASSWORD",
         "realm": "businessplanner",
@@ -1021,7 +1021,7 @@
       "app_url": "http://wardcrew.com:8889/app/en",
       "repo_path": "~/Documents/GitHub/next_extra_primary",
       "params": {
-        "kc_url": "http://next_extra_primary-deploy-keycloak-1:8080/sso",
+        "kc_url": "http://next_extra_primary-keycloak-1:8080/sso",
         "kc_master_user": "admin",
         "kc_master_password_env": "NEXTRA_KC_MASTER_PASSWORD",
         "realm": "nextra",
@@ -1115,7 +1115,7 @@
       "app_url": "http://wardcrew.com:8892/app/en",
       "repo_path": "~/Documents/GitHub/businessplanner",
       "params": {
-        "kc_url": "http://businessplanner-deploy-keycloak-1:8080/sso",
+        "kc_url": "http://businessplanner-keycloak-1:8080/sso",
         "kc_master_user": "admin",
         "kc_master_password_env": "BUSINESSPLANNER_KC_MASTER_PASSWORD",
         "realm": "businessplanner",
@@ -1133,7 +1133,7 @@
       "app_url": "http://wardcrew.com:8892/app/en",
       "repo_path": "~/Documents/GitHub/businessplanner",
       "params": {
-        "kc_url": "http://businessplanner-deploy-keycloak-1:8080/sso",
+        "kc_url": "http://businessplanner-keycloak-1:8080/sso",
         "kc_master_user": "admin",
         "kc_master_password_env": "BUSINESSPLANNER_KC_MASTER_PASSWORD",
         "realm": "businessplanner",
@@ -1151,7 +1151,7 @@
       "app_url": "http://wardcrew.com:8889/app/en",
       "repo_path": "~/Documents/GitHub/next_extra_primary",
       "params": {
-        "kc_url": "http://next_extra_primary-deploy-keycloak-1:8080/sso",
+        "kc_url": "http://next_extra_primary-keycloak-1:8080/sso",
         "kc_master_user": "admin",
         "kc_master_password_env": "NEXTRA_KC_MASTER_PASSWORD",
         "realm": "nextra",
@@ -1169,7 +1169,7 @@
       "app_url": "http://wardcrew.com:8889/app/en",
       "repo_path": "~/Documents/GitHub/next_extra_primary",
       "params": {
-        "kc_url": "http://next_extra_primary-deploy-keycloak-1:8080/sso",
+        "kc_url": "http://next_extra_primary-keycloak-1:8080/sso",
         "kc_master_user": "admin",
         "kc_master_password_env": "NEXTRA_KC_MASTER_PASSWORD",
         "realm": "nextra",

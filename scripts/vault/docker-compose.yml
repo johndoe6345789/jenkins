@@ -56,7 +56,7 @@ networks:
     name: businessplanner-deploy_default
   nextra_kc:
     external: true
-    name: next_extra_primary-deploy_default
+    name: next_extra_primary_default
   metabuilder_net:
     external: true
     name: metabuilder-network
