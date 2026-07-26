@@ -8,7 +8,7 @@ export interface Credential {
   app_url?: string
   repo_path?: string
   group?: string
-  source?: 'manifest' | 'custom'
+  source?: 'manifest' | 'custom' | 'catalog'
 }
 
 export type TargetsPayload = Record<string, Credential[]>

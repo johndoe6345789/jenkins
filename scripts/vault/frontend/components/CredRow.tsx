@@ -25,6 +25,7 @@ export function CredRow({ item, onRotated, onToast }: Props) {
   const masked = item.password
     ? '•'.repeat(Math.min(item.password.length, 24))
     : null
+  const isPublic = item.source === 'catalog'
 
   return (
     <TableRow hover data-testid={`cred-row-${item.name}`}>
@@ -45,11 +46,15 @@ export function CredRow({ item, onRotated, onToast }: Props) {
           className={s.pw}
           color={item.password ? 'text.primary' : 'text.disabled'}
         >
-          {item.password ? (shown ? item.password : masked) : '—'}
+          {isPublic
+            ? item.password
+            : item.password
+              ? (shown ? item.password : masked)
+              : '—'}
         </Typography>
       </TableCell>
       <TableCell className={`${s.cell} ${s.actCell}`}>
-        <Box className={s.actions}>
+        {!isPublic && <Box className={s.actions}>
           <Button
             size="small" variant="outlined"
             onClick={toggleShown}
@@ -89,7 +94,7 @@ export function CredRow({ item, onRotated, onToast }: Props) {
           >
             {rotating ? '…' : t('cred.rotate')}
           </Button>
-        </Box>
+        </Box>}
       </TableCell>
     </TableRow>
   )

@@ -4,6 +4,7 @@ import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import Typography from '@mui/material/Typography'
 import { buildBuckets } from '../lib/buckets'
+import { buildFrontendAccess } from '../lib/frontendAccess'
 import { useRotateAll } from '../hooks/useRotateAll'
 import type { Credential, ToastType } from '../lib/types'
 import { FrontendCatalogue } from './FrontendCatalogue'
@@ -14,15 +15,21 @@ import s from './section.module.scss'
 interface Props {
   title: string
   items: Credential[]
+  allItems?: Credential[]
   onRotated: () => void
   onToast: (msg: string, type: ToastType) => void
 }
 
-export function Section({ title, items, onRotated, onToast }: Props) {
+export function Section({
+  title, items, allItems = items, onRotated, onToast,
+}: Props) {
   const { t } = useTranslation()
   const { busy, rotateAll, progress, dialogOpen, closeDialog } =
     useRotateAll({ items, onRotated, onToast })
   const tid = title.toLowerCase()
+  const accessItems = tid === 'frontends'
+    ? buildFrontendAccess(items, allItems)
+    : items
 
   return (
     <Box data-testid={`section-${tid}`} className={s.sectionWrap}>
@@ -45,7 +52,7 @@ export function Section({ title, items, onRotated, onToast }: Props) {
       </Box>
       {tid === 'frontends' && <FrontendCatalogue />}
       <Box className={s.groupStack}>
-        {buildBuckets(items).map(bucket => (
+        {buildBuckets(accessItems).map(bucket => (
           <GroupCard
             key={bucket.group || '_ungrouped'}
             bucket={bucket}

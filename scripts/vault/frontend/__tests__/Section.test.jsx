@@ -68,9 +68,12 @@ describe('Section', () => {
     expect(screen.getByTestId(
       'catalogue-link-metabuilder',
     )).toBeInTheDocument()
-    expect(screen.queryByTestId(
+    expect(screen.getByTestId(
       'service-group-metabuilder',
-    )).not.toBeInTheDocument()
+    )).toBeInTheDocument()
+    expect(
+      screen.getAllByText('No login required').length,
+    ).toBeGreaterThan(0)
   })
 
   it('Rotate all disabled when items is empty', () => {

@@ -28,6 +28,7 @@ export function ServiceGroup({
 }: Props) {
   const { open, toggle } = useGroupToggle()
   const { t } = useTranslation()
+  const hasManaged = users.some(item => item.source !== 'catalog')
   return (
     <>
       <TableRow
@@ -44,14 +45,18 @@ export function ServiceGroup({
               className={`${s.chevron}${open ? '' : ` ${s.closed}`}`}
             />
             <Box className={s.nameStack}>
-              <Typography
-                component={Link}
-                href={`/vault/service/${encodeURIComponent(name)}`}
-                onClick={(e: React.MouseEvent) => e.stopPropagation()}
-                className={s.name}
-              >
-                {name}
-              </Typography>
+              {hasManaged ? (
+                <Typography
+                  component={Link}
+                  href={`/vault/service/${encodeURIComponent(name)}`}
+                  onClick={(e: React.MouseEvent) => e.stopPropagation()}
+                  className={s.name}
+                >
+                  {name}
+                </Typography>
+              ) : (
+                <Typography className={s.name}>{name}</Typography>
+              )}
               {repo_path && (
                 <Typography className={s.repoPath} component="span">
                   {repo_path.replace(/^~\/Documents\/GitHub\//, '')}

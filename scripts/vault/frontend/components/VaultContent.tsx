@@ -22,6 +22,7 @@ export function VaultContent() {
   const { toasts, push }         = useToast()
   const router                   = useRouter()
   const pathname                 = usePathname()
+  const allItems = Object.values(sections ?? {}).flat()
 
   useEffect(() => {
     if (hydrated && error === 'unauthenticated')
@@ -52,6 +53,7 @@ export function VaultContent() {
               <Section
                 title={sectionId.charAt(0).toUpperCase() + sectionId.slice(1)}
                 items={items}
+                allItems={allItems}
                 onRotated={reload}
                 onToast={push}
               />
