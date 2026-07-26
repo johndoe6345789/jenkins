@@ -36,22 +36,10 @@ describe('Section', () => {
     expect(screen.getAllByText('admin').length).toBeGreaterThanOrEqual(1)
   })
 
-  it('links the metabuilder group to its login page', () => {
-    const metabuilder = [{
-      ...mockItem,
-      group: 'metabuilder',
-      service_name: 'workflowui',
-    }]
-    renderWithStore(
-      <Section title="Frontends" items={metabuilder}
-        onRotated={onRotated} onToast={onToast} />,
-      { preloadedState: { auth: { token: 'tok' } } },
+  it('links PostgreSQL Dashboard to its own login page', () => {
+    expect(frontendLinks.services['postgres-dashboard']).toBe(
+      'https://metabuilder.wardcrew.com/postgres/admin/login',
     )
-    expect(screen.getByRole('link', { name: /open login/i }))
-      .toHaveAttribute(
-        'href',
-        'https://metabuilder.wardcrew.com/app/login',
-      )
   })
 
   it('defines a URL for every frontend service', () => {

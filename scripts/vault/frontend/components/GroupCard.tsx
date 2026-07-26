@@ -2,7 +2,6 @@
 import { Fragment } from 'react'
 import { useTranslation } from 'react-i18next'
 import Box from '@mui/material/Box'
-import Button from '@mui/material/Button'
 import Paper from '@mui/material/Paper'
 import Table from '@mui/material/Table'
 import TableBody from '@mui/material/TableBody'
@@ -10,10 +9,8 @@ import TableCell from '@mui/material/TableCell'
 import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
 import Typography from '@mui/material/Typography'
-import OpenInNewIcon from '@mui/icons-material/OpenInNew'
 import type { ToastType } from '../lib/types'
 import type { GroupBucket } from '../lib/buckets'
-import frontendLinks from '../lib/frontend-links.json'
 import { ServiceGroup } from './ServiceGroup'
 import s from './section.module.scss'
 
@@ -25,28 +22,12 @@ interface Props {
 
 export function GroupCard({ bucket, onRotated, onToast }: Props) {
   const { t } = useTranslation()
-  const groupKey =
-    bucket.group.toLowerCase() as keyof typeof frontendLinks.groups
-  const groupLink = frontendLinks.groups[groupKey]
 
   return (
     <Paper variant="outlined" className={s.groupCard}>
       {bucket.group && (
         <Box className={s.groupHeader}>
           <Typography className={s.groupLabel}>{bucket.group}</Typography>
-          {groupLink && (
-            <Button
-              component="a"
-              href={groupLink.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              size="small"
-              endIcon={<OpenInNewIcon />}
-              className={s.groupLink}
-            >
-              {groupLink.label}
-            </Button>
-          )}
         </Box>
       )}
       <Table size="small">
