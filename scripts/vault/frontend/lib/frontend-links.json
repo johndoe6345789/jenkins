@@ -1,18 +1,174 @@
 {
-  "services": {
-    "businessplanner": "https://businessplanner.wardcrew.com/app/en/login",
-    "caprover": "https://captain.wardcrew.com",
-    "dbal": "https://metabuilder.wardcrew.com/dbal",
-    "dockerterminal": "https://metabuilder.wardcrew.com/terminal",
-    "emailclient": "https://metabuilder.wardcrew.com/emailclient",
-    "grafana": "https://metabuilder.wardcrew.com/grafana",
-    "hamradio": "https://hamradio.wardcrew.com/en/login",
-    "next-extra-primary": "http://wardcrew.com:8889/app/en/login",
-    "packagerepo": "https://metabuilder.wardcrew.com/packagerepo",
-    "packagerepo-registry": "https://businessplanner.wardcrew.com/repo",
-    "pastebin": "https://metabuilder.wardcrew.com/pastebin",
-    "postgres-dashboard": "https://metabuilder.wardcrew.com/postgres/admin/login",
-    "pyracms": "https://pyracms.wardcrew.com/auth/login",
-    "workflowui": "https://metabuilder.wardcrew.com/workflowui"
-  }
+  "services": [
+    {
+      "name": "businessplanner",
+      "group": "keycloak apps",
+      "url": "https://businessplanner.wardcrew.com/app/en/login"
+    },
+    {
+      "name": "packagerepo-registry",
+      "group": "businessplanner",
+      "url": "https://businessplanner.wardcrew.com/repo"
+    },
+    {
+      "name": "caprover",
+      "group": "infrastructure",
+      "url": "https://captain.wardcrew.com"
+    },
+    {
+      "name": "jenkins",
+      "group": "infrastructure",
+      "url": "https://jenkins.wardcrew.com"
+    },
+    {
+      "name": "vault",
+      "group": "infrastructure",
+      "url": "https://vault.wardcrew.com"
+    },
+    {
+      "name": "hamradio",
+      "group": "infrastructure",
+      "url": "https://hamradio.wardcrew.com/en/login"
+    },
+    {
+      "name": "next-extra-primary",
+      "group": "keycloak apps",
+      "url": "http://wardcrew.com:8889/app/en/login"
+    },
+    {
+      "name": "metabuilder",
+      "group": "metabuilder",
+      "url": "https://metabuilder.wardcrew.com/app/login"
+    },
+    {
+      "name": "portal",
+      "group": "metabuilder",
+      "url": "https://metabuilder.wardcrew.com/portal/"
+    },
+    {
+      "name": "workflowui",
+      "group": "metabuilder",
+      "url": "https://metabuilder.wardcrew.com/workflowui"
+    },
+    {
+      "name": "codegen",
+      "group": "metabuilder",
+      "url": "https://metabuilder.wardcrew.com/codegen"
+    },
+    {
+      "name": "pastebin",
+      "group": "metabuilder",
+      "url": "https://metabuilder.wardcrew.com/pastebin"
+    },
+    {
+      "name": "postgres-dashboard",
+      "group": "metabuilder",
+      "url": "https://metabuilder.wardcrew.com/postgres/admin/login"
+    },
+    {
+      "name": "emailclient",
+      "group": "metabuilder",
+      "url": "https://metabuilder.wardcrew.com/emailclient"
+    },
+    {
+      "name": "exploded-diagrams",
+      "group": "metabuilder",
+      "url": "https://metabuilder.wardcrew.com/diagrams"
+    },
+    {
+      "name": "dbal",
+      "group": "metabuilder",
+      "url": "https://metabuilder.wardcrew.com/dbal"
+    },
+    {
+      "name": "dockerterminal",
+      "group": "metabuilder",
+      "url": "https://metabuilder.wardcrew.com/terminal"
+    },
+    {
+      "name": "packagerepo",
+      "group": "metabuilder",
+      "url": "https://metabuilder.wardcrew.com/packagerepo"
+    },
+    {
+      "name": "repoforge",
+      "group": "metabuilder",
+      "url": "https://metabuilder.wardcrew.com/repoforge"
+    },
+    {
+      "name": "caproverforge",
+      "group": "metabuilder",
+      "url": "https://metabuilder.wardcrew.com/caproverforge"
+    },
+    {
+      "name": "phpmyadmin",
+      "group": "metabuilder",
+      "url": "https://metabuilder.wardcrew.com/phpmyadmin/"
+    },
+    {
+      "name": "mongo-express",
+      "group": "metabuilder",
+      "url": "https://metabuilder.wardcrew.com/mongo-express/"
+    },
+    {
+      "name": "redis-insight",
+      "group": "metabuilder",
+      "url": "https://metabuilder.wardcrew.com/redis-insight/"
+    },
+    {
+      "name": "kibana",
+      "group": "metabuilder",
+      "url": "https://metabuilder.wardcrew.com/kibana/"
+    },
+    {
+      "name": "grafana",
+      "group": "monitoring",
+      "url": "https://metabuilder.wardcrew.com/grafana/"
+    },
+    {
+      "name": "prometheus",
+      "group": "metabuilder",
+      "url": "https://metabuilder.wardcrew.com/prometheus/"
+    },
+    {
+      "name": "PyraCMS",
+      "group": "pyracms",
+      "url": "https://pyracms.wardcrew.com/auth/login"
+    },
+    {
+      "name": "drupal",
+      "group": "sites",
+      "url": "https://drupal.wardcrew.com"
+    },
+    {
+      "name": "joomla",
+      "group": "sites",
+      "url": "https://joomla.wardcrew.com"
+    },
+    {
+      "name": "retro-react",
+      "group": "sites",
+      "url": "https://retro-react.wardcrew.com"
+    },
+    {
+      "name": "webdevguide",
+      "group": "sites",
+      "url": "https://webdev.wardcrew.com"
+    },
+    {
+      "name": "workforce-pay-bill",
+      "group": "sites",
+      "url": "https://workforce.wardcrew.com"
+    },
+    {
+      "name": "strategy-execution",
+      "group": "sites",
+      "url": "https://strategy.wardcrew.com"
+    },
+    {
+      "name": "nexus-command",
+      "group": "sites",
+      "url": "https://nexuscommand.wardcrew.com"
+    }
+  ]
 }

@@ -37,19 +37,35 @@ describe('Section', () => {
   })
 
   it('links PostgreSQL Dashboard to its own login page', () => {
-    expect(frontendLinks.services['postgres-dashboard']).toBe(
+    const service = frontendLinks.services.find(
+      item => item.name === 'postgres-dashboard',
+    )
+    expect(service.url).toBe(
       'https://metabuilder.wardcrew.com/postgres/admin/login',
     )
   })
 
-  it('defines a URL for every frontend service', () => {
+  it('catalogues every credential-backed frontend service', () => {
     const services = [
       'businessplanner', 'caprover', 'dbal', 'dockerterminal',
       'emailclient', 'grafana', 'hamradio', 'next-extra-primary',
       'packagerepo', 'packagerepo-registry', 'pastebin',
       'postgres-dashboard', 'pyracms', 'workflowui',
     ]
-    expect(Object.keys(frontendLinks.services).sort()).toEqual(services.sort())
+    const catalogNames = frontendLinks.services.map(
+      item => item.name.toLowerCase(),
+    )
+    expect(catalogNames).toEqual(expect.arrayContaining(services))
+  })
+
+  it('renders catalogue-only frontends without credentials', () => {
+    renderWithStore(
+      <Section title="Frontends" items={[]}
+        onRotated={onRotated} onToast={onToast} />,
+      { preloadedState: { auth: { token: 'tok' } } },
+    )
+    expect(screen.getAllByText('metabuilder').length).toBeGreaterThan(0)
+    expect(screen.getByText('retro-react')).toBeInTheDocument()
   })
 
   it('Rotate all disabled when items is empty', () => {

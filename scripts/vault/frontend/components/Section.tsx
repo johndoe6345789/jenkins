@@ -4,6 +4,7 @@ import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import Typography from '@mui/material/Typography'
 import { buildBuckets } from '../lib/buckets'
+import frontendLinks from '../lib/frontend-links.json'
 import { useRotateAll } from '../hooks/useRotateAll'
 import type { Credential, ToastType } from '../lib/types'
 import { GroupCard } from './GroupCard'
@@ -22,6 +23,7 @@ export function Section({ title, items, onRotated, onToast }: Props) {
   const { busy, rotateAll, progress, dialogOpen, closeDialog } =
     useRotateAll({ items, onRotated, onToast })
   const tid = title.toLowerCase()
+  const catalog = tid === 'frontends' ? frontendLinks.services : []
 
   return (
     <Box data-testid={`section-${tid}`} className={s.sectionWrap}>
@@ -43,7 +45,7 @@ export function Section({ title, items, onRotated, onToast }: Props) {
         </Button>
       </Box>
       <Box className={s.groupStack}>
-        {buildBuckets(items).map(bucket => (
+        {buildBuckets(items, catalog).map(bucket => (
           <GroupCard
             key={bucket.group || '_ungrouped'}
             bucket={bucket}

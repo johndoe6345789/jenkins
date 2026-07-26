@@ -10,7 +10,6 @@ import OpenInNewIcon from '@mui/icons-material/OpenInNew'
 import Link from 'next/link'
 import { useTranslation } from 'react-i18next'
 import { useGroupToggle } from '../hooks/useGroupToggle'
-import frontendLinks from '../lib/frontend-links.json'
 import type { Credential, ToastType } from '../lib/types'
 import { CredRow } from './CredRow'
 import s from './serviceGroup.module.scss'
@@ -29,13 +28,12 @@ export function ServiceGroup({
 }: Props) {
   const { open, toggle } = useGroupToggle()
   const { t } = useTranslation()
-  const serviceKey = name.toLowerCase() as keyof typeof frontendLinks.services
-  const frontendUrl = frontendLinks.services[serviceKey] ?? app_url
+  const hasUsers = users.length > 0
 
   return (
     <>
       <TableRow
-        onClick={toggle}
+        onClick={hasUsers ? toggle : undefined}
         className={s.row}
         data-testid={`service-group-${name}`}
       >
@@ -44,32 +42,38 @@ export function ServiceGroup({
           className={`${s.cell}${open ? '' : ` ${s.noBorder}`}`}
         >
           <Box className={s.inner}>
-            <ExpandMoreIcon
-              className={`${s.chevron}${open ? '' : ` ${s.closed}`}`}
-            />
+            {hasUsers && (
+              <ExpandMoreIcon
+                className={`${s.chevron}${open ? '' : ` ${s.closed}`}`}
+              />
+            )}
             <Box className={s.nameStack}>
-              <Typography
-                component={Link}
-                href={`/vault/service/${encodeURIComponent(name)}`}
-                onClick={(e: React.MouseEvent) => e.stopPropagation()}
-                className={s.name}
-              >
-                {name}
-              </Typography>
+              {hasUsers ? (
+                <Typography
+                  component={Link}
+                  href={`/vault/service/${encodeURIComponent(name)}`}
+                  onClick={(e: React.MouseEvent) => e.stopPropagation()}
+                  className={s.name}
+                >
+                  {name}
+                </Typography>
+              ) : (
+                <Typography className={s.name}>{name}</Typography>
+              )}
               {repo_path && (
                 <Typography className={s.repoPath} component="span">
                   {repo_path.replace(/^~\/Documents\/GitHub\//, '')}
                 </Typography>
               )}
             </Box>
-            {frontendUrl && (
+            {app_url && (
               <Tooltip title={t('cred.open')}>
                 <IconButton
                   size="small"
                   className={s.openBtn}
                   onClick={e => {
                     e.stopPropagation()
-                    window.open(frontendUrl, '_blank', 'noopener,noreferrer')
+                    window.open(app_url, '_blank', 'noopener,noreferrer')
                   }}
                   data-testid={`open-btn-${name}`}
                 >
