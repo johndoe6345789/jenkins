@@ -28,12 +28,10 @@ export function ServiceGroup({
 }: Props) {
   const { open, toggle } = useGroupToggle()
   const { t } = useTranslation()
-  const hasUsers = users.length > 0
-
   return (
     <>
       <TableRow
-        onClick={hasUsers ? toggle : undefined}
+        onClick={toggle}
         className={s.row}
         data-testid={`service-group-${name}`}
       >
@@ -42,24 +40,18 @@ export function ServiceGroup({
           className={`${s.cell}${open ? '' : ` ${s.noBorder}`}`}
         >
           <Box className={s.inner}>
-            {hasUsers && (
-              <ExpandMoreIcon
-                className={`${s.chevron}${open ? '' : ` ${s.closed}`}`}
-              />
-            )}
+            <ExpandMoreIcon
+              className={`${s.chevron}${open ? '' : ` ${s.closed}`}`}
+            />
             <Box className={s.nameStack}>
-              {hasUsers ? (
-                <Typography
-                  component={Link}
-                  href={`/vault/service/${encodeURIComponent(name)}`}
-                  onClick={(e: React.MouseEvent) => e.stopPropagation()}
-                  className={s.name}
-                >
-                  {name}
-                </Typography>
-              ) : (
-                <Typography className={s.name}>{name}</Typography>
-              )}
+              <Typography
+                component={Link}
+                href={`/vault/service/${encodeURIComponent(name)}`}
+                onClick={(e: React.MouseEvent) => e.stopPropagation()}
+                className={s.name}
+              >
+                {name}
+              </Typography>
               {repo_path && (
                 <Typography className={s.repoPath} component="span">
                   {repo_path.replace(/^~\/Documents\/GitHub\//, '')}

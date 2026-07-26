@@ -58,14 +58,19 @@ describe('Section', () => {
     expect(catalogNames).toEqual(expect.arrayContaining(services))
   })
 
-  it('renders catalogue-only frontends without credentials', () => {
+  it('renders the application catalogue separately from credentials', () => {
     renderWithStore(
       <Section title="Frontends" items={[]}
         onRotated={onRotated} onToast={onToast} />,
       { preloadedState: { auth: { token: 'tok' } } },
     )
-    expect(screen.getAllByText('metabuilder').length).toBeGreaterThan(0)
-    expect(screen.getByText('retro-react')).toBeInTheDocument()
+    expect(screen.getByText('Applications')).toBeInTheDocument()
+    expect(screen.getByTestId(
+      'catalogue-link-metabuilder',
+    )).toBeInTheDocument()
+    expect(screen.queryByTestId(
+      'service-group-metabuilder',
+    )).not.toBeInTheDocument()
   })
 
   it('Rotate all disabled when items is empty', () => {
