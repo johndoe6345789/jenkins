@@ -9,6 +9,12 @@ services:
       - POSTGRES_PASSWORD=vault
     volumes:
       - vault-db:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U vault -d vault"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+      start_period: 10s
 
   vault-backend:
     build:
@@ -28,7 +34,14 @@ services:
       - VAULT_REPO_ROOT=/app     # scripts/ copied to /app/scripts/ in image
       - VAULT_DATABASE_URL=host=vault-db port=5432 dbname=vault user=vault password=vault
     depends_on:
-      - vault-db
+      vault-db:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://localhost:5050/api/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 60s
     networks:
       - default
       - businessplanner_kc
@@ -47,7 +60,15 @@ services:
     environment:
       - FLASK_URL=http://vault-backend:5050
     depends_on:
-      - vault-backend
+      vault-backend:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O", "/dev/null",
+             "http://127.0.0.1:3000/login"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 20s
 
 networks:
   default: {}

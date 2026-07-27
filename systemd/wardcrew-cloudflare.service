@@ -1,0 +1,17 @@
+[Unit]
+Description=Ward Crew Cloudflare tunnel container
+Requires=docker.service
+After=docker.service network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStartPre=/usr/bin/docker update \
+  --restart unless-stopped captain-cloudflare-tunnel
+ExecStart=/usr/bin/docker start captain-cloudflare-tunnel
+ExecReload=/usr/bin/docker restart captain-cloudflare-tunnel
+TimeoutStartSec=2min
+
+[Install]
+WantedBy=multi-user.target

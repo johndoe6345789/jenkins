@@ -2,6 +2,7 @@
  * @file main.cpp
  * @brief Drogon entrypoint for the vault backend.
  */
+#include "services/DatabaseStartup.h"
 #include "services/DbPool.h"
 #include "services/Paths.h"
 #include "services/VaultConfig.h"
@@ -10,12 +11,10 @@
 
 #include <cstdlib>
 #include <algorithm>
-#include <chrono>
 #include <filesystem>
 #include <fstream>
 #include <iostream>
 #include <sstream>
-#include <thread>
 #include <vector>
 
 namespace
@@ -51,21 +50,6 @@ void applyMigrations()
         vault::DbPool::get()->execSqlSync(readFile(path));
 }
 
-void waitForDatabase()
-{
-    std::string last;
-    for (int i = 0; i < 30; ++i) {
-        try {
-            vault::DbPool::get()->execSqlSync("SELECT 1");
-            return;
-        } catch (const std::exception& e) {
-            last = e.what();
-            std::this_thread::sleep_for(std::chrono::seconds(1));
-        }
-    }
-    throw std::runtime_error("database not ready: " + last);
-}
-
 } // namespace
 
 int main()
@@ -74,8 +58,7 @@ int main()
         std::string db = envOr("VAULT_DATABASE_URL",
                                "host=vault-db port=5432 dbname=vault "
                                "user=vault password=vault");
-        vault::DbPool::init(db);
-        waitForDatabase();
+        vault::initializeDatabase(db);
         applyMigrations();
         vault::VaultConfig::bootstrap();
 

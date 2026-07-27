@@ -8,6 +8,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 find_package(Drogon REQUIRED)
 find_package(OpenSSL REQUIRED)
 find_package(CURL REQUIRED)
+find_package(PostgreSQL REQUIRED)
 
 # ── shared core: crypto, services, rotator, adapters ──────────────────────────
 # Globbed so each <=80 LOC unit stays its own file (house C++ standard) without
@@ -29,6 +30,7 @@ target_link_libraries(vaultcore
         OpenSSL::SSL
         OpenSSL::Crypto
         CURL::libcurl
+        libpq::pq
 )
 
 # ── HTTP API server ───────────────────────────────────────────────────────────
