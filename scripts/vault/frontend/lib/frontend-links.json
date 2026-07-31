@@ -111,7 +111,7 @@
       "url": "https://metabuilder.wardcrew.com/mongo-express/"
     },
     {
-      "name": "redis-insight",
+      "name": "redisinsight",
       "group": "metabuilder",
       "url": "https://metabuilder.wardcrew.com/redis-insight/"
     },

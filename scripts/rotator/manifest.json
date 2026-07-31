@@ -190,6 +190,22 @@
       }
     },
     {
+      "name": "phpmyadmin-admin",
+      "section": "frontends",
+      "group": "metabuilder",
+      "service_name": "phpmyadmin",
+      "username": "metabuilder",
+      "adapter": "env_var",
+      "secret_env_key": "PHPMYADMIN_MYSQL_PASSWORD",
+      "app_url": "http://wardcrew.com:8900/phpmyadmin",
+      "repo_path": "~/Documents/GitHub/metabuilder/deployment/metabuilder",
+      "params": {
+        "env_file": "secrets/phpmyadmin.env",
+        "env_key": "MYSQL_PASSWORD",
+        "recreate_service": "metabuilder-phpmyadmin"
+      }
+    },
+    {
       "name": "dockerterminal-admin",
       "section": "frontends",
       "group": "metabuilder",
