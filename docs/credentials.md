@@ -197,7 +197,7 @@ Targets and their `secrets/` keys:
 | `admin` | `secrets/jenkins.env` | `JENKINS_ADMIN_PASSWORD` |
 | `nexus-admin` | `secrets/nexus.env` | `NEXUS_ADMIN_PASSWORD` |
 
-### Frontend passwords — `scripts/rotator/rotate.py`
+### Frontend passwords — `vault-rotate`
 
 JSON-orchestrated rotator that covers all sibling-repo credentials. Each
 target in `scripts/rotator/manifest.json` names an adapter that knows how
@@ -205,19 +205,19 @@ to apply the password to the live service.
 
 ```sh
 # Show current status of all targets (read-only)
-scripts/rotator/rotate.py status
+vault-rotate status
 
 # Rotate everything — auto-generated 32-char alphanumeric passwords
-scripts/rotator/rotate.py rotate
+vault-rotate rotate
 
 # Rotate one target, print a preview without writing
-scripts/rotator/rotate.py rotate --only postgres-dashboard-admin --dry-run
+vault-rotate rotate --only postgres-dashboard-admin --dry-run
 
 # Rotate one target with a specific password
-scripts/rotator/rotate.py rotate --only packagerepo-admin --password 'MyPass123!'
+vault-rotate rotate --only packagerepo-admin --password 'MyPass123!'
 
 # See what keys would be emitted without rotating
-scripts/rotator/rotate.py generate
+vault-rotate generate
 ```
 
 New passwords land in two places:
