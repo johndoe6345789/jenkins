@@ -1,0 +1,55 @@
+# Validates what this repo actually ships: the two images it defines
+# (controller + SSH agent) and its config files. It does not stand up the
+# full stack -- that needs secrets/*.env, which are gitignored on purpose
+# (see .gitignore) and never available to a clean CI checkout.
+name: ci
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  validate-config:
+    name: Validate config
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Parse casc.yaml
+        run: |
+          python3 -c "import yaml; yaml.safe_load(open('casc.yaml')); print('casc.yaml: valid YAML')"
+
+      # docker compose config requires every env_file to exist even just to
+      # validate structure, and the real ones are gitignored secrets -- so
+      # this stands in empty placeholders rather than skipping the check.
+      - name: Validate docker-compose.yml
+        run: |
+          mkdir -p secrets
+          touch secrets/jenkins.env secrets/nexus.env
+          docker compose config --quiet
+          echo "docker-compose.yml: valid"
+
+  build-controller:
+    name: Build controller image
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - name: Build
+        run: docker build -f Dockerfile -t jenkins-controller:ci .
+
+  build-agent:
+    name: Build agent image
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - name: Build
+        run: docker build -f Dockerfile.agent -t jenkins-agent:ci .
