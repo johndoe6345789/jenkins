@@ -11,3 +11,6 @@ scripts/vault/frontend/test-results/
 scripts/vault/test-results/
 scripts/vault/backend/build/
 scripts/vault/backend/CMakeUserPresets.json
+
+# Local ninja build output
+scripts/caprover-backup/build/
