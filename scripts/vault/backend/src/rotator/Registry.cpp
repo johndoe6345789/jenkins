@@ -20,6 +20,7 @@ std::unique_ptr<Adapter> makeAdapter(const std::string& name)
             {"db_sha512", [] { return std::make_unique<DbSha512Adapter>(); }},
             {"db_werkzeug", [] { return std::make_unique<DbWerkzeugAdapter>(); }},
             {"db_bcrypt", [] { return std::make_unique<DbBcryptAdapter>(); }},
+            {"db_argon2", [] { return std::make_unique<DbArgon2Adapter>(); }},
             {"db_bcrypt_sqlite",
              [] { return std::make_unique<DbBcryptSqliteAdapter>(); }},
             {"pyracms_pbkdf2",

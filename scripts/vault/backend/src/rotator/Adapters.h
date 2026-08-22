@@ -22,6 +22,7 @@ VAULT_ADAPTER(DbSha512Adapter);        ///< sqlite UPDATE, unsalted sha512
 VAULT_ADAPTER(DbWerkzeugAdapter);      ///< sqlite UPDATE, werkzeug hash
 VAULT_ADAPTER(DbBcryptAdapter);        ///< postgres UPSERT, bcrypt
 VAULT_ADAPTER(DbBcryptSqliteAdapter);  ///< sqlite UPDATE, bcrypt
+VAULT_ADAPTER(DbArgon2Adapter);        ///< postgres UPDATE, argon2id
 VAULT_ADAPTER(PyracmsPbkdf2Adapter);   ///< postgres UPDATE, PBKDF2 salt:hash
 VAULT_ADAPTER(GrafanaApiAdapter);      ///< Grafana admin REST
 VAULT_ADAPTER(KeycloakRealmAdapter);   ///< Keycloak admin REST
