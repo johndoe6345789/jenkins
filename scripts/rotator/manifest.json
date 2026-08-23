@@ -272,15 +272,15 @@
       }
     },
     {
-      "name": "pastebin-demo",
+      "name": "metabuilder-demo",
       "section": "frontends",
       "group": "metabuilder",
-      "service_name": "pastebin",
+      "service_name": "metabuilder",
       "username": "demo",
       "adapter": "db_argon2",
-      "secret_env_key": "PASTEBIN_DEMO_PASSWORD",
-      "app_url": "http://wardcrew.com:8900/pastebin",
-      "repo_path": "~/Documents/GitHub/metabuilder/frontends/pastebin",
+      "secret_env_key": "DBAL_DEMO_PASSWORD",
+      "app_url": "https://metabuilder.wardcrew.com/app/login",
+      "repo_path": "~/Documents/GitHub/metabuilder",
       "params": {
         "db_container": "metabuilder-postgres",
         "db_user": "metabuilder",
@@ -291,7 +291,8 @@
         "username": "demo",
         "tenant_column": "\"tenantId\"",
         "tenant": "system"
-      }
+      },
+      "note": "DBAL SSO, system tenant - metabuilder + portal share these"
     },
     {
       "name": "pastebin-alice",
@@ -668,16 +669,16 @@
       }
     },
     {
-      "name": "sso-admin",
+      "name": "metabuilder-admin",
       "section": "frontends",
       "group": "metabuilder",
-      "service_name": "sso",
+      "service_name": "metabuilder",
       "username": "admin",
       "adapter": "db_argon2",
       "secret_env_key": "DBAL_ADMIN_PASSWORD",
-      "app_url": "http://wardcrew.com:8900/dbal",
-      "repo_path": "~/Documents/GitHub/dbal",
-      "note": "DBAL SSO - role admin",
+      "app_url": "https://metabuilder.wardcrew.com/app/login",
+      "repo_path": "~/Documents/GitHub/metabuilder",
+      "note": "DBAL SSO, system tenant - metabuilder + portal share these",
       "params": {
         "db_container": "metabuilder-postgres",
         "db_user": "metabuilder",
@@ -691,16 +692,16 @@
       }
     },
     {
-      "name": "sso-god",
+      "name": "metabuilder-god",
       "section": "frontends",
       "group": "metabuilder",
-      "service_name": "sso",
+      "service_name": "metabuilder",
       "username": "god",
       "adapter": "db_argon2",
       "secret_env_key": "DBAL_GOD_PASSWORD",
-      "app_url": "http://wardcrew.com:8900/dbal",
-      "repo_path": "~/Documents/GitHub/dbal",
-      "note": "DBAL SSO - role god",
+      "app_url": "https://metabuilder.wardcrew.com/app/login",
+      "repo_path": "~/Documents/GitHub/metabuilder",
+      "note": "DBAL SSO, system tenant - metabuilder + portal share these",
       "params": {
         "db_container": "metabuilder-postgres",
         "db_user": "metabuilder",
@@ -714,16 +715,16 @@
       }
     },
     {
-      "name": "sso-supergod",
+      "name": "metabuilder-supergod",
       "section": "frontends",
       "group": "metabuilder",
-      "service_name": "sso",
+      "service_name": "metabuilder",
       "username": "supergod",
       "adapter": "db_argon2",
       "secret_env_key": "DBAL_SUPERGOD_PASSWORD",
-      "app_url": "http://wardcrew.com:8900/dbal",
-      "repo_path": "~/Documents/GitHub/dbal",
-      "note": "DBAL SSO - role supergod",
+      "app_url": "https://metabuilder.wardcrew.com/app/login",
+      "repo_path": "~/Documents/GitHub/metabuilder",
+      "note": "DBAL SSO, system tenant - metabuilder + portal share these",
       "params": {
         "db_container": "metabuilder-postgres",
         "db_user": "metabuilder",
@@ -737,16 +738,16 @@
       }
     },
     {
-      "name": "sso-moderator",
+      "name": "metabuilder-moderator",
       "section": "frontends",
       "group": "metabuilder",
-      "service_name": "sso",
+      "service_name": "metabuilder",
       "username": "moderator",
       "adapter": "db_argon2",
       "secret_env_key": "DBAL_MODERATOR_PASSWORD",
-      "app_url": "http://wardcrew.com:8900/dbal",
-      "repo_path": "~/Documents/GitHub/dbal",
-      "note": "DBAL SSO - role moderator",
+      "app_url": "https://metabuilder.wardcrew.com/app/login",
+      "repo_path": "~/Documents/GitHub/metabuilder",
+      "note": "DBAL SSO, system tenant - metabuilder + portal share these",
       "params": {
         "db_container": "metabuilder-postgres",
         "db_user": "metabuilder",
@@ -760,16 +761,16 @@
       }
     },
     {
-      "name": "sso-testuser",
+      "name": "metabuilder-testuser",
       "section": "frontends",
       "group": "metabuilder",
-      "service_name": "sso",
+      "service_name": "metabuilder",
       "username": "testuser",
       "adapter": "db_argon2",
       "secret_env_key": "DBAL_TESTUSER_PASSWORD",
-      "app_url": "http://wardcrew.com:8900/dbal",
-      "repo_path": "~/Documents/GitHub/dbal",
-      "note": "DBAL SSO - role user",
+      "app_url": "https://metabuilder.wardcrew.com/app/login",
+      "repo_path": "~/Documents/GitHub/metabuilder",
+      "note": "DBAL SSO, system tenant - metabuilder + portal share these",
       "params": {
         "db_container": "metabuilder-postgres",
         "db_user": "metabuilder",
