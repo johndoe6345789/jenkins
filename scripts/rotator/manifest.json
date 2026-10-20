@@ -909,42 +909,6 @@
       }
     },
     {
-      "name": "businessplanner-keycloak-devadmin",
-      "section": "frontends",
-      "group": "keycloak apps",
-      "service_name": "businessplanner",
-      "username": "devadmin",
-      "adapter": "keycloak_realm",
-      "secret_env_key": "BUSINESSPLANNER_DEVADMIN_PASSWORD",
-      "app_url": "http://wardcrew.com:8892/app/en",
-      "repo_path": "~/Documents/GitHub/businessplanner",
-      "params": {
-        "kc_url": "http://businessplanner-deploy-keycloak-1:8080/sso",
-        "kc_master_user": "admin",
-        "kc_master_password_env": "BUSINESSPLANNER_KC_MASTER_PASSWORD",
-        "realm": "businessplanner",
-        "user": "devadmin"
-      }
-    },
-    {
-      "name": "next-extra-primary-keycloak-devadmin",
-      "section": "frontends",
-      "group": "keycloak apps",
-      "service_name": "next-extra-primary",
-      "username": "devadmin",
-      "adapter": "keycloak_realm",
-      "secret_env_key": "NEXTRA_DEVADMIN_PASSWORD",
-      "app_url": "http://wardcrew.com:8889/app/en",
-      "repo_path": "~/Documents/GitHub/next_extra_primary",
-      "params": {
-        "kc_url": "http://next_extra_primary-deploy-keycloak-1:8080/sso",
-        "kc_master_user": "admin",
-        "kc_master_password_env": "NEXTRA_KC_MASTER_PASSWORD",
-        "realm": "nextra",
-        "user": "devadmin"
-      }
-    },
-    {
       "name": "caprover-admin",
       "section": "frontends",
       "group": "infrastructure",
@@ -1018,78 +982,6 @@
         "grafana_url": "http://metabuilder-grafana:3000",
         "admin_password_env": "GRAFANA_ADMIN_PASSWORD",
         "login": "viewer"
-      }
-    },
-    {
-      "name": "businessplanner-keycloak-devmod",
-      "section": "frontends",
-      "group": "keycloak apps",
-      "service_name": "businessplanner",
-      "username": "devmod",
-      "adapter": "keycloak_realm",
-      "secret_env_key": "BUSINESSPLANNER_DEVMOD_PASSWORD",
-      "app_url": "http://wardcrew.com:8892/app/en",
-      "repo_path": "~/Documents/GitHub/businessplanner",
-      "params": {
-        "kc_url": "http://businessplanner-deploy-keycloak-1:8080/sso",
-        "kc_master_user": "admin",
-        "kc_master_password_env": "BUSINESSPLANNER_KC_MASTER_PASSWORD",
-        "realm": "businessplanner",
-        "user": "devmod"
-      }
-    },
-    {
-      "name": "businessplanner-keycloak-devuser",
-      "section": "frontends",
-      "group": "keycloak apps",
-      "service_name": "businessplanner",
-      "username": "devuser",
-      "adapter": "keycloak_realm",
-      "secret_env_key": "BUSINESSPLANNER_DEVUSER_PASSWORD",
-      "app_url": "http://wardcrew.com:8892/app/en",
-      "repo_path": "~/Documents/GitHub/businessplanner",
-      "params": {
-        "kc_url": "http://businessplanner-deploy-keycloak-1:8080/sso",
-        "kc_master_user": "admin",
-        "kc_master_password_env": "BUSINESSPLANNER_KC_MASTER_PASSWORD",
-        "realm": "businessplanner",
-        "user": "devuser"
-      }
-    },
-    {
-      "name": "next-extra-primary-keycloak-devmod",
-      "section": "frontends",
-      "group": "keycloak apps",
-      "service_name": "next-extra-primary",
-      "username": "devmod",
-      "adapter": "keycloak_realm",
-      "secret_env_key": "NEXTRA_DEVMOD_PASSWORD",
-      "app_url": "http://wardcrew.com:8889/app/en",
-      "repo_path": "~/Documents/GitHub/next_extra_primary",
-      "params": {
-        "kc_url": "http://next_extra_primary-deploy-keycloak-1:8080/sso",
-        "kc_master_user": "admin",
-        "kc_master_password_env": "NEXTRA_KC_MASTER_PASSWORD",
-        "realm": "nextra",
-        "user": "devmod"
-      }
-    },
-    {
-      "name": "next-extra-primary-keycloak-devuser",
-      "section": "frontends",
-      "group": "keycloak apps",
-      "service_name": "next-extra-primary",
-      "username": "devuser",
-      "adapter": "keycloak_realm",
-      "secret_env_key": "NEXTRA_DEVUSER_PASSWORD",
-      "app_url": "http://wardcrew.com:8889/app/en",
-      "repo_path": "~/Documents/GitHub/next_extra_primary",
-      "params": {
-        "kc_url": "http://next_extra_primary-deploy-keycloak-1:8080/sso",
-        "kc_master_user": "admin",
-        "kc_master_password_env": "NEXTRA_KC_MASTER_PASSWORD",
-        "realm": "nextra",
-        "user": "devuser"
       }
     },
     {
