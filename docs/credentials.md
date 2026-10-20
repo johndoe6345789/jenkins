@@ -49,25 +49,12 @@ is gone).
 
 ## businessplanner
 
-Keycloak is the user-facing IdP. The `users` service also seeds an older
-legacy set of accounts directly into Postgres via migration SQL — both sets
-exist in parallel on a fresh `up`.
+Sign-in is OIDC against the shared **dbal** (the `metabuilder-dbal` CapRover app), not Keycloak. Accounts are dbal
+credentials: a username plus a password, with an optional e-mail as an alternate login. People sign themselves up on
+https://business.wardcrew.com/app/en/register (the `businessplanner-signup` service creates a `bp_<hex>` dbal username
+with their e-mail as the login). The `users` service also seeds an older legacy set of accounts directly into Postgres
+via migration SQL; those are not used for sign-in.
 
-### Keycloak
-
-| What | Login | URL | Source |
-| --- | --- | --- | --- |
-| Keycloak master admin | `admin` / `admin` | http://localhost:8080 | `docker-compose.yml` (`KEYCLOAK_ADMIN` / `KEYCLOAK_ADMIN_PASSWORD`) |
-| Keycloak DB (postgres) | `keycloak` / `keycloak_dev` | — | `docker-compose.yml` (`KC_DB_*`) |
-
-Realm users (from `docker/keycloak/realm-export.json`, also mirrored in
-`services/users/seeds/users.json`):
-
-| Username | Password | Email | Role |
-| --- | --- | --- | --- |
-| `devadmin` | `DevAdmin1` | dev.admin@businessplanner.local | admin |
-| `devuser`  | `DevUser1`  | dev.user@businessplanner.local  | user  |
-| `devmod`   | `DevMod1a`  | dev.mod@businessplanner.local   | moderator |
 
 ### Legacy app-DB users
 
@@ -93,24 +80,9 @@ you create it.
 
 ## next_extra_primary
 
-Same shape as businessplanner — same passwords, only the email domain
-changes from `@businessplanner.local` to `@nextra.local`.
+Same shape as businessplanner: sign-in is OIDC against the shared dbal (client `nextra-app`), and the legacy
+app-DB users below use the same passwords with the e-mail domain `@nextra.local`.
 
-### Keycloak
-
-| What | Login | URL |
-| --- | --- | --- |
-| Keycloak master admin | `admin` / `admin` | http://localhost:8080 |
-| Keycloak DB | `keycloak` / `keycloak_dev` | — |
-
-Realm users (`docker/keycloak/realm-export.json`,
-`services/users/seeds/users.json`):
-
-| Username | Password | Email | Role |
-| --- | --- | --- | --- |
-| `devadmin` | `DevAdmin1` | dev.admin@nextra.local | admin |
-| `devuser`  | `DevUser1`  | dev.user@nextra.local  | user  |
-| `devmod`   | `DevMod1a`  | dev.mod@nextra.local   | moderator |
 
 ### Legacy app-DB users
 
@@ -237,13 +209,11 @@ Current manifest targets and their adapters:
 | `dockerterminal-admin` | `env_var` | metabuilder dockerterminal `ADMIN_PASSWORD` |
 | `workflowui-nextauth-secret` | `env_var` | metabuilder workflowui `NEXTAUTH_SECRET` |
 | `emailclient-redis` | `env_var` | metabuilder emailclient Redis password |
-| `businessplanner-keycloak-devadmin` | `keycloak_realm` | businessplanner Keycloak `devadmin` realm user |
-| `next-extra-primary-keycloak-devadmin` | `keycloak_realm` | next_extra_primary Keycloak `devadmin` realm user |
 
 **Adapters:**
 - `db_bcrypt` — connects to a named Postgres container, re-hashes with bcrypt and updates the row directly
 - `env_var` — writes a new value into a `secrets/` env file then `docker compose` recreates the target service
-- `keycloak_realm` — calls the Keycloak admin REST API to set the user's password in the specified realm
+- `dbal_credential` — sets a login's password in the shared dbal through its admin-token endpoint (`POST /admin/credentials`); the token is read from an env file under `secrets/`, never from the manifest
 
 ## Notes for re-deriving this file
 
